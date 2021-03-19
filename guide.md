@@ -337,8 +337,53 @@ componmentDidUpdate(props, state, snapshot) {
   console.log(snapshot)
 }
 
+2-8 react 组件通信
+1. 父组件向子组件传值
+1. 子组件向父组件传值
+1. 兄弟间组件传值
+
+class/lists.js
+import ListItem1 from './list-item1.js'
+import ListItem2 from './list-item2.js'
+
+handleChild = (msg) => {
+  console.log(msg)
+  + this.setState({
+    name: mes
+  })
+}
+
+return (
+  div>ListItem1[name={'item1'} handleItem={this.handleChild}] 
+  +ListItem2[name={this.state.name}] 
+)
 
 
+class/list-item1.js
+import PropTypes from 'prop-types'
+static defaultProps = {
+  name: 'item1'
+}
+
+static propTypes = {
+  name: PropTypes.string 
+}
+
+handleClick = () => {
+  this.props.handleItem('item1')
+}
+return (
+  div>h1[onClick={this.handleClick}]{item1-- {this.props.name}}
+)
+
+在父组件没有传递自组件属性值时，依然显示默认值，并且对属性的类型进行校验
+yarn add prop-types --save 
+
+class/list-item2.js
+
+return (
+  div>h1{item2 -- {this.props.name }}
+)
 
 
 
