@@ -200,6 +200,100 @@ export default Id
 2-5 umi3 项目
 umi/yarn create @umijs/umi-app
 
+.umirc.ts - .umirc.js
+index.tsx = index.js
+
+yarn install
+
+区别：
+1. .umi 路由区别 umi3 src/.umi; umi2 src/pages/.umi
+1. umi3 .umirc.js defineConfig
+1. 动态路由 以[id].js
+src/pages/[id].js
+```
+export default class Id extends Component {
+
+  render () {
+    return (div{this.props.mathid})
+  }
+}
+```
+手动注释.umirc.js/routes
+
+2-6 react 组件生命周期
+react 组件 旧生命周期 图解
+
+初始化
+
+挂载挂载
+
+更新阶段
+
+卸载阶段
+
+react 组件 新周期 图解
+
+
+
+.umirc.js/plugins
+'umi-plugin-react',
+{
+  antd: true
+}
+
+vscode / project-tpl 代码片段
+
+import { List } from 'antd-mobile // H5 项目 
+import { Link } from 'umi
+class tab Index
+return (
+  div>h1{class demo}+List>List.Item>Link[to='/class/component-old']{component-old}^List.Item>Link[to='/class/component-new']{component-new}
+)
+
+class/component-old.js
+constructor () {
+  this.state = {
+    text: 'demo'
+  }
+  console.log('constructor')
+  this.handleClick = this.handleClick.bind(this)// 方法一 初始化
+}
+conponentWillMount() {
+  console.log('conponentWillMount)
+}
+conponentDidMount() {
+  console.log('conponentDidMount)
+}
+// 更新
+handleClick() {
+  console.log(')
+}
+
+conponentWillUpdate() {
+  console.log()
+}
+
+conponentDigUpdate() {
+  console.log
+}
+
+// 方法四 需要使用 ES最新特新 public flede
+handleClick = () => {
+  this.setState({
+    text: 'demo2'
+  })
+}
+// react 事件绑定 有三种不同写法 
+// 1. constructor / 组件初始化 组件性能优化
+// 2. jsx 代码块 绑定 .bind(this) / render 函数每次都会重新实例话 handleClick
+// 3. 采用 尖头函数
+// 4. 需要使用 es 最新特性 public filer
+console.log('render')
+return (
+  div onClick={this.handleClick (this.handleClick.bind(this) 组件每次render 实例话方法)(() => this.handleClick())(this.handleClick)} {component-old - {this.state.test}}
+)
+
+
 
 
 
