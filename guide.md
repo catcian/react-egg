@@ -294,11 +294,48 @@ return (
 )
 
 
+2-7 生命周期 下
+import { PureComopnent } from 'react'
+1. 比较 state 的属性，浅比较。
 
+this.state = {
+  text: {id: 1}
+}
 
+shouldComponentUpdate(props, state) {
+  console.log()
+  console.log(props,state)
+  // 组件 state 相同不进行渲染，此写法比较复杂 针对这种实现的效果 react 官方推出新的组件 PureComponent
+  if (state.text === 'demo-new' && this.state.text !== state.text) return true
+  return false
+}
 
+handleClick = () => {
+  this.setState ({
+    text: {id: 2}
+  })
+}
 
+componentWillUnmount () {
+  console.log('componentWillUnmount)
+}
 
+新生命周期
+
+static getDerivedStateFromProps(props, state) {
+  console.log()
+  console.log(props, state)
+  return state
+}
+
+getSnapshotBeforeUpdate () {
+  console.log
+  return 'getSnapshotBeforeUpdate'
+}
+
+componmentDidUpdate(props, state, snapshot) {
+  console.log(snapshot)
+}
 
 
 

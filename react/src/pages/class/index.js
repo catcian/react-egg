@@ -20,7 +20,7 @@ export default class Index extends Component {
             <Link to='/class/component-old'>component-old</Link>
           </List.Item>
           <List.Item>
-            <Link to='class/component-new'>component-new</Link>
+            <Link to='/class/component-new'>component-new</Link>
           </List.Item>
         </List>
       </div>
