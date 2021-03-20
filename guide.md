@@ -386,6 +386,90 @@ return (
 )
 
 
+2-9 dva 数据处理及数据mock
+src/.umirc.js/
+{
+  dva: true
+}
+
+src/models 放置dva 相关代码
+src/models/search.js
+export default {
+  namespace: 'search',// 非必填项。没有取文件名字值
+  state: {
+    text: 'dva',
+    lists: []
+  },
+  // 支持方法的调用 两者
+  // 同步方法
+  reducers: {
+    getLists (state, action) {
+
+      return {
+        ...state,
+        lists: Array(10).fill(action.payload)
+      }
+    }
+  },
+  // 异步
+  // call 主要调用异步函数
+  // put 主要调用同步函数
+  effects: {
+    *getListsAsync({payload}, {call, put}){
+      yield put({
+        type: 'getLists'// reducer 方法名，
+        payload
+      })
+    }
+  }
+}
+
+class/index.js 
+Link to '/calss/dva' dva /Link
+
+class/dva/index.js Dva
+import Search from './Search'
+import Lists from './lists
+import { connect } from 'dva'
+
+export default connect(({search}) => ({
+  search
+}))(Dva)
+
+return (
+  div> Search[{...this.props}] 
+  + Lists[{this.props}]
+
+)
+class/dva/search.js
+import { SearchBar } from 'antd-mobile'
+this.state = {
+  value: ''
+}
+handleChange = value => {
+  this.setState({
+    value: value
+  })
+}
+handleSubmit = () => {
+  this.props.dispath({
+    type: 'search/getLists',
+    payload: this.state.value
+  })
+}
+return (
+  div>SearchBar[autoFocus value={this.state,value} onChange={this.handleChange} onSubmit={this.handleSubmit}]
+)
+
+class/dva/lists.js
+import { List } from 'antd-mobile'
+
+console.log(this.props)
+const { text, lists} = this.props.search
+return (
+  div> h1{text: {text}} + List> lists.map((item,i) => List.Item[key=i]{item})
+)
+
 
 
 
