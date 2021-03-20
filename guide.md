@@ -387,11 +387,25 @@ return (
 
 
 2-9 dva 数据处理及数据mock
-src/.umirc.js/
-{
-  dva: true
-}
-mock/search.js
+``` src/.umirc.js
+plugins: [
+    // ref: https://umijs.org/plugin/umi-plugin-react.html
+    [
+      'umi-plugin-react',
+      {
+        antd: true,
+      + dva: true,
+        dynamicImport: false,
+        title: 'react',
+        dll: false,
+        routes: {
+          exclude: [/components\//],
+        },
+      },
+    ],
+  ],
+```
+``` mock/search.js
 export default {
   'GET /api/getLists': {
     lists: ['a','b','c']
@@ -407,18 +421,19 @@ export default {
     })
   }
 }
-
+```
 关于 http 相关请求放置在 services
-src/services/search.js
+``` src/services/search.js
 export function getLists (value) {
   return fetch('api/getLists?value=value) +getListsAsync
   .then(resp => resp.json())
   .catch(err => (console.log(err)))
 }
+```
 
 src/models 放置dva 相关代码
-src/models/search.js
-+import { getLists } from '@/services/search.js
+``` src/models/search.js
++ import { getLists } from '@/services/search.js
 export default {
   namespace: 'search',// 非必填项。没有取文件名字值
   state: {
@@ -449,25 +464,28 @@ export default {
     }
   }
 }
+```
+``` class/index.js 
+<List.Item>
+  <Link to='/class/dva'>dva</Link>
+</List.Item>
+```
 
-class/index.js 
-Link to '/calss/dva' dva /Link
-
-class/dva/index.js Dva
+``` class/dva/index.js Dva
 import Search from './Search'
 import Lists from './lists
 import { connect } from 'dva'
 
-export default connect(({search}) => ({
-  search
-}))(Dva)
-
 return (
   div> Search[{...this.props}] 
   + Lists[{this.props}]
-
 )
-class/dva/search.js
+
+export default connect(({search}) => ({search}))(Index)
+
+```
+
+``` class/dva/search.js
 import { SearchBar } from 'antd-mobile'
 this.state = {
   value: ''
@@ -486,18 +504,117 @@ handleSubmit = () => {
 return (
   div>SearchBar[autoFocus value={this.state,value} onChange={this.handleChange} onSubmit={this.handleSubmit}]
 )
+```
 
-class/dva/lists.js
+```class/dva/lists.js
 import { List } from 'antd-mobile'
 
 console.log(this.props)
-const { text, lists} = this.props.search
+const { text, lists } = this.props.search
 return (
   div> h1{text: {text}} + List> lists.map((item,i) => List.Item[key=i]{item})
 )
+```
+
+2-10 基于 react context api 实现数据流管理
+
+``` class/index.js
+<List.Item>
+  <Link to='/class/context'>context</Link>
+</List.Item>
+```
+
+// Provider 子组件 可以称为消费子组件，并且消费组件是可以有多个的
+// 消费组件用来订阅 Provider 里的属性
+// 如果 Provider 属性发生变化，所有订阅该属性的消费组件则会重新渲染
+
+``` class/context/index.js
+import SearchContext from './SearchContext'
+
+handleDispatch = async (action) => {
+  switch (action.type) {
+    case 'TEXT':
+      return this.setState({
+        text: action.payload
+      })
+    case 'LISTS':
+      const res = await getLists(action.payload)
+      return this.setState({
+        lists: res.lists
+      })
+    default:
+      break;
+  }
+}
+return (
+  <div>
+    <SearchContext.Provider value={{
+      state: this.state,
+      dispatch: this.handleDispatch
+    }}>
+      <Consumer></Consumer>
+      <Search></Search>
+      <Lists></Lists>
+    </SearchContext.Provider>
+  </div>
+)
+```
 
 
+``` class/context/searchContext.js
+import React from 'react'
 
+const SearchContext = React.createContext()
 
+export default SearchContext
+```
+
+``` class/context/lists.js
+static contextType = SearchContext
+
+return (
+  <div>
+    <h1>text: { this.context.state.text }</h1>
+    <List>
+      { this.context.state.lists.map((item,index) => <List.Item key={index}>{ item }</List.Item>)}
+    </List>
+  </div>
+)
+```
+
+``` class/context/search.js
+import SearchContext from './SearchContext
+
+static contextType = SearchContext
+
+handleSubmit = () => {
+  this.context.dispatch({
+    type: 'TEXT',
+    payload: this.state.value
+  })
+  this.context.dispatch({
+    type: 'LISTS',
+    payload: this.state.value
+  })
+}
+```
+
+``` class/context/consumer.js
+import SearchContext from './SearchContext'
+
+render() {
+  return (
+    <div>
+      <SearchContext.Consumer>
+        {({state, dispatch}) => (
+          <h1 onClick={() => dispatch({type: 'TEXT', payload: 'consumer-demo'})}>
+            consumer: { state.text }
+          </h1>
+        )}
+      </SearchContext.Consumer>
+    </div>
+  )
+}
+```
 
 
