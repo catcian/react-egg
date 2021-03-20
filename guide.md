@@ -391,9 +391,34 @@ src/.umirc.js/
 {
   dva: true
 }
+mock/search.js
+export default {
+  'GET /api/getLists': {
+    lists: ['a','b','c']
+  }
+  // value func 类型 umi mock 是对 express 封装
+  'GET /api/getListsAsync': (req, res) => {
+    console.log(req)
+
+    // 支持异步
+    setTimeOut(() => {}, 1000)
+    res.json({
+      list: Array(10).fill(req.query.value)
+    })
+  }
+}
+
+关于 http 相关请求放置在 services
+src/services/search.js
+export function getLists (value) {
+  return fetch('api/getLists?value=value) +getListsAsync
+  .then(resp => resp.json())
+  .catch(err => (console.log(err)))
+}
 
 src/models 放置dva 相关代码
 src/models/search.js
++import { getLists } from '@/services/search.js
 export default {
   namespace: 'search',// 非必填项。没有取文件名字值
   state: {
@@ -413,12 +438,13 @@ export default {
   },
   // 异步
   // call 主要调用异步函数
-  // put 主要调用同步函数
+  // put 主要事件派发
   effects: {
     *getListsAsync({payload}, {call, put}){
+      + const res = yield call(getLists, payload)
       yield put({
         type: 'getLists'// reducer 方法名，
-        payload
+        payload: res.lists
       })
     }
   }
