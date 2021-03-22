@@ -881,3 +881,76 @@ return (
   </div>
 )
 ```
+
+2-14 使用 ref api 操作 dom 组件
+``` 0. /class/index.js
+<List.Item>
+  <Link to='/class/refs'>refs</Link>
+</List.Item>
+```
+``` 1. /class/refs/index.js/Refs
+import Child from './child'
+import InputForward from './forward'
+
+constructor(props) {
+  super(props);
+  this.testRef = createRef()
+  this.childRef = createRef()
+  this.inputRef = createRef()
+}
+
+componentDidMount(){
+  console.log(this.domRef)
+  log(this.domRef.current.innerHTML)
+  log(this.childRef.current)// 返回子组件的实例
+  this.inputRef.current.focus()
+}
+
+handleChild(str) {
+  this.childRef.current.changeText(str)
+}
+
+return (
+  <div>
+    <h1 ref={this.testRef}>refs test</h1>
+    <Child ref={this.childRef}></Child>
+    <button onClick={() => this.handleChild(Math.random())}>修改child值</button>
+  </div>
+)
+```
+
+// 操作子组件
+``` 2. /class/refs/child.js
+
+this.state = {
+  text: 'old text'
+};
+
+handleChange (str) {
+  this.setState({
+    text: str
+  })
+}
+
+return (
+  <div>
+    <h2>child test -- { this.state.text }</h2>
+  </div>
+)
+```
+
+// 父组件操作子组件的某些 dom 节点
+``` 3. /class/refs/forward.js
+import React, { forwardRef } from 'react'
+
+const InputForward = forwardRef((props, ref) => {
+  return (
+    <div>
+      姓名：<input ref={ref}></input>
+    </div>
+  )
+})
+
+export default InputForward
+
+```
