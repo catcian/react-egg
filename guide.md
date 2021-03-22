@@ -617,4 +617,267 @@ render() {
 }
 ```
 
+2-11 lazyload 组件开发
+按需加载：针对页面级别
+期望：能够对页面的某个组件按需加载
+class/index.js + lazy-load
 
+``` 0. /class/index.js
+<List.Item>
+  <Link to='/class/lazy-load'>lazy-load</Link>
+</List.Item>
+```
+
+``` 1. /class/lazy-load/index.js
+import React, { lazy, Suspense } from 'react'
+- import Demo from './demo' 
+// lazy 函数 接收一个函数，动态调用 import 方法，并且返回 Promise 对象
++ const Demo = lazy(()=> import('./demo'))
+
+this.state = {
+  flag: false
+}
+
+componentDidMount () {
+  setTimteout(()=> {
+    this.setState({
+      flag:true
+    }, 2000)
+  })
+}
+
+// fallback 属性 子组件 未在解析完之前执行的
+return (
+  <div>
+    <Suspense fallback={<div>Loading</div>}>
+      { this.state.flag ? <Demo></Demo> : null }
+    </Suspense>
+  </div>
+)
+```
+
+``` 2. /class/lazy-load/demo.js
+return (
+  <div>
+    lazy-load: demo
+  </div>
+)
+```
+
+// lazy suspense 封装
+``` 3. /src/components/LazyLoad/index.js
+import { lazy, Suspense } from 'react'
+
+_renderLazy = () => {
+  let Lazy
+  const { component, delay, ...other} = this.props
+  // 组件不存在或者组件类型不是Promise
+  if (!component || components.constructor.name !== 'Promise'){
+    Lazy = import('./error')
+  }
+
+  Lazy = Lazy(() => {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(component)
+      }, delay || 300)
+    })
+  })
+  return <Lazy {...other}>
+}
+
+return (
+  div> Suspense[fallback={div{loading...}}] > {this._renderLazy()}
+)
+```
+
+``` 3.2 /src/components/Lazyload/error.js/Error
+return (div{组件引入错误})
+```
+
+``` 3.3 /class/context/index.js
+import LazyLoad from '@/components/Lazyload'
+
+return (
+  <div>
+    <SearchContext.Provider value={{
+      state: this.state,
+      dispatch: this.handleDispatch
+    }}>
+      <LazyLoad component={import('./lists')}></LazyLoad>
+      {/* <Lists></Lists> */}
+  </div>
+)
+```
+
+2-12 ErrorBoundary 父组件检测子组件发生的错误，不能检测本身的错误
+``` 1. /class/context/index.js
+
+const house = {
+  info: {}
+}
+return (
+  div {houses.info2.id}
+)
+```
+
+``` 2. src/components/ErrorBoundary/index.js
+
+this.state = {
+  flag: false
+}
+
+static getDerivedStateFromError(error) {
+  // console.log(error)
+  return {
+    flag: true
+  }
+}
+
+componentDidCatch(error, info) {
+  // 一般做日志操作
+}
+
+return (
+  <div>
+    { this.state.flag ? <h1>发生错误，请稍后再试</h1> : this.props.children }
+  </div>
+)
+```
+
+``` 3. layouts/index.js
+import ErrorBoundary from '@/components/ErrorBounday'
+
+return (
+  <div className={styles.normal}>
+    <h1 className={styles.title}>Hello! Welcome to umi!</h1>
+    <ErrorBoundary>
+      {props.children}
+    </ErrorBoundary>
+  </div>
+);
+```
+
+// js 新特性：可选链 ?.
+// babel 相关插件
+// 建议：安装插件
+// 1. 安装 vscode 插件：JavaScript and TypeScript Nightly
+// 1. 安装 TypeSciprt tsc -v version 3.7.2
+// 避免 vscode 编译代码报错
+
+// ErrorBoundary 错误边界并不是万能的，当遇到点击事件内部，以及setTimeout 等异步函数内部错误，是无法进行检测的。
+
+2-13 createPortal api  Modal组件
+
+``` 1. /class/index.js
+<List.Item>
+  <Link to='/class/modal'>modal</Link>
+</List.Item>
+```
+
+``` 2. /class/modal/index.js
+import CreatePortal from '@/components/CreatePortal'
+
+return (
+  <div>
+    <CreatePortal>modal</CreatePortal>
+  </div>
+)
+
+```
+
+``` 3. /components/CreatePortal/index.js
+import ReactDOM from 'react-dom'
+constructor(props) {
+  super(props);
+  this.body = document.querySelector('body')
+  this.elem = document.createElement('div')
+}
+
+componentDidMount() {
+  this.elem.setAttribute('id', 'portal-root')
+  this.body.appendChild(this.elem)
+}
+
+componentWillUnmount() {
+  this.body.removeChild(this.elem)
+}
+
+render() {
+  return ReactDOM.createPortal(this.props.children, this.elem)
+}
+
+```
+封装Modal
+``` 4. /components/Modal/index.js
+import CreatePortal from '@/components/CreatePortal'
+import { Icon } from 'antd-mobile
+
+const Styles = {
+  modal: {
+    position: 'relative',
+    top: '0',
+    left: '0',
+    zIndex: '999',
+  },
+  body: {
+    backgroundColor: '#fff',
+    position: 'fixed',
+    height: '100%',
+    width: '100%',
+    top: '0',
+    left: '0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  close: {
+    position: 'fixed',
+    top: '10px',
+    right: '10px',
+  }
+}
+handleClose = () => {
+  const { onClose } = this.props
+  onClose && onClose()
+}
+const { show } = this.props
+return (
+  <>
+    { this.props.show ? 
+      <CreatePortal style={Styles.modal}>
+        <div style={Styles.body}>
+          {this.props.children}
+          <Icon type="cross" size="lg" style={Styles.close} onClick={this.handleClick}></Icon>
+        </div>
+      </CreatePortal> : null
+    }
+  </>
+)
+
+```
+
+``` 5. /class/modal/index.js
+import Modal from '@/components/Modal
+import { Button } from 'antd-mobile
+
+this.state = {
+  show: false
+}
+handleClick = () => {
+  this.setState({
+    show: true
+  })
+}
+handleClose = () => {
+  this.setState({
+    show: false
+  })
+}
+return (
+  <div>
+    <Button type="primary" onClick={this.handleClick}>show modal</Button>
+    <Modal show={this.state.show} onClose={this.hanldeClose}>modal</Modal>
+  </div>
+)
+```

@@ -8,7 +8,7 @@ export default {
   },
   reducers: {
     getLists (state, action) {
-      console.log('reducers.getLists', state, action)
+      // console.log('reducers.getLists', state, action)
       return {
         ...state,
         // lists: Array(10).fill(action.payload)

@@ -31,7 +31,6 @@ export default class Search extends Component {
   }
 
   render() {
-    console.log(this);
     return (
       <div>
         <SearchBar
