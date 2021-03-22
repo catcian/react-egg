@@ -954,3 +954,89 @@ const InputForward = forwardRef((props, ref) => {
 export default InputForward
 
 ```
+
+3-1 react hook api 新组件开发模式
+pages/function/index.js
+func
+import { WingBlank, WhiteSpace, List} from 'antd-mobile
+import { Link } from 'umi'
+return (
+  div> WingBlank > List > List.Item > Link to='/function/hook' hook
+
+  WhiteSpace
+)
+
+/pages/function/hook/index.js
+
+1. useState
+const [count, setCount] = useState(0)
+1. useEffect componendDIdMount/willMount
+useEffect(() => {
+  log('useEffect')
+}, [])
+
+useEffect 接收两个参数，第一个是函数，第二个是依赖项的数组，并且第二项是非必选项。
+因此存在三种情况：
+1. 没有依赖性，在组件渲染执行适合，和每次修改属性都会被执行
+1. 如果为空数组，在组件初始化时只会执行一次，
+1. 有依赖项，数组有依赖项，并且依赖项的值发生改变的时候useEffect方法回重新被执行
+useEffect如何执行异步操作：
+1. fetch('/api/getLists)
+1. 并不支持 async/await
+
+解决async/await
+1. async 方法写 useEffect 内部
+useEffect(() => {
+  async function demo() {
+
+  }
+  demo()
+})
+
+1. async 方法写在 useEffect 外部
+  async function demo() {
+
+  }
+  useEffect(() => {
+  demo()
+})
+
+
+const handleCount = () => {
+  setCount(count+1)
+}
+return (
+  div
+    h1 onClick={handleCount} count: {count} /h1
+
+  /div
+)
+
+1. useLayoutEffect 是在所有的 dom 渲染完毕之后，才会同步执行effect，一般做dom相关操作
+
+useLayoutEffect(() => {
+  console.log('useLayoutEffect')
+}, [])
+
+1. useMemo 性能优化，经过缓存返回的值
+const [text, setText] = useState('text-demo')
+
+const noCacheText = () => {
+  console.log('text changed')
+  return text
+}
+
+const memoText = useMemo(() => {
+  console.log('text changed')
+  return text
+}, [text])
+return (
+  h1 text: {noCacheText()} /h1
+  h1 text: {memoText} /h1
+)
+
+1. useCallback
+const handleCount = useCallback(() => {
+  console.log('count changed')
+  setCount(count+1)
+}, [count])

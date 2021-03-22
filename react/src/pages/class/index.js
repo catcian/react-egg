@@ -16,30 +16,14 @@ export default class Index extends Component {
       <div>
         <h1>class index</h1>
         <List>
-          <List.Item>
-            <Link to='/class/component-old'>component-old</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/component-new'>component-new</Link>
-          </List.Item>          
-          <List.Item>
-            <Link to='/class/lists'>lists</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/dva'>dva</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/context'>context</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/lazy-load'>lazy-load</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/modal'>modal</Link>
-          </List.Item>
-          <List.Item>
-            <Link to='/class/refs'>refs</Link>
-          </List.Item>
+          <List.Item><Link to='/class/component-old'>component-old</Link></List.Item>
+          <List.Item><Link to='/class/component-new'>component-new</Link></List.Item>          
+          <List.Item><Link to='/class/lists'>lists</Link></List.Item>
+          <List.Item><Link to='/class/dva'>dva</Link></List.Item>
+          <List.Item><Link to='/class/context'>context</Link></List.Item>
+          <List.Item><Link to='/class/lazy-load'>lazy-load</Link></List.Item>
+          <List.Item><Link to='/class/modal'>modal</Link></List.Item>
+          <List.Item><Link to='/class/refs'>refs</Link></List.Item>
         </List>
       </div>
     )
