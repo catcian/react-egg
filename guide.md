@@ -956,24 +956,21 @@ export default InputForward
 ```
 
 3-1 react hook api 新组件开发模式
-pages/function/index.js
-func
-import { WingBlank, WhiteSpace, List} from 'antd-mobile
+``` 0 pages/function/index.js
+import { WingBlank, WhiteSpace, List } from 'antd-mobile'
 import { Link } from 'umi'
+
 return (
-  div> WingBlank > List > List.Item > Link to='/function/hook' hook
-
-  WhiteSpace
+  <div>
+    <WingBlank>
+      <List>
+        <List.Item><Link to="/function/hook">hook</Link></List.Item>
+      </List>
+      <WhiteSpace></WhiteSpace>
+    </WingBlank>
+  </div>
 )
-
-/pages/function/hook/index.js
-
-1. useState
-const [count, setCount] = useState(0)
-1. useEffect componendDIdMount/willMount
-useEffect(() => {
-  log('useEffect')
-}, [])
+```
 
 useEffect 接收两个参数，第一个是函数，第二个是依赖项的数组，并且第二项是非必选项。
 因此存在三种情况：
@@ -983,6 +980,16 @@ useEffect 接收两个参数，第一个是函数，第二个是依赖项的数�
 useEffect如何执行异步操作：
 1. fetch('/api/getLists)
 1. 并不支持 async/await
+``` 1 /pages/function/hook/index.js
+
+1. useState
+const [count, setCount] = useState(0)
+
+1. useEffect componendDIdMount/willMount
+useEffect(() => {
+  console.log('useEffect')
+}, [count])
+
 
 解决async/await
 1. async 方法写 useEffect 内部
@@ -1005,23 +1012,31 @@ useEffect(() => {
 const handleCount = () => {
   setCount(count+1)
 }
+
 return (
-  div
-    h1 onClick={handleCount} count: {count} /h1
-
-  /div
+  <div>
+    <h1 onClick={handleCount}>count: {count}</h1>
+  </div>
 )
-
+```
 1. useLayoutEffect 是在所有的 dom 渲染完毕之后，才会同步执行effect，一般做dom相关操作
+1. useMemo 性能优化，经过缓存返回的值
+1. useCallback
+
+```
+const [text, setText] = useState('text-demo')
+
+const handleCount = useCallback(() => {
+  console.log('count changed')
+  setCount(count+1)
+}, [count])
 
 useLayoutEffect(() => {
   console.log('useLayoutEffect')
 }, [])
 
-1. useMemo 性能优化，经过缓存返回的值
-const [text, setText] = useState('text-demo')
-
 const noCacheText = () => {
+  // 在组件当中，当属性改变的时候其余的组件同时会被重复的渲染
   console.log('text changed')
   return text
 }
@@ -1030,13 +1045,111 @@ const memoText = useMemo(() => {
   console.log('text changed')
   return text
 }, [text])
+
 return (
-  h1 text: {noCacheText()} /h1
-  h1 text: {memoText} /h1
+  <div>
+    {/* <h1>text: {noCacheText()}</h1> */}
+    <h1>text: {memoText}</h1>
+  </div>
 )
 
-1. useCallback
-const handleCount = useCallback(() => {
-  console.log('count changed')
-  setCount(count+1)
-}, [count])
+```
+
+3-2 useContext和useReducer实现数据流管理
+
+``` 0. /function/index.js
+<List.Item><Link to="/function/context">context</Link></List.Item>
+
+```
+``` 1. /function/context/index.js
+import React, { useState, useEffect } from 'react';
+import App from './app'
+import { UserContextPrivider } from './userContext'
+
+export default function(props){
+
+  return (
+    <UserContextPrivider>
+      <App {...props}></App>
+    </UserContextPrivider>
+  )
+}
+```
+
+``` 2. /function/context/app.js
+import React, { useState, useEffect, useContext } from 'react';
+import User from './user'
+import { Button } from 'antd-mobile'
+import { UserContext } from './userContext'
+
+export default function(props){
+  const { state, dispatch } = useContext(UserContext)
+
+const handleLogin = () => {
+  dispatch({
+    type: 'LOGIN',
+    payload: true
+  })
+}
+  return (
+    <div>
+      { state.isLogin ? <User></User> : <Button type="primary" onClick={handleLogin}>登陆</Button> }
+    </div>
+  )
+}
+```
+
+``` 3. /function/context/user.js
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from './userContext'
+
+export default function(props){
+  const { state } = useContext(UserContext)
+  return (
+    <div>
+      <h1>user:</h1>
+      <h1>user.id: { state.user.id }</h1>
+      <h1>user.name: { state.user.name }</h1>
+    </div>
+  )
+}
+```
+
+``` 4. /function/context/userContext
+import React, { useReducer } from 'react'
+
+const initState = {
+  isLogin: false,
+  user: {
+    id: '100',
+    name: 'CatCian'
+  }
+}
+
+const UserContext = React.createContext()
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'LOGIN':
+      return {
+        ...state,
+        isLogin: action.payload
+      }
+    default:
+      break;
+  }
+}
+
+const UserContextPrivider = (props) => {
+  const [state, dispatch] = useReducer(reducer, initState)
+
+  return (
+    <UserContext.Provider value={{state, dispatch}}>{ props.children }</UserContext.Provider>
+  )
+}
+
+export {
+  UserContext,
+  UserContextPrivider
+}
+```
