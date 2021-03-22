@@ -1153,3 +1153,59 @@ export {
   UserContextPrivider
 }
 ```
+
+3-3 useTitleHook【根据url修改页面title的自定义hook】
+
+``` 0. .class/function/index.js
+<List.Item><Link to="/function/customize">customize</Link></List.Item>
+```
+``` 1. function/customize/index.js
+import React, { useState } from 'react';
+import { useTitleHook } from '@/hooks'
+
+export default function(props){
+  const [state, setState] = useState('customize')
+  const title = useTitleHook(state)
+
+  const handleClick = () => {
+    setState('customize next')
+  }
+  return (
+    <div>
+        <h1 onClick={handleClick}>{title}</h1>
+    </div>
+  )
+}
+```
+
+``` 2. src/hooks/index.js
+export { default as useTitleHook } from './useTitleHook.js
+
+```
+
+```3. src/hooks/useTitleHook.js
+import React, { useLayoutEffect, useState } from 'react'
+
+export default function useTitleHook (title) {
+  const [state, setState] = useState()
+
+  useLayoutEffect(()=>{
+    document.title = title
+    setState(title)
+  }, [title])
+
+  return state
+}
+```
+
+引入 hook 代码提示配置
+``` 4. /jsconfig/json vscode 配置
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/hooks": ["hooks/index"]
+    }
+  }
+}
+```
