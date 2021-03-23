@@ -1436,3 +1436,86 @@ componentWillUpdate
 componentDidMount
 componentDidUpdate
 componentWillUnmount
+
+4-1 Egg.js 企业级开发的利器概述
+1. Egg.js是个适合开发企业级应用的 Node s框架,能够帮助开发团 队和开发人员降低开发和维护成本。
+企业级应用特点
+1. 功能完善
+1. 规范性高
+1. 便于扩展、升级
+
+Egg.js 特点
+1. 提供基于 Egg 定制上层框架的能力
+1. 高度可扩展的插件机制
+1. 内置多进程管理
+1. 基于 koa 开发，性能优异
+1. 框架稳定，测试覆盖率高（控制层、服务层、插件）
+1. 渐进式开发
+
+Egg.js Koa/Express 对比
+特性对比：
+1. 代码的规范性(是否提供明确的MVC架构开发模式)
+egg.js 三层架构 Controller/Service/View 具有明确的开发和命名规范
+express/koa 可以灵活编写带啊，没有明确规范
+1. 学习成本
+egg 中
+express/koa 易
+1. 插件机制/框架扩展机制
+egg 有
+express/koa 无
+1. 多进程管理
+egg 有
+express/koa 无
+1. HttpClient 集成
+egg 有
+express/koa 无
+
+4-2 Egg.js 初体验
+``` 0. 项目初始化
+mkdir egg && cd egg
+yarn create egg --type=simple
+code .
+yarn install
+```
+
+``` 1. package.json
+  "dependencies": {
+    "egg": "^2.15.1",
+    "egg-scripts": "^2.11.0"
+  },
+  "devDependencies": {
+    "autod": "^3.0.1",
+    "autod-egg": "^1.1.0",
+    "egg-bin": "^4.11.0",
+    "egg-ci": "^1.11.0",
+    "egg-mock": "^3.21.0",
+    "eslint": "^5.13.0",
+    "eslint-config-egg": "^7.1.0"
+  },
+// start 线上运行环境 
+// dev 本地开发环境
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=egg-server-egg",
+    "stop": "egg-scripts stop --title=egg-server-egg",
+    "dev": "egg-bin dev",
+  },
+
+```
+3. 项目启动生成文件
+/logs
+/run
+
+``` 4. /app/controller/home.js/HomeController
+  async demo() {
+    const { ctx } = this;
+    ctx.body = 'hi CatCian';
+  }
+
+app/router.js
+module.exports = app => {
+  const { router, controller } = app;
+  router.get('/', controller.home.index);
+  router.get('/demo', controller.home.demo);
+};
+```
+
