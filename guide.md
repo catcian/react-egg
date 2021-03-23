@@ -1298,3 +1298,107 @@ export { default as useHttpHook } from './useHttpHook'
     })
   }
 ```
+
+3-5 使用think-react-store实现数据处理【基于React context 和 hook的数据流解决方案】
+
+yarn add think-react-store
+
+``` 0. /function/index.js
+<List.Item><Link to="/function/store">store</Link></List.Item>
+```
+``` 1. /function/store/index.js
+import React, { useState, useEffect } from 'react';
+import { StoreProvider } from 'think-react-store'
+import log from 'think-react-store/middlewares/log'
+import * as store from './stores'
+import User from './user'
+
+export default function(props){
+  const [state, setState] = useState()
+
+  useEffect(() => {
+
+  }, [])
+
+  return (
+    <StoreProvider store={store} middleware={[log]}>
+      <User></User>
+    </StoreProvider>
+  )
+}
+
+```
+
+``` 2. /function/store/stores/index.js
+export { default as user } from './user
+
+```
+
+``` 3. /function/store/stores/user.js
+export default {
+  state: {
+    id: '1',
+    username: 'CatCian'
+  },
+  reducers: {
+    getUser(state, payload) {
+      return {
+        ...state,
+        ...payload
+      }
+    }
+  },
+  effects: {
+    async getUserAsync(dispatch, rootState, payload) {
+      await new Promise(resolve => {
+        setTimeout(() => {
+          resolve()
+        }, 1000)
+      })
+      dispatch({
+        type: 'getUser',// reducers 同步方法名,
+        payload
+      })
+    }
+  }
+}
+```
+
+``` 4. store/user.js
+import React, { useState, useEffect } from 'react';
+import { useStoreHook, useStateHook, useDispatchHook } from 'think-react-store'
+
+export default function(props){
+  // const { user: {id, username, getUserAsync }} = useStoreHook()
+  const { id, username } = useStateHook('user')
+  const dispatchs = useDispatchHook()
+
+  useEffect(() => {
+
+  }, [])
+
+  const handleClick = () => {
+    dispatchs(() => ({
+      key: 'user',
+      type: 'getUserAsync',
+      payload: {
+        id: '03',
+        username: 'CatCian3'
+      }
+    }))
+    // getUserAsync({
+    //   id: '02',
+    //   username: 'CatCian2'
+    // })
+  }
+
+  return (
+    <div>
+      <h1>user</h1>
+      <h1>user-id: { id }</h1>
+      <h1>user-username: { username }</h1>
+      <button onClick={handleClick}>修改</button>
+    </div>
+  )
+}
+```
