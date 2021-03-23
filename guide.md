@@ -1402,3 +1402,37 @@ export default function(props){
   )
 }
 ```
+
+3-6 Fiber架构解析
+1. 为什么需要 Fiber 架构
+1. Fiber 的执行流程
+1. Fiber 对 React 生命周期的 api 的影响
+
+为什么需要 Fiber 架构
+React 16之前渲染流程：属性更新到渲染页面过程中，浏览器一直处于忙碌状态，并且这个过程是不能终止的。
+假如有100个节点更新，那么浏览器在更新阶段内一直处于繁忙状态，假如有1000个、或这10000个节点更新，
+此时浏览器会在1s、2s甚至更长的时间段内，都进行节点的更新操作，这时，如果用户进行了鼠标、点击、滑动
+或者滚轮相关的滑动，浏览器是无法进行响应的。会造成页面特别卡顿的感受
+
+针对这种问题。React 提出了Fiber 架构
+Fiber 架构是将整个渲染阶段分成2个小的阶段，分别是调度阶段、提交阶段，
+调度阶段 可以看到是有很多小的山峰，这些小曲线，指的是浏览器在渲染阶段的每一帧。
+调度阶段 react 这会在浏览器每一帧里运行，
+假如有100个节点需要更新，就会去判断那些节点是需要增加，哪些是可以修改，而哪些是可以直接删除的。
+提交阶段 是将调度阶段返回的结果更新到视图上去。
+调度阶段是不能够被终止的，提交阶段可以被终止。
+
+Fiber 执行流程图 https://whimsical.com/react-fiber-K84ABiexufahf2StSRxNTU
+
+
+Fiber 架构对组件生命周期的影响
+1. 调度阶段
+componentWillMount
+componentWillReceiveProps
+shouldComponentUpdate
+componentWillUpdate
+
+1. 提交阶段
+componentDidMount
+componentDidUpdate
+componentWillUnmount
