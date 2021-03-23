@@ -6,7 +6,11 @@ export default {
     // 支持异步
     // setTimeout(() => {
       res.json({
-        lists: ['umi', 'dva', 'react']
+        status: 200,
+        data: {
+          lists: ['umi', 'dva', 'react'],
+        },
+        Msg: 'status code 500'
       })
     // }, 3000)
   }

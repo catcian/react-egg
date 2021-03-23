@@ -1209,3 +1209,92 @@ export default function useTitleHook (title) {
   }
 }
 ```
+
+3-4 useHttpHook【基于fetch api 封装具有监测功能的自定义hook】
+
+0. /function/
+
+```1. src/hooks/useHttpHook.js
+import React, { useState, useEffect } from 'react';
+import { Toast } from 'antd-mobile'
+
+export default function useHttpHook ({
+  url,
+  method = 'GET',
+  headers,
+  body = {},
+  watch = [],
+}){
+  const [result, setResult] = useState()
+  const [loading, setLoading] = useState(true)
+
+  async function Http () {
+    setLoading(true)
+    const defaultHeader = {
+      'Context-type': 'application/json'
+    }
+    let params
+    if (method.toUpperCase() === 'GET') {
+      params = undefined
+    } else {
+      params = {
+        ...defaultHeader,
+        headers,
+        body: JSON.stringify(body)
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      fetch('/api/'+ url, params)
+      .then(resp => resp.json())
+      .then(resp => {
+        if (resp.status === 200) {
+          resolve(resp.data)
+          setResult(resp.data)
+        } else {
+          Toast.fail(resp.Msg)
+          reject(resp.Msg)
+        }
+      })
+      .catch(err => {
+        console.log('err',err)
+        Toast.fail(err.Msg)
+        reject(err.Msg)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+    })
+  }
+
+  useEffect(() => {
+    Http()
+  }, watch)
+
+  return [result, loading]
+}
+```
+
+``` 2. /src/hooks/index/js
+export { default as useHttpHook } from './useHttpHook'
+```
+
+``` 3. /function/customize/index.js
+  const [result, loading] = useHttpHook({
+    url: 'getListsAsync',
+    // watch: [state]
+  })
+
+```
+
+```mock/search.js
+  'GET /api/getListsAsync': (req, res) => {
+    res.json({
+      status: 200,
+      data: {
+        lists: ['umi', 'dva', 'react'],
+      },
+      Msg: 'status code 500'
+    })
+  }
+```
