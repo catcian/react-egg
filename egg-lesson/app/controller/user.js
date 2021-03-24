@@ -14,6 +14,18 @@ class UserController extends Controller {
     });
     ctx.body = [{ id: 123 }];
   }
+
+  async detail() {
+    const { ctx } = this;
+    console.log(ctx.query);
+    ctx.body = ctx.query.id;
+  }
+
+  async detail2() {
+    const { ctx } = this;
+    console.log(ctx.params);
+    ctx.body = ctx.params.id;
+  }
 }
 
 module.exports = UserController;

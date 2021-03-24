@@ -1798,3 +1798,24 @@ yarn test
 4 project-tpl
 controller
 
+5-2 Egg.js 路由中 get 请求的处理方式
+``` 1. /app/controller/user.js
+执行 GET /detail?id=10
+async detail() {
+  const { ctx } = this
+  console.log(ctx.query)
+  ctx.body = ctx.query.id
+}
+
+用户执行 GET /detail2/20
+async detail2() {
+  const { ctx } = this
+  console.log(ctx.params)
+  ctx.body = ctx.params.id
+}
+```
+
+``` 2. /app/router.js
+  router.get('/detail', controller.user.detail);
+  router.get('/detail2/:id', controller.user.detail2);
+```
