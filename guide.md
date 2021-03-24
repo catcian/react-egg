@@ -1918,3 +1918,53 @@ postman
   "id": 100
 }
 ```
+
+5-4 Egg.js 中 Service 服务和单元测试
+``` 1. /app/servuce/user.js
+'use strict'
+
+const Service = require('egg').Service
+
+class UserService extends Service {
+  async detail(id) {
+    return {
+      id: id,
+      name: 'CatCian',
+      age: 29
+    }
+  }
+}
+
+module.exports = UserService
+```
+
+
+``` 2. /app/controller/user.js
+async detail() {
+  const res = await ctx.service.user.detail(10)
+  console.log(res)
+  ctx.body = res
+}
+
+/app/controller/home.js
+async index() {
+  const res = await ctx.service.user.detail(10)
+  console.log(res)
+}
+```
+
+test
+``` 3. /test/app/service/user.test.js
+'use strict'
+
+const {app, assert} = require('egg-mock-bootstrap')
+
+describe('service user test'm () => {
+  it.only('test detail'. async () => {
+    const ctx = app.mockContext()
+    const user = await ctx.service.user.detail(10)
+    assert(user)// user 是存在的
+    assert(user.id === 10)
+  })
+})
+```
