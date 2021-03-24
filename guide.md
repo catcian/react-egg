@@ -1731,3 +1731,70 @@ exports.info = {
   path: path.join(__dirname, '../lib/plugin/egg-info')
 }
 ```
+
+5-1 Egg.js 中 Controller 的使用和单元测试
+mkdir egg-lesson && cd egg-lesson
+yarn create egg --type=simple
+yarn install
+
+yarn dev
+code .
+/app/controller/user.js
+'use strict';
+
+const Controller = require('egg').Controller
+
+class UserController extends Controller {
+  async index() {
+    const { ctx } = this
+    ctx.body = 'user index'
+  }
+
+  +async lists() {
+    const { ctx } = this
+    await new Promise((resolve) => {
+      setTimeout(()=> {
+        resolve
+      },1500)
+    })
+    ctx.body = [{id: 1s23}]
+  }
+}
+
+module.exports = UserController
+
+2 app/router.js
+router.get('/user', controller.user.index)
++router.get('/lists', controller.user.lists)
+
+3 单元测试
+/test/app/controller/xx.text.js
+/test/app/controller/user.text.js
+```
+'use strict';
+
+const { app } = require('egg-mock/bootstrap');
+
+describe('test/app/controller/user.test.js', () => {
+  it('user index', () => {
+    return app.httpRequest()
+      .get('/user')
+      .expect(200)
+      .expect('user index');
+  });
+
+
+  it('user lists', async () => {
+    await app.httpRequest()
+      .get('/lists')
+      .expect(200)
+      .expect('[{"id":123}]');
+  });
+});
+
+```
+yarn test
+
+4 project-tpl
+controller
+
