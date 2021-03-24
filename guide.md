@@ -1519,3 +1519,98 @@ module.exports = app => {
 };
 ```
 
+4-3 Node.js 中的进程
+node.js 单线程单进程
+1. child_process 模块 创建子进程 ，通过子进程执行某些shell命令
+1. cluster 模块 可以充分利用cpu资源
+1. master 进程 和 cluster 进程通信方式
+
+/node
+touch child_process.js
+exec 创建子进程，将进程的结果缓存起来，之后再将缓存的结果返回给回调函数
+```/node/child_process.js
+exec('cat a.js', (error, stdout, stderr) => {
+  // 创建子进程时候如果出错，返回error
+  if (error) {
+    console.log('#1 报错')
+    return
+  }
+  // 创建子进程成功后，返回 stdout，否则返回 stderr
+  console.log('#1 stdout', stdout)
+  console.log('#1 stderr', stderr)
+})
+
+```
+
+``` 2. spawn 创建子进程，返回的结果是stream流，执行shell命令，数组，配置项
+const ls = spawn('ls', ['-a'], { encoding: 'utf8' })
+// 成功流
+ls.stdout.on('data', data => {
+  console.log('#2 stdout', data)
+})
+
+// 错误的流
+ls.stderr.on('data', data => {
+  console.log('#2 stderr', data)
+})
+
+// 关闭操作
+ls.on('close', data => {
+  console.log('#2 close', data)
+})
+```
+
+
+``` 3. node/cluster.js
+const cluster = require('cluster')
+const http = require('http')
+const numCPUs = require('os').cpus().length
+
+// console.log('numCPUs', numCPUs)
+
+if (cluster.isMaster) {
+  console.log(`主进程 ${process.pid} 正在运行`)
+
+  // 衍生工作进程
+  for (let i=0; i<numCPUs; i++) {
+    cluster.fork()
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`工作进程 ${worker.process.pid} 已退出`)
+  })
+} else {
+  // 工作进程可以共享 TCP 连接
+  // 本例共享的是 HTTP 服务器
+
+  http.createServer((req, res) => {
+    res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'})
+    res.write('你好 Cluster.js')
+    res.end()
+  }).listen(8000)
+  console.log(`工作进程 ${process.pid} 已启动`)
+}
+```
+4. master进程和cluster进程如何通信/ fork
+``` 1. node/child.js
+console.log('child 进程', process.pid)
+
+// 使用 process.send() 方法发送消息到父进程
+process.send('来自 child 消息')
+
+process.on('message', msg => {
+  console.log('child 进程接收', msg)
+})
+```
+``` 2. node/master.js
+const childProcess = require('child_process')
+const child = childProcess.fork('./child.js')
+
+console.log('master进程', process.pid)
+
+child.on('message', msg => {
+  console.log('master进程接收', msg)
+})
+
+child.send('master 进程发送消息')
+```
