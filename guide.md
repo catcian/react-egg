@@ -1633,9 +1633,9 @@ child.send('master 进程发送消息')
 1. master 进程通知 agent 进程 Egg 服务已经启动
 1. master 进程通知 cluster 进程 Egg 服务已经启动
 
-
+https://eggjs.org/zh-cn/core/cluster-and-ipc.html
 3 Worker\Agent Worker 是如何进行通信？
-egg/agent.js
+``` egg/agent.js
 module.exports = agent => {
   // 这里我们使用 messenger 对象来发送消息
   // 并且是在 egg 启动之后才能接收消息
@@ -1643,17 +1643,91 @@ module.exports = agent => {
     const data = { info: 'agent send msg!'}
     // agent 发送消息给 master
     agent.messenger.sendToApp('agentAction', data)
-
   })
-  
 }
+```
 
-egg/app.js
+``` egg/app.js
 module.exports = app => {
   log(egg init)
   app.messenger.on('agentAction', data => {
     log(data)
   })
 }
+```
 
-yarn dev/ 浏览器刷新
+4-5 超越Express Koa2，Egg.js中的渐进式开发模式
+通用函数 - 框架扩展 - 内置插件 - 独立插件 - 抽象框架
+
+1. 实际项目中，经常会存在一些通用的逻辑，可以将通用的逻辑封装成一个个的通用函数
+1. 但是通用的函数只能实现本身的方式，如果使用 egg 特有的属性和方法时候，通用函数显然无法满足需求
+1. 针对这种需求 eggjs 提出 框架扩展，框架扩展不尽能够包含通用函数，还可以集成 eggjs 特有的属性和方法
+1. 还可将框架扩展继续改造，成为内置插件
+1. 内置插件不仅具有框架扩展的功能，还可以做一些自定义配置
+1. 如果使用的插件越来越多，可以将插件变为独立插件发布npm市场上去
+1. 如果框架内扩展和插件比较多，还可以封装成抽象框架里
+
+通用函数 - 框架扩展 - 内置插件开发
+需求：1. 获取本机信息
+
+通用函数
+``` 1. app/utils/info.js
+'use strict';
+const os = require('os');
+
+module.exports = () => {
+  const data = {
+    memory: os.totalmem / 1024 / 1024 / 1024 + 'G', // bytes
+    platform: os.platform(),
+    cpus: os.cpus().length,
+  };
+  return data;
+};
+```
+
+app/controller/home.js
+async index()
+log(info(), ctx.request.url)
+
+对框架进行扩展
+``` 2. app/extend/context.js
+'use strict';
+const os = require('os')
+
+module.exports = {
+  get info() {
+    const data = {
+      memory: os.totalmem / 1024 / 1024 / 1024 + 'G', // bytes
+      platform: os.platform(),
+      cpus: os.cpus().length,
+      url: this.request.url,
+    };
+    return data;
+  },
+};
+
+app/contoller/home.js
+async index()
+log(ctx.info)
+
+```
+
+内置插件开发
+/lib/plugin/egg-info/app/extend/context.js
+/lib/plugin/egg-info/app/extend/package.json
+```
+{
+  "eggPlugin": {
+    "name": "info"
+  }
+}
+```
+
+``` /config/plugin.js
+const path = require('path')
+
+exports.info = {
+  enable: true,
+  path: path.join(__dirname, '../lib/plugin/egg-info')
+}
+```
