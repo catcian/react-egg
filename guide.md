@@ -1614,3 +1614,46 @@ child.on('message', msg => {
 
 child.send('master 进程发送消息')
 ```
+
+4-4 Egg.js 中多进程模式
+1 当一个应用启动时，会同时启动这三类进程。
+| 类型      | 进程数量 | 作用      | 稳定性 | 是否运行业务代码 |
+| ----------- | ----------- | ----------- | ----------- | ----------- |
+| Master      | 1       | 管理进程，进程间消息转发      | 非常高       | 否       |
+| Agent Worker   | 1        | 后台运行工作（长链接客户端）   | 高        | 少量        |
+| Worker   | CPUs 核数        | 执行业务代码   | 一般        | 是        |
+
+2 Master\Agent\Cluster进程之间的启动方式
+1. 首先启动 master 进程
+1. master 进程会创建 agent 进程
+1. agent 进行创建成功之后会通过回调的方式告诉 master 进程（我已经创建成功了）
+1. master 进程会创建 cluster 进程
+1. cluster 进程创建成功会告诉 master 进程 创建成功了
+1. 如果有多个 cluster 进程，上两步过程会重复执行多次，直到 cluster 进程创建完毕
+1. master 进程通知 agent 进程 Egg 服务已经启动
+1. master 进程通知 cluster 进程 Egg 服务已经启动
+
+
+3 Worker\Agent Worker 是如何进行通信？
+egg/agent.js
+module.exports = agent => {
+  // 这里我们使用 messenger 对象来发送消息
+  // 并且是在 egg 启动之后才能接收消息
+  agent.messenger.on('egg-reday', () => {
+    const data = { info: 'agent send msg!'}
+    // agent 发送消息给 master
+    agent.messenger.sendToApp('agentAction', data)
+
+  })
+  
+}
+
+egg/app.js
+module.exports = app => {
+  log(egg init)
+  app.messenger.on('agentAction', data => {
+    log(data)
+  })
+}
+
+yarn dev/ 浏览器刷新
