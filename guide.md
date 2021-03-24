@@ -2044,3 +2044,41 @@ const path = require('path')
     +].join(','),
   };
 ```
+
+5-6 Ejs 模版引擎中静态资源的使用和配置
+``` 0 app/html/user-header.html
+<h1>user header</h1>
+```
+
+``` 1 app/html/user.html
+<% include user-header.html %>
+```
+配置静态资源默认路径 /app/public/..
+public/img
+public/js/user.js
+alert('user')
+public/css/user.css
+#user{
+  color #f60
+  font-size 30px
+}
+
+localhost:7001/public/css/user.css
+
+node_modules/egg-static/config/config.default.js
+手动修改配置
+``` 2 confit/config.default.js
+config.static = {
+  prefix: "/assets/"
+  dir: path.join(appInfo.baseDir, 'app/assets')
+}
+```
+
+``` 3 app/html/user.html
+<link rel="stylesheet" href="assets/css/user.css">
+
+ul#user
+<img src="assets/img/1.jpg" alt="" width="100px" height="100px">
+<script src="assets/js/user.js"></script>
+
+```
