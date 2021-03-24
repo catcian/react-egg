@@ -1765,7 +1765,7 @@ module.exports = UserController
 
 2 app/router.js
 router.get('/user', controller.user.index)
-+router.get('/lists', controller.user.lists)
++router.get('/user/lists', controller.user.lists)
 
 3 单元测试
 /test/app/controller/xx.text.js
@@ -1786,7 +1786,7 @@ describe('test/app/controller/user.test.js', () => {
 
   it('user lists', async () => {
     await app.httpRequest()
-      .get('/lists')
+      .get('/user/lists')
       .expect(200)
       .expect('[{"id":123}]');
   });
@@ -1816,6 +1816,105 @@ async detail2() {
 ```
 
 ``` 2. /app/router.js
-  router.get('/detail', controller.user.detail);
-  router.get('/detail2/:id', controller.user.detail2);
+  router.get('/user/detail', controller.user.detail);
+  router.get('/user/detail2/:id', controller.user.detail2);
+```
+5-3 Egg.js 路由中 post put delete等请求的处理及参数校验
+``` /app/controller/user.js
+  async add() {
+    const { ctx } = this;
+    console.log(ctx.request.body);
+    const rule = {
+      name: { type: 'string' },
+      age: { type: 'number' },
+    };
+    ctx.validate(rule);
+    ctx.body = {
+      status: 200,
+      data: ctx.request.body,
+    };
+  }
+```
+
+``` /app/router/js
+router.post('/user/add', controller.user.add);
+```
+
+postman post /user/add
+body raw JSON
+```
+{
+  "name": "john",
+  "age": 18
+}
+```
+
+Web 安全概念
+``` /app/config/config.defatult.js
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+```
+
+参数校验
+``` /app/config/plugin.js
+'use strict';
+
+/** @type Egg.EggPlugin */
+module.exports = {
+  validate: {
+    enable: true,
+    package: 'egg-validate',
+  },
+};
+
+```
+
+post text
+```/text/app/controller/user.text.js
+  it('user add', async () => {
+    await app.httpRequest()
+      .post('/user/add')
+      .send({
+        name: 'CatCian',
+        age: 39,
+      })
+      .expect(200)
+      .expect({
+        status: 200,
+        data: {
+          name: 'CatCian',
+          age: 39,
+        },
+      });
+  });
+```
+
+put 
+``` /app/controller/user.js
+  async edit() {
+    const { ctx } = this;
+    ctx.body = ctx.request.body;
+  }
+
+```
+``` router.js
+router.put('/user/edit', controller.user.edit);
+```
+
+delete
+``` /app/controller/user.js
+  async del() {
+    const { ctx } = this;
+    ctx.body = ctx.request.body.id;
+  }
+
+  router.del('/user/del', controller.user.del);
+
+postman
+{
+  "id": 100
+}
 ```
