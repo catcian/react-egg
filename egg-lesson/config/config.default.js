@@ -2,10 +2,12 @@
 
 'use strict';
 
+const path = require('path');
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
 module.exports = appInfo => {
+
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -23,6 +25,22 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
+  };
+
+  config.view = {
+    mapping: {
+      '.ejs': 'ejs',
+      '.html': 'ejs',
+    },
+    // root: path.join(appInfo.baseDir, 'app/view'),
+    root: [ path.join(appInfo.baseDir, 'app/view'),
+      path.join(appInfo.baseDir, 'app/html'),
+    ].join(','),
+  };
+
+  config.ejs = {
+    // 全局修改分割符
+    delimiter: '%',
   };
 
   // add your user config here

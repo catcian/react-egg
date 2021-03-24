@@ -1862,12 +1862,7 @@ Web 安全概念
 ``` /app/config/plugin.js
 'use strict';
 
-/** @type Egg.EggPlugin */
 module.exports = {
-  validate: {
-    enable: true,
-    package: 'egg-validate',
-  },
 };
 
 ```
@@ -1967,4 +1962,85 @@ describe('service user test'm () => {
     assert(user.id === 10)
   })
 })
+```
+
+5-5 Egg.js 中使用 Ejs 模版引擎
+1. 后端渲染由来已久，渲染性能得到业界认可
+1. 利于 SEO 优化，对纯展示类网站页面体验较好
+1. 对前后端分离开发模式的补充（单点登陆的登陆页面）
+
+Egg.js 支持多套模板引擎
+npm i egg-view-ejs --save
+
+``` 1. /config/plugin.js
+'use strict';
+
+module.exports = {
+  ejs: {
+    enable: true,
+    package: 'egg-view-ejs',
+  },
+};
+
+```
+
+``` 2. config/default.js
+  config.view = {
+    mapping: {
+      '.ejs': 'ejs',
+      '.html': 'ejs',
+    },
+  };
+
+  config.ejs = {
+  
+  };
+```
+
+``` 3. /app/controll/user.js
+  async index() {
+    const { ctx } = this;
+    await ctx.render('user.html', {
+      id: 100,
+      name: 'admin',
+      lists: [ 'java', 'php', 'ts' ],
+    });
+  }
+```
+
+``` 4. /app/view/user.html
+  <div>
+    <h1>id: <%= id %></h1>
+    <%# 注释 #%>
+    <h1>name: <%= name %></h1>
+    <%# 渲染数据 #%>
+    <h1>lists:</h1>
+    <ul>
+      <% for (let i=0; i<lists.length; i++) { %>
+        <li><%= lists[i] %></li>
+      <% } %>
+    </ul>
+  </div>
+```
+
+``` 5. config.default.js
+  config.ejs = {
+    // 全局修改分割符
+    delimiter: '%',
+  };
+```
+
+同时满足 /app/view/user.html& /app/html/user.html
+``` 6 config.default.js
+const path = require('path')
+
+  config.view = {
+    mapping: {
+      '.ejs': 'ejs',
+      '.html': 'ejs',
+    },
+    +root: [ path.join(appInfo.baseDir, 'app/view'),
+    +  path.join(appInfo.baseDir, 'app/html'),
+    +].join(','),
+  };
 ```
