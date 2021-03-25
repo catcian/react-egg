@@ -2304,3 +2304,73 @@ app/router.js
   router.get('/curlGet', controller.curl.curlGet);
   router.post('/curlPost', controller.curl.curlPost);
 ```
+
+6-1 中间件，绕不开的洋葱圈模型【实现日志中间件httpLog】
+为什么叫洋葱圈模型？
+因为中间件是按照顺序，由外而内，一层一层执行，并且每个中间件都会执行两次。
+
+实际项目中，使用中间件对请求进行拦截，然后增加额外的处理
+
+eggjs 如何使用中间件？
+``` 1 app/middlerware/m2.js
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+    console.log('m2 start')
+    await next()
+    console.log('m2 end')
+  }
+}
+```
+
+``` 1 app/middlerware/m1.js
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+    console.log('m1 start');
+    await next();
+    console.log('m1 end');
+  };
+};
+
+```
+``` 2 config.default.js
+config.middleware = ['m1', 'm2']
+config.middleware = ['httLog']
+```
+http://localhost:7001/ 刷新
+
+``` 3 app/midleware/httpLog.js
+拦截请求，将请求相关的内容输出到文件中
+dayjs npm install dayjs --save
+'use strict';
+const dayjs = require('dayjs');
+const fs = require('fs');
+
+module.exports = options => {
+  return async (ctx, next) => {
+    const sTime = Date.now();
+    const startTime = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+    const req = ctx.request;
+    await next();
+    const logData = {
+      method: req.method,
+      url: req.url,
+      data: req.method.toUpperCase === 'GET' ? req.query : req.body,
+      startTime,
+      endTime: dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+      timeLength: (Date.now() - sTime) + 'ms',
+    };
+    const data = dayjs(Date.now()).format('YYYY-MM-DD HH:mm:ss') + ' [httpLog] ' + JSON.stringify(logData) + '\r\n';
+    fs.appendFileSync(ctx.app.baseDir + '/logs/httpLog.log', data);
+  };
+};
+```
+// 中间件的参数
+``` /app/config.default.js
+config.httpLog = {
+  type: 'all'
+}
+```

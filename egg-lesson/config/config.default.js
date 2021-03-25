@@ -18,7 +18,12 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [ 'httpLog' ];
+
+  // httpLog options
+  config.httpLog = {
+    type: 'all',
+  };
 
   // 框架的安全插件是默认开启的，关闭安全防范
   config.security = {
