@@ -48,6 +48,13 @@ module.exports = appInfo => {
     dir: path.join(appInfo.baseDir, 'app/assets'),
   };
 
+  config.session = {
+    key: 'CAT_SESS',
+    httpOnly: false,
+    maxAge: 3 * 1000,
+    renew: true,
+  };
+
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

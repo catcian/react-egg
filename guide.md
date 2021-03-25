@@ -2209,6 +2209,70 @@ async index() {
 ```
 1. 设置中文时候加密
 1. base64 方式
-user.html
+```user.html
 div{中文zh：<%= zh %>}
 div{中文base64：<%= base64 %>}
+```
+
+5-8 Egg.js 中 Session 的配置和使用
+1. cookie sessiont 区别
+1. 如何操作 session
+1. seestion 扩展
+
+``` 0 app/controller/user.js
+  aysnc index() {
+      const user2 = ctx.session.user;
+      console.log('user session', user2);
+      const zhs = ctx.session.zh;
+  }
+  async login() {
+    const { ctx } = this;
+    ...
+    // 设置 session
+    ctx.session.user = body;
+    ctx.session.zh = 'SESSION 中文';
+  }
+  async logout() {
+    const { ctx } = this;
+    ...
+    // 清除 session
+    ctx.session.user = null;
+    ctx.session.zh = null;
+  }
+```
+
+session 配置
+```config.default.js
+  config.session = {
+    key: 'CAT_SESS',
+    httpOnly: false,
+    maxAge: 3 * 1000,
+    // 如果发现用户目前seesion剩余的时候，为最大缓存时间一半时候，自动刷新session
+    renew: true,
+  };
+```
+
+默认情况下，session 会保存在浏览器 cookie 某个字段中
+如果 session 内容越来越多，那么 cookie 相应也会越来越多，直到浏览器拒绝相关 session
+这样就对 session 进行简单的扩展，将 session 一部分内容保存在内存当中
+```/app.js
+'use strict';
+
+const store = {};
+module.exports = app => {
+  app.sessionStore = {
+    async get(key) {
+      return store[key];
+    },
+    async set(key, value, maxAge) {
+      store[key] = value;
+    },
+    async destroy(key) {
+      store[key] = null;
+    },
+
+  };
+};
+
+ctx.session.test = 'test'
+```
