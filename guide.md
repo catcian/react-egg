@@ -2375,7 +2375,7 @@ config.httpLog = {
 }
 ```
 
-6-2 丰富的扩展方式，项目开发得心应手【提取公共逻辑，提升开发效率】（上）
+6-2/-3 丰富的扩展方式，项目开发得心应手【提取公共逻辑，提升开发效率】
 appliction 扩展
 ```app/extend/appliction.js
 'use strict';
@@ -2483,7 +2483,7 @@ home.js
     // ctx.body = ctx.response;
     ctx.body = base64Parse;
   }
-  
+
 router.get('/newResponse, controller.home.newResponse)
 
 
