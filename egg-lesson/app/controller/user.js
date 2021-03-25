@@ -83,6 +83,7 @@ class UserController extends Controller {
   async login() {
     const { ctx } = this;
     const body = ctx.request.body;
+    console.log('user.js login', ctx.request)
     // 设置 cookies
     ctx.cookies.set('user', JSON.stringify(body), {
       // js document.cookie opreate

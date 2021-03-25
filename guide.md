@@ -2276,3 +2276,31 @@ module.exports = app => {
 
 ctx.session.test = 'test'
 ```
+
+5-9 Egg.js 中使用 HttpClient 请求其他接口
+
+``` 1 /app/controller/curl.js
+  async curlGet() {
+    const { ctx } = this;
+    const res = await ctx.curl('http://localhost:7001/', {
+      dataType: 'json',
+    });
+    ctx.body = res.data;
+  }
+
+  async curlPost() {
+    const { ctx } = this;
+    console.log('ctx request body', ctx.request.body);
+    const res = await ctx.curl('http://localhost:7001/login', {
+      method: 'POST',
+      dataType: 'json',
+      contentType: 'appliation/json',
+      data: ctx.request.body,
+    });
+    ctx.body = res.data;
+  }
+
+app/router.js
+  router.get('/curlGet', controller.curl.curlGet);
+  router.post('/curlPost', controller.curl.curlPost);
+```

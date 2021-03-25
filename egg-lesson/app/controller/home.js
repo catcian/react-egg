@@ -6,7 +6,10 @@ class HomeController extends Controller {
   async index() {
     const { ctx } = this;
     const res = await ctx.service.user.detail(ctx.request.query.id);
-    ctx.body = res;
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
   }
 }
 
