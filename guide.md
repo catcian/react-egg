@@ -2374,3 +2374,127 @@ config.httpLog = {
   type: 'all'
 }
 ```
+
+6-2 丰富的扩展方式，项目开发得心应手【提取公共逻辑，提升开发效率】（上）
+appliction 扩展
+```app/extend/appliction.js
+'use strict';
+const path = require('path');
+
+module.exports = {
+  // methods
+  getPackage(key) {
+    const pack = getPack();
+    return key ? pack[key] : pack;
+  },
+  // property
+  get allPackage() {
+    return getPack();
+  },
+};
+
+function getPack() {
+  const filePath = path.join(process.cwd(), '/package.json');
+  const pack = require(filePath);
+  return pack;
+}
+
+```
+``` home.js
+  async newApplication() {
+    const { ctx, app } = this;
+    // const pack = app.getPackage('scripts');
+    const pack = app.allPackage;
+    // ctx.body = 'newApplication';
+    ctx.body = pack;
+  }
+
+router.js
+router.get('/newApplication', controller.home.newApplication);
+```
+
+context 扩展
+``` home.js
+  async newContext() {
+    const { ctx } = this;
+    const params = ctx.params();
+    ctx.body = params;
+  }
+
+router.js
+router.post('/newContext' controller.home.newContext)
+```
+``` app/extend/context.js
+'use strict';
+
+module.exports = {
+  // methods
+  params(key) {
+    const method = this.method;
+    if (method.toUpperCase() === 'GET') {
+      return key ? this.query[key] : this.query;
+    }
+    return key ? this.request.body[key] : this.request.body;
+  },
+};
+
+```
+
+request 扩展
+``` app/extend/request.js
+'use strict';
+
+module.exports = {
+  // property
+  get token() {
+    const token = this.header.token;
+    return this.get('token');
+  },
+};
+
+```
+``` home.js
+  async newRequest() {
+    const { ctx } = this;
+    const token = ctx.request.token;
+    ctx.body = token;
+  }
+
+router.get('/newRequest' controller.home.newRequest)
+```
+
+response/help 扩展
+``` app/extend/reponse.js
+'use strict';
+
+module.exports = {
+  // property
+  set token(params) {
+    this.set('token', params);
+  },
+};
+
+
+home.js
+  async newResponse() {
+    const { ctx } = this;
+    ctx.response.token = 'newResponse';
+    const base64Parse = ctx.helper.base64Encode('newResponse')
+    // ctx.body = ctx.response;
+    ctx.body = base64Parse;
+  }
+  
+router.get('/newResponse, controller.home.newResponse)
+
+
+extend/helper.js
+'use strict';
+
+module.exports = {
+  // str - base64
+  base64Encode(str = '') {
+    return new Buffer(str).toString('base64');
+  },
+};
+
+```
