@@ -2593,7 +2593,7 @@ module.exports = app => {
 const os = require('os');
 
 module.exports = {
-  info() {
+  get info() {
     const data = {
       memory: os.totalmem() / 1024 / 1024 / 1024 + 'G',
       platform: os.platform(),
@@ -2618,3 +2618,23 @@ module.exports = {
 1. 定时上报应用状态，便于系统监控
 1. 定时从远程接口更新数据
 1. 定时处理文件（清理过期日志文件）
+
+app/schedule/get_info.js
+const Subscription = require('egg').Subscription
+
+class getInfo extends Subscription {
+  state get schedule() {
+    return {
+      cron: '* * * * * *'// 秒，分钟（每隔3分钟 */3），小时，月天，某月，一周内的某天
+      interval: 3000, // 每隔3s时间
+      type: 'worker'// 单独指定一个worker     // 'all'
+    }
+  }
+
+  async subscribe() {
+    const info = this.ctx.info
+    console.log(Data.now(), info)
+  }
+}
+
+module.exports = getInfo

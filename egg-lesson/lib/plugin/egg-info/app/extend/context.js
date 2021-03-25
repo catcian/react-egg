@@ -2,7 +2,7 @@
 const os = require('os');
 
 module.exports = {
-  info() {
+  get info() {
     const data = {
       memory: os.totalmem() / 1024 / 1024 / 1024 + 'G',
       platform: os.platform(),
