@@ -2,12 +2,36 @@
 const Controller = require('egg').Controller;
 
 class UserController extends Controller {
+  // zh
+  encode(str) {
+    return new Buffer(str).toString('base64');
+  }
+
+  decode(str) {
+    return new Buffer(str, 'base64').toString();
+  }
+
   async index() {
     const { ctx } = this;
+    // 获取 cookies
+    const user = ctx.cookies.get('user');
+
+    // zh
+    // ctx.cookies.set('zh', '中文', {
+    //   encrypt: true,
+    // });
+    // const zh = ctx.cookies.get('zh', {
+    //   encrypt: true,
+    // });
+    ctx.cookies.set('zh', this.encode('中文'));
+    const zh = this.decode(ctx.cookies.get('zh'));
+    console.log('zh', zh);
     await ctx.render('user.html', {
       id: 100,
       name: 'admin',
       lists: [ 'java', 'php', 'ts' ],
+      user: user ? JSON.parse(user) : null,
+      zh,
     });
   }
 
@@ -53,6 +77,31 @@ class UserController extends Controller {
   async del() {
     const { ctx } = this;
     ctx.body = ctx.request.body.id;
+  }
+
+  async login() {
+    const { ctx } = this;
+    const body = ctx.request.body;
+    // 设置 cookies
+    ctx.cookies.set('user', JSON.stringify(body), {
+      // js document.cookie opreate
+      httpOnly: false,
+      maxAge: 1000 * 60 * 10,
+    });
+
+    ctx.body = {
+      status: 200,
+      data: body,
+    };
+  }
+
+  async logout() {
+    const { ctx } = this;
+    // 清除 cookies
+    ctx.cookies.set('user', null);
+    ctx.body = {
+      status: 200,
+    };
   }
 }
 

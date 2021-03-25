@@ -2082,3 +2082,133 @@ ul#user
 <script src="assets/js/user.js"></script>
 
 ```
+
+5-7 Egg.js 中 Cookie 的配置和使用以及如何设置中文cookie
+``` 0 /app/html/user.html
+    <button onclick="login()">登陆</button>
+    <button onclick="logout()">退出</button>
+```
+
+``` 1 assets/js/user.js
+function login() {
+  fetch('/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: 'CatCian',
+      pwd: 'admin',
+    }),
+  })
+    .finally(() => {
+      location.reload();
+    });
+}
+```
+
+``` 2 app/controller/user.js
+  async login() {
+    const { ctx } = this;
+    const body = ctx.request.body;
+    // 设置 cookies
+    ctx.cookies.set('user', JSON.stringify(body), {
+      // js document.cookie opreate
+      httpOnly: false,
+      maxAge: 1000 * 60 * 10,
+    });
+
+    ctx.body = {
+      status: 200,
+      data: body,
+    };
+  }
+
+
+app/router
+router.post('/login', controller.user.login);
+```
+
+``` 3 app/assets/user.html
+    <h1>user:</h1>
+    <% if (user) { %>
+      已经登陆：<%= user.name%>
+    <% } else { %>
+      未登陆
+    <% }%>
+    <hr>
+```
+
+``` 4 app/controller/user.js
+  async index() {
+    const { ctx } = this;
+    // 获取 cookies
+    const user = ctx.cookies.get('user');
+    await ctx.render('user.html', {
+      ...
+      user: user ? JSON.parse(user) : null,
+    });
+  }
+```
+
+注销操作
+``` 5 app/assets/js/user.js
+function logout() {
+  fetch('/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: 'CatCian',
+      pwd: 'admin',
+    }),
+  })
+    .finally(() => {
+      location.reload();
+    });
+}
+```
+
+``` 5.1 controller
+/app/controller/user.js
+  async logout() {
+    const { ctx } = this;
+    // 清除 cookies
+    ctx.cookies.set('user', null);
+    ctx.body = {
+      status: 200,
+    };
+  }
+router.js
+router.post('/logout, controller.user.logout)
+```
+
+js 不能操作 document.cookie
+
+egg 设置中文 cookies
+``` controller/user.js
+encode(str) {
+  return new Buffer(str).toString('base64')
+}
+decode(str) {
+  return new Buffer(str, 'base64').toString()
+}
+async index() {
+  ctx.cookies.set('zh', '测试‘, {
+    encrypt: true
+  })
+
+  const zh = ctx.cookies.get('zh', {
+    encrypt: true
+  })
+
+  ctx.cookies.set('base64', this.encode("中文"))
+  const base64 = this.decode(ctx.cookied.get('base64'))
+}
+```
+1. 设置中文时候加密
+1. base64 方式
+user.html
+div{中文zh：<%= zh %>}
+div{中文base64：<%= base64 %>}

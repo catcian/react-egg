@@ -13,4 +13,6 @@ module.exports = app => {
   router.post('/user/add', controller.user.add);
   router.put('/user/edit', controller.user.edit);
   router.del('/user/del', controller.user.del);
+  router.post('/login', controller.user.login);
+  router.post('/logout', controller.user.logout);
 };
