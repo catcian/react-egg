@@ -2498,3 +2498,123 @@ module.exports = {
 };
 
 ```
+6-4 插件机制， Egg.js 灵活应用【实现用户登录验证插件egg-auth】
+
+```1 /lib/plugin/egg-auth/app/middleware/
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+    const url = ctx.request.url;
+    const user = ctx.session.user;
+    console.log('url', url)
+    console.log('user', user);
+    if (!user && !options.exclude.includes(url.split('?')[0])) {
+      ctx.body = {
+        status: 10001,
+        errMsg: '用户未登陆',
+      };
+    } else {
+      await next();
+    }
+  };
+};
+```
+
+``` 2 /lib/plugin/egg-auth/app/package.json
+{
+  "name": "egg-auth",
+  "eggPlugin": {
+    "name": "auth"
+  }
+}
+```
+
+``` 3 /config/plugin.js
+'use strict';
+const path = require('path');
+
+/** @type Egg.EggPlugin */
+module.exports = {
+...
+  auth: {
+    enable: true,
+    path: path.join(__dirname, '../lib/plugin/egg-auth'),
+  },
+  info: {
+    enable: true,
+    path: path.join(__dirname, '../lib/plugin/egg-info'),
+  },
+};
+
+```
+
+``` 4 /config.default.js
+/* eslint valid-jsdoc: "off" */
+
+'use strict';
+
+const path = require('path');
+/**
+ * @param {Egg.EggAppInfo} appInfo app info
+ */
+module.exports = appInfo => {
+
+  // add your middleware config here
+  config.middleware = [ 'httpLog', 'auth' ];
+
+  config.auth = {
+    exclude: [ '/', '/user', '/login', 'logout' ],
+  };
+
+  return {
+    ...config,
+    ...userConfig,
+  };
+};
+
+
+```
+
+也可以添加midlleware
+``` 4 app.js
+'use strict';
+
+const store = {};
+module.exports = app => {
+  // 在框架和插件中使用中间件
+  // app.config.coreMiddleware.push('auth');
+};
+
+```
+
+``` 5 /lib/plugin/egg-info/extend/context.js
+'use strict';
+const os = require('os');
+
+module.exports = {
+  info() {
+    const data = {
+      memory: os.totalmem() / 1024 / 1024 / 1024 + 'G',
+      platform: os.platform(),
+      cpus: os.cpus().length,
+      url: this.request.url,
+    };
+    return data;
+  },
+};
+
+``
+``` 6 /lib/plugin/egg-info/extend/package.json
+{
+  "eggPlugin": {
+    "name": "info"
+  }
+}
+```
+
+
+6-5 Egg.js 中的定时任务
+1. 定时上报应用状态，便于系统监控
+1. 定时从远程接口更新数据
+1. 定时处理文件（清理过期日志文件）

@@ -12,6 +12,7 @@ module.exports = app => {
     async destroy(key) {
       store[key] = null;
     },
-
   };
+  // 在框架和插件中使用中间件
+  // app.config.coreMiddleware.push('auth');
 };

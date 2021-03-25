@@ -25,8 +25,10 @@ class UserController extends Controller {
     // });
     ctx.cookies.set('zh', this.encode('中文'));
     const zh = this.decode(ctx.cookies.get('zh'));
-    const user2 = ctx.session.user;
-    const zhs = ctx.session.zh;
+    const userSession = ctx.session.user;
+    // console.log('userSession', userSession);
+    const zhSession = ctx.session.zh;
+    // console.log('zhSession', zhSession);
     await ctx.render('user.html', {
       id: 100,
       name: 'admin',
@@ -83,7 +85,7 @@ class UserController extends Controller {
   async login() {
     const { ctx } = this;
     const body = ctx.request.body;
-    console.log('user.js login', ctx.request)
+    console.log('user.js login', ctx.request.body);
     // 设置 cookies
     ctx.cookies.set('user', JSON.stringify(body), {
       // js document.cookie opreate
@@ -92,8 +94,8 @@ class UserController extends Controller {
     });
     // 设置 session
     ctx.session.user = body;
-    ctx.session.zh = 'SESSION 中文';
-
+    ctx.session.zh = 'zh 中文';
+    ctx.session.test = 'test';
     ctx.body = {
       status: 200,
       data: body,
@@ -107,7 +109,7 @@ class UserController extends Controller {
     // 清除 session
     ctx.session.user = null;
     ctx.session.zh = null;
-    ctx.session.test = 'test';
+    ctx.session.test = null;
     ctx.body = {
       status: 200,
     };

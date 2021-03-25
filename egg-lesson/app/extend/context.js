@@ -1,4 +1,5 @@
 'use strict';
+const os = require('os');
 
 module.exports = {
   // methods
@@ -9,4 +10,14 @@ module.exports = {
     }
     return key ? this.request.body[key] : this.request.body;
   },
+
+  // info() {
+  //   const data = {
+  //     memory: os.totalmem() / 1024 / 1024 / 1024 + 'G',
+  //     platform: os.platform(),
+  //     cpus: os.cpus().length,
+  //     url: this.request.url,
+  //   };
+  //   return data;
+  // },
 };
