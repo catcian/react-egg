@@ -2708,3 +2708,160 @@ update user set pwd = '123456' where id = 1
 
 -- 删除表数据
 delete from user where id = 2
+
+7-3 使用egg-mysql插件操作数据库
+npm install --save egg-mysql@3.0.0
+
+``` 0 egg-mysql 
+config/plugin.js
+  auth: {
+    enable: false,
+    path: path.join(__dirname, '../lib/plugin/egg-auth'),
+  },
+  mysql: {
+    enable: true,
+    package: 'egg-mysql',
+  },
+
+config.default.js
+  config.mysql = {
+    // load into app, default is open
+    app: true,
+    // load into agent, default is close
+    agent: false,
+    // database configuration
+    client: {
+    // host
+      host: '127.0.0.1',
+      // port
+      port: '3306',
+      // username
+      user: 'root',
+      // password
+      passward: '',
+      // database
+      database: 'egg',
+    },
+  };
+```
+
+``` 1 app/controller/user.js
+  async lists() {
+    const { ctx } = this;
+    const res = await ctx.service.user.lists();
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async detail2() {
+    const { ctx } = this;
+    const res = await ctx.service.user.detail2(ctx.params.id);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async add() {
+    const { ctx } = this;
+    console.log(ctx.request.body);
+    // const rule = {
+    //   name: { type: 'string' },
+    //   age: { type: 'number' },
+    // };
+    // ctx.validate(rule);
+    const res = await ctx.service.user.add(ctx.request.body);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async edit() {
+    const { ctx } = this;
+    const res = await ctx.service.user.edit(ctx.request.body);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async del() {
+    const { ctx } = this;
+    const res = await ctx.service.user.del(ctx.request.body.id);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+}
+```
+
+``` 2 app/service/user.js
+'use strict';
+
+const Service = require('egg').Service;
+
+class UserService extends Service {
+  // 查询整张表数据
+  async lists() {
+    try {
+      const { app } = this;
+      const res = await app.mysql.select('user');
+      return res;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  // 条件查询
+  async detail2(id) {
+    try {
+      const { app } = this;
+      const res = await app.mysql.get('user', { id });
+      return res;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  // 新增数据
+  async add(params) {
+    try {
+      const { app } = this;
+      const res = await app.mysql.insert('user', params);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  // 修改数据
+  async edit(params) {
+    try {
+      const { app } = this;
+      const res = await app.mysql.update('user', params);
+      return res;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  // 删除数据
+  async del(id) {
+    try {
+      const { app } = this;
+      const res = await app.mysql.delete('user', { id });
+      return res;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+}
+
+module.exports = UserService;
+
+```

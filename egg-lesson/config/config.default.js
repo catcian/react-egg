@@ -18,7 +18,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'httpLog', 'auth' ];
+  config.middleware = [ 'httpLog' ];
 
   // httpLog options
   config.httpLog = {
@@ -64,6 +64,25 @@ module.exports = appInfo => {
     exclude: [ '/', '/user', '/login', 'logout' ],
   };
 
+  config.mysql = {
+    // load into app, default is open
+    app: true,
+    // load into agent, default is close
+    agent: false,
+    // database configuration
+    client: {
+    // host
+      host: '127.0.0.1',
+      // port
+      port: '3306',
+      // username
+      user: 'root',
+      // password
+      passward: '',
+      // database
+      database: 'egg',
+    },
+  };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

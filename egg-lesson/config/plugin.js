@@ -12,11 +12,15 @@ module.exports = {
     package: 'egg-view-ejs',
   },
   auth: {
-    enable: true,
+    enable: false,
     path: path.join(__dirname, '../lib/plugin/egg-auth'),
   },
   info: {
     enable: true,
     path: path.join(__dirname, '../lib/plugin/egg-info'),
+  },
+  mysql: {
+    enable: true,
+    package: 'egg-mysql',
   },
 };
