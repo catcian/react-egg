@@ -2619,7 +2619,7 @@ module.exports = {
 1. 定时从远程接口更新数据
 1. 定时处理文件（清理过期日志文件）
 
-app/schedule/get_info.js
+```app/schedule/get_info.js
 const Subscription = require('egg').Subscription
 
 class getInfo extends Subscription {
@@ -2638,3 +2638,30 @@ class getInfo extends Subscription {
 }
 
 module.exports = getInfo
+```
+
+7-1 安装 Mysql 数据库
+MySQL Community (GPL) Downloads 社区版本
+MySql Community Server 8.0.20
+macOs 10.15(x86,64-bit),DMG Archive
+
+mysql -uroot -p /无密码
+
+1. 本机所有数据库
+mysql> show databases
+
+系统自带数据库
+information_schema
+mysql
+performance_schema
+sys
+
+1. 创建数据库
+create datebase egg;
+
+show databases
+
+推荐可视化数据库查看工具 mysql Workbench 8.0.20
+egg - 3306 - root - shcema/查看数据库
+
+
