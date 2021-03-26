@@ -2994,4 +2994,14 @@ module.exports = app => {
   }
 ```
 
+7-5/6 Sequlize 查询操作
+各表之间存在的联系：
+user、userDetail 一对一关系，一个用户只有一条详情信息
+user、comment    一对多关系，一个用户有多条评论
+user、roles      多对多关系，存在一张中间表 userRoles 一个用户有多个角色，一个角色有多个用户
+
+在Model实例里面，重新Model的associate方法，将关联关系写在内部实现关联：
+has 方法 如果有 foreignKey 属性值是从对方的表上找，如果有targetKey则是自己的主键。
+belongs 方法 如果有 foreignKey 属性值是自身表的主键，targetKey 是对方表上的。
+
 

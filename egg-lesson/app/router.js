@@ -19,6 +19,10 @@ module.exports = app => {
   router.del('/user/del', controller.user.del);
   router.post('/login', controller.user.login);
   router.post('/logout', controller.user.logout);
+  router.get('/user/info', controller.user.userInfo);
+  router.get('/user/commentLists', controller.user.userCommentLists);
+  router.get('/user/roles', controller.user.roles);
+  router.get('/user/rolesWithUser', controller.user.rolesWithUser);
   router.get('/curlGet', controller.curl.curlGet);
   router.post('/curlPost', controller.curl.curlPost);
 };

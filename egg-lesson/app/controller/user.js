@@ -154,6 +154,65 @@ class UserController extends Controller {
       status: 200,
     };
   }
+
+  // 获取所有用户和用户详情 一对一关系
+  async userInfo() {
+    const { ctx, app } = this;
+    const res = await app.model.User.findAll({
+      include: {
+        model: app.model.UserDetail,
+      },
+    });
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  // 获取用户文章 一对多关系
+  async userCommentLists() {
+    const { ctx, app } = this;
+    const res = await app.model.User.findOne({
+      include: {
+        model: app.model.Comment,
+      },
+    });
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  // 获取某个用户下的所有角色
+  async roles() {
+    const { ctx, app } = this;
+    const res = await app.model.User.findAll({
+      where: {
+        id: 2,
+      },
+      include: [
+        { model: app.model.UserDetail },
+        { model: app.model.Roles },
+      ],
+    });
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+  // 获取角色下的所有用户
+  async rolesWithUser() {
+    const { ctx, app } = this;
+    const res = await app.model.Roles.findAll({
+      include: {
+        model: app.model.User,
+      },
+    });
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
 }
 
 module.exports = UserController;
