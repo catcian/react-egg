@@ -83,6 +83,19 @@ module.exports = appInfo => {
       database: 'egg',
     },
   };
+
+  config.sequelize = {
+    dialect: 'mysql',
+    database: 'egg',
+    host: '127.0.0.1',
+    port: '3306',
+    username: 'root',
+    password: '',
+    define: {
+      timestamps: false,
+      freezeTableName: true,
+    },
+  };
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',

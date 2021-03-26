@@ -2865,3 +2865,133 @@ class UserService extends Service {
 module.exports = UserService;
 
 ```
+
+7-4 Egg.js 中使用 Sequelize 操作 mysql 数据库
+分页、多表联查
+npm install egg-sequelize mysql2 --save
+``` config/plugin/js
+  sequelize: {
+    enable: true,
+    package: 'egg-sequelize',
+  },
+```
+```config.default.js
+  config.sequelize = {
+    dialect: 'mysql',
+    database: 'egg',
+    host: '127.0.0.1',
+    port: '3306',
+    username: 'root',
+    password: '',
+    define: {
+    // 不需要sequelize自动添加时间相关字段  
+      timestamps: false,
+    // 在 sequelize 使用用原始表名称
+      freezeTableName: true,
+    },
+  };
+```
+
+```app/model/user.js 表名称保持一直
+'use strict';
+
+module.exports = app => {
+  const { STRING, INTEGER } = app.Sequelize;
+
+  const User = app.model.define('user', {
+    id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+    name: STRING(20),
+    pwd: STRING(50),
+  });
+  return User;
+};
+
+```
+
+``` app/controller/user.js
+  async lists() {
+    const { ctx } = this;
+    // const res = await ctx.service.user.lists();
+    const res = await ctx.model.User.findAll();
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async detail() {
+    const { ctx } = this;
+    // const res = await ctx.service.user.detail2(ctx.query.id);
+    // const res = await ctx.model.User.findAll({
+    //   id: ctx.query.id,
+    // });
+    const res = await ctx.model.User.findByPk(ctx.query.id);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async detail2() {
+    const { ctx } = this;
+    const res = await ctx.service.user.detail2(ctx.params.id);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async add() {
+    const { ctx } = this;
+    console.log(ctx.request.body);
+    // const rule = {
+    //   name: { type: 'string' },
+    //   age: { type: 'number' },
+    // };
+    // ctx.validate(rule);
+    // const res = await ctx.service.user.add(ctx.request.body);
+    const res = await ctx.model.User.create(ctx.request.body);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async edit() {
+    const { ctx } = this;
+    // const res = await ctx.service.user.edit(ctx.request.body);
+    const user = await ctx.model.User.findByPk(ctx.request.body.id);
+    if (!user) {
+      ctx.body = {
+        status: 404,
+        errMsg: 'id不存在',
+      };
+      return;
+    }
+    const res = user.update(ctx.request.body);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+
+  async del() {
+    const { ctx } = this;
+    // const res = await ctx.service.user.del(ctx.request.body.id);
+    const user = await ctx.model.User.findByPk(ctx.request.body.id);
+    if (!user) {
+      ctx.body = {
+        status: 404,
+        errMsg: 'id不存在',
+      };
+      return;
+    }
+    const res = user.destroy(ctx.request.body.id);
+    ctx.body = {
+      status: 200,
+      data: res,
+    };
+  }
+```
+
+
