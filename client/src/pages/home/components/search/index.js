@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Picker, List, Button, Calendar } from 'antd-mobile';
+import { Picker, List, Button, Calendar, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
+import { history } from 'umi';
 import defaultCitys from './citys.json';
 
 export default function (props) {
@@ -28,7 +29,20 @@ export default function (props) {
     setDataShow(!dataShow);
   };
 
-  const handleSearch = () => {};
+  const handleSearch = () => {
+    if (!times.includes(' - ')) {
+      Toast.fail('请选择时间');
+    } else {
+      history.push({
+        pathname: '/search',
+        query: {
+          city: selectedCity,
+          startTime: times.split(' - ')[0],
+          endTime: times.split(' - ')[1],
+        },
+      });
+    }
+  };
 
   return (
     <div className="search">

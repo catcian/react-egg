@@ -3504,3 +3504,141 @@ export default {
     </div>
   ))}
 ```
+
+8-5 开发搜索页面
+
+```src/pages/home/componens/search
+import { Toast } from 'antd-mobile
+
+const handleSearch = () => {
+  if (!times.includes(' - ')) {
+    Toast.fail('请选择时间');
+  } else {
+    history.push({
+      pathname: '/search',
+      query: {
+        city: selectedCity,
+        startTime: times.split(' - ')[0],
+        endTime: times.split(' - ')[1],
+      },
+    });
+  }
+};
+```
+
+```pages/search/index.js/func
+import React, { useState, useEffect } from 'react';
+import { useHttpHook } from '@/hooks';
+import { SearchBar, ActivityIndicator } from 'antd-mobile';
+import './index.less';
+
+export default function (props) {
+  const [houseName, setHouseName] = useState('');
+  const [houses, loading] = useHttpHook({
+    url: '/house/search',
+  });
+  useEffect(() => {}, []);
+
+  const handleChange = (value) => {
+    setHouseName(value);
+  };
+
+  const handleCancel = () => {
+    setHouseName('');
+  };
+
+  const handleSubmit = () => {
+    console.log('1233');
+  };
+  return (
+    <div className="search-page">
+      {/* 顶部搜索栏 */}
+      <SearchBar
+        placeholder="搜索民宿"
+        value={houseName}
+        onChange={handleChange}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+      ></SearchBar>
+      {/* 搜索结构 */}
+      <div className="result">
+        {loading ? (
+          <ActivityIndicator toast></ActivityIndicator>
+        ) : (
+          houses.map((house) => (
+            <div className="item" key={house.id}>
+              <img src={house.img} alt="img" />
+              <div className="item-right">
+                <div className="title">{house.title}</div>
+                <div className="price">{house.price}</div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+```
+```pages/search/index.less
+@import '../../assets/mixin.less';
+
+.search-page {
+  .am-search {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+  }
+  .result {
+    width: 100%;
+    margin-top: 40px;
+    padding: 10px;
+    box-sizing: border-box;
+    .item {
+      .flex(row, flex-start);
+      height: 100px;
+      padding: 6px;
+      background: #fff;
+      margin-bottom: 6px;
+      img {
+        width: 120px;
+        height: 86px;
+        object-fit: cover;
+      }
+      &-right {
+        .flex(column, space-between);
+        flex: 1;
+        height: 90px;
+        margin-left: 16px;
+        .title, .price {
+          width: 100%;
+        }
+        .title {
+          font-size: 20px;
+        }
+        .price {
+          color: #ff4d6a;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+```
+```/mock/house.js
+import houses from '../src/pages/home/components/hot/mock.json';
+
+export default {
+  'POST /api/house/search': (req, res) => {
+    setTimeout(() => {
+      res.json({
+        status: 200,
+        data: houses,
+      });
+    }, 500);
+  },
+};
+
+```
