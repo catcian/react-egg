@@ -3437,3 +3437,70 @@ export default function (props) {
 }
 
 ```
+
+8-4 为首页添加数据mock（使用useHttpHook请求数据）
+
+``` src/pages/home/index.js
+import React, { useState, useEffect } from 'react';
+import Header from './components/header';
+import Search from './components/search';
+import Hot from './components/hot';
+import './index.less';
+import { useHttpHook } from '@/hooks';
+
+export default function (props) {
+  const [state, setState] = useState();
+  const [citys, citysLoading] = useHttpHook({
+    url: '/commons/citys',
+  });
+  const [houses, housesLoading] = useHttpHook({
+    url: '/house/hot',
+  });
+  useEffect(() => {}, []);
+
+  return (
+    <div className="home">
+      <Header></Header>
+      <Search citys={citys} citysLoading={citysLoading}></Search>
+      <Hot houses={houses} housesLoading={housesLoading}></Hot>
+    </div>
+  );
+}
+
+```
+
+``` mock/home.js
+import citys from '../src/pages/home/components/search/citys.json';
+import houses from '../src/pages/home/components/hot/mock.json';
+
+export default {
+  'GET /api/commons/citys': (req, res) => {
+    res.json({
+      status: 200,
+      data: citys,
+    });
+  },
+  'GET /api/house/hot': (req, res) => {
+    res.json({
+      status: 200,
+      data: houses,
+    });
+  },
+};
+```
+
+``` search/index.js
+{!props.citysLoading ? Picker}
+
+```
+
+``` hot/index
+  {props?.houses?.map((house) => (
+    <div className="hot-lists-item" key={house.id}>
+      <img className="img" src={house.img} alt={house.title} />
+      <div className="title">{house.title} </div>
+      <div className="info">{house.info}</div>
+      <div className="price">{house.price}</div>
+    </div>
+  ))}
+```

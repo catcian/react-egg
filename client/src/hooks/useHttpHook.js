@@ -28,7 +28,7 @@ export default function useHttpHook ({
     }
 
     return new Promise((resolve, reject) => {
-      fetch('/api/'+ url, params)
+      fetch('/api'+ url, params)
       .then(resp => resp.json())
       .then(resp => {
         if (resp.status === 200) {
@@ -52,7 +52,7 @@ export default function useHttpHook ({
 
   useEffect(() => {
     Http()
-  }, [Http])
+  }, [])
 
   return [result, loading]
 }
