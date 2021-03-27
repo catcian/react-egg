@@ -3028,3 +3028,176 @@ belongs 方法 如果有 foreignKey 属性值是自身表的主键，targetKey �
 1. 可以学习到前端系统的开发流程
 1. 了解并实现滚动加载和图片懒加载的思路
 1. 前端项目的优化思路(公共组件、缓存、骨架屏)
+
+8-2 实现网站的底部导航功能
+client/pages/home/index.js
+return (
+  div {home}
+)
+client/pages/order/
+client/pages/user/
+
+``` .umirc.js [
+import { defineConfig } from 'umi';
+
+export default defineConfig({
+  nodeModulesTransform: {
+    type: 'none',
+  },
+  routes: [
+    {
+      path: '/',
+      component: '@/layouts/index',
+      routes: [
+        { path: '/', component: '@/pages/home', title: '首页' },
+        { path: '/order', component: '@/pages/order', title: '订单' },
+        { path: '/user', component: '@/pages/user', title: '我的' },
+      ]
+    }
+   
+  ],
+  fastRefresh: {},
+});
+
+```
+
+``` src/layouts/index.js
+import styles from './index.css';
+import { MenuBar, ErrorBoundary } from '@/components'
+import { useLocation } from 'umi'
+
+function BasicLayout(props) {
+  const location = useLocation()
+  const path = ['/', '/order', '/user']
+
+  return (
+    <div>
+      <MenuBar show={path.includes(location.pathname)} pathname={location.pathname}></MenuBar>
+      <ErrorBoundary>
+        {props.children}
+      </ErrorBoundary>
+    </div>
+  );
+}
+
+export default BasicLayout;
+
+```
+
+```jsconfig.json
+{
+  paths {
+    @/hooks" [hooks/index]
+    @/components" [component/index]
+    @/utils" [utiles/index]
+  }
+}
+```
+
+``` src/components/index.js
+export { default as CreatePortal } from './CreatePortal'
+export { default as ErrorBoundary } from './ErrorBoundary'
+export { default as LazyLoad } from './LazyLoad'
+export { default as Modal } from './Modal'
+export { default as MenuBar } from './MenuBar'
+```
+
+底部导航条
+react-icons Bootstrap Icons npm install react-icons@3.10.0 --save
+``` src/components/MenuBar/index.js
+import React, { Component } from 'react';
+import PropTypes from "prop-types";
+import { TabBar } from "antd-mobile";
+import { BsHouseDoorFill, BsHouseDoor, BsBagFill, BsBag, BsPersonFill, BsPerson } from "react-icons/bs";
+import { history } from "umi";
+
+import './index.less'
+
+export default class MenuBar extends Component {
+
+  static defaultProps = {
+    show: false,
+    pathname: ''
+  }
+
+  static propTypes = {
+    show: PropTypes.bool,
+    pathname: PropTypes.string
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      tabs: [
+        {
+          title: '首页',
+          selectedIcon: <BsHouseDoorFill style={{fontSize: '1.5rem'}}></BsHouseDoorFill>,
+          select: <BsHouseDoor style={{fontSize: '1.5rem'}}></BsHouseDoor>,
+          link: '/'
+        },
+        {
+          title: '订单',
+          selectedIcon: <BsBagFill style={{fontSize: '1.5rem'}}></BsBagFill>,
+          select: <BsBag style={{fontSize: '1.5rem'}}></BsBag>,
+          link: '/order'
+        },
+        {
+          title: '我的',
+          selectedIcon: <BsPersonFill style={{fontSize: '1.5rem'}}></BsPersonFill>,
+          select: <BsPerson style={{fontSize: '1.5rem'}}></BsPerson>,
+          link: '/user'
+        },
+      ]
+    };
+  }
+
+  render() {
+    return (
+      <div className="menu-bar">
+          <TabBar hidden={!this.props.show}>
+            { 
+              this.state.tabs.map(
+                tab => <TabBar.Item key={tab.link}
+                icon={tab.select}
+                selectedIcon={tab.selectedIcon}
+                selected={tab.link === this.props.pathname}
+                title={tab.title}
+                onPress={() => history.push(tab.link)}></TabBar.Item> 
+              ) 
+            }
+          </TabBar>
+      </div>
+    )
+  }
+}
+```
+
+``` src/components/MenuBar/index.less
+.menu-bar {
+  .am-tab-bar {
+    position: relative;
+    overflow: visible !important;
+  }
+  .am-tabs {
+    width: 100%;
+    overflow: visible !important;
+  }
+  .am-tabs-pane-wrap {
+    overflow-y: visible !important;
+  }
+  .am-tab-bar-item {
+    height: auto !important;
+  }
+  
+  .am-tabs-tab-bar-wrap {
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 10;
+  }
+}
+```
