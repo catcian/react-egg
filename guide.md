@@ -3031,9 +3031,6 @@ belongs 方法 如果有 foreignKey 属性值是自身表的主键，targetKey �
 
 8-2 实现网站的底部导航功能
 client/pages/home/index.js
-return (
-  div {home}
-)
 client/pages/order/
 client/pages/user/
 
@@ -3200,4 +3197,243 @@ export default class MenuBar extends Component {
     z-index: 10;
   }
 }
+```
+
+8-3 首页开发
+``` src/assets/mixin.less
+.flex(@direction: row, @justify: center, @align: center) {
+  display: flex;
+  flex-driection: @direction
+  justify-content: @justify
+  align-items: @align
+}
+```
+
+``` src/pages/home/index.less
+@import '../../assets/mixin.less';
+
+.home {
+  width: 100%;
+  padding: 12px;
+  .header {
+    .flex(row, space-between);
+    &-title {
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+  .search {
+    margin: 12px 0;
+    background-color: #fff;
+    .am-list-item .am-list-line .am-list-content,
+    .am-list-item .am-list-line .am-list-extra {
+      font-size: 18px;
+    }
+    &-addr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    &-time {
+      height: 50px;
+      line-height: 50px;
+      font-size: 18px;
+      padding-left: 15px;
+      padding-right: 15px;
+      box-sizing: border-box;
+      .flex(row, space-between, flex-start);
+      &-left {
+        color: #000;
+      }
+      &-right {
+        color: #888;
+      }
+    }
+  }
+
+  .hot {
+    padding-bottom: 60px;
+    h1 {
+      font-size: 20px;
+    }
+    &-lists {
+      .flex(row, space-between);
+      flex-wrap: wrap;
+      .hot-lists-item {
+        width: 49%;
+        margin-bottom: 15px;
+        padding: 12px;
+        background: #fff;
+        box-sizing: border-box;
+        border-radius: 12px;
+        .img {
+          width: 100%;
+          height: 100px;
+          border-radius: 8px;
+          object-fit: cover;
+        }
+        .title {
+          font-size: 16px;
+        }
+        .info {
+          margin: 12px 0;
+          font-size: 16px;
+          color: #8a9094;
+          white-space: pre-wrap;
+        }
+        .price {
+          font-size: 15px;
+          color: #ff4d6a;
+        }
+      }
+    }
+  }
+}
+
+```
+
+``` src/pages/home/index.js/func
+import React, { useState, useEffect } from 'react';
+import Header from './components/header'
+import Search from './components/search'
+import Hot from './components/hot'
+import './index.less'
+
+export default function(props){
+  const [state, setState] = useState()
+
+  useEffect(() => {
+
+  }, [])
+
+  return (
+    <div className="home">
+      <Header></Header>
+      <Search></Search>
+      <Hot></Hot>
+    </div>
+  )
+}
+```
+
+``` src/pages/home/components/header/index.js/func
+import React, { useState, useEffect } from 'react';
+import { Link } from 'umi'
+
+export default function(props){
+  const [state, setState] = useState()
+
+  useEffect(() => {
+
+  }, [])
+
+  return (
+    <div className="header">
+      <div className="header-title">民宿</div>
+      <div className="header-login">
+          <Link to="/login">登陆</Link>
+          <Link to="/register">注册</Link>
+      </div>
+    </div>
+  )
+}
+```
+
+``` src/pages/home/components/search/index.js/func
+import React, { useState, useEffect } from 'react';
+import { Picker, List, Button, Calendar } from 'antd-mobile';
+import dayjs from 'dayjs';
+
+const defaultCitys = [
+  [
+    { label: '杭州', value: '10001' },
+    { label: '深圳', value: '10002' },
+  ],
+];
+export default function (props) {
+  const [citys, setCitys] = useState(defaultCitys);
+  const [selectedCity, setSelectedCity] = useState(['10001']);
+  const [times, setTimes] = useState('可选时间');
+  const [dataShow, setDataShow] = useState(false);
+
+  useEffect(() => {}, []);
+
+  const handleCityChange = (value) => {
+    setSelectedCity(value);
+  };
+
+  const handleData = () => {
+    setDataShow(!dataShow);
+  };
+
+  const handleDataConfirm = (startTime, endTime) => {
+    setTimes(
+      dayjs(startTime).format('YYYY-MM-DD') +
+        ' - ' +
+        dayjs(endTime).format('YYYY-MM-DD'),
+    );
+    setDataShow(!dataShow);
+  };
+
+  const handleSearch = () => {};
+
+  return (
+    <div className="search">
+      {/* 可选城市 */}
+      <div className="search-addr">
+        <Picker
+          title="城市"
+          data={citys}
+          value={selectedCity}
+          cascade={false}
+          cols={1}
+          onChange={handleCityChange}
+        >
+          <List.Item>可选城市</List.Item>
+        </Picker>
+      </div>
+      {/* 可选时间 */}
+      <div className="search-time" onClick={handleData}>
+        <p className="search-time-left">出租时间</p>
+        <p className="search-time-right">{times}</p>
+      </div>
+      {/* 点击按钮 */}
+      <Button type="warning" onClick={handleSearch} size="large">
+        搜索民宿
+      </Button>
+      <Calendar
+        visible={dataShow}
+        onCancel={handleData}
+        onConfirm={handleDataConfirm}
+      ></Calendar>
+    </div>
+  );
+}
+
+```
+ 
+``` src/pages/home/components/hot/index.js/func
+import React, { useState, useEffect } from 'react';
+import data from './mock.json';
+
+export default function (props) {
+  const [houses, setHouses] = useState(data);
+
+  useEffect(() => {}, []);
+
+  return (
+    <div className="hot">
+      <div className="hot-lists">
+        {houses.map((house) => (
+          <div className="hot-lists-item" key={house.id}>
+            <img className="img" src={house.img} alt={house.title} />
+            <div className="title">{house.title} </div>
+            <div className="info">{house.info}</div>
+            <div className="price">{house.price}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 ```

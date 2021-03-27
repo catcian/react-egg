@@ -1,19 +1,21 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import Header from './components/header'
+import Search from './components/search'
+import Hot from './components/hot'
+import './index.less'
 
-export default class Home extends Component {
+export default function(props){
+  const [state, setState] = useState()
 
-  constructor(props) {
-    super(props);
-    this.state = {
+  useEffect(() => {
 
-    };
-  }
+  }, [])
 
-  render() {
-    return (
-      <div>
-        home
-      </div>
-    )
-  }
+  return (
+    <div className="home">
+      <Header></Header>
+      <Search></Search>
+      <Hot></Hot>
+    </div>
+  )
 }
