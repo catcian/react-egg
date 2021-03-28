@@ -14,7 +14,7 @@ export default function useHttpHook({
   async function Http() {
     setLoading(true);
     const defaultHeader = {
-      'Context-type': 'application/json',
+      'Content-Type': 'application/json',
     };
     let params;
     if (method.toUpperCase() === 'GET') {
@@ -55,7 +55,7 @@ export default function useHttpHook({
 
   useEffect(() => {
     Http();
-  }, []);
+  }, watch);
 
   return [result, loading];
 }
