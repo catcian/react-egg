@@ -3642,3 +3642,97 @@ export default {
 };
 
 ```
+8-6 初识IntersectionObserver，实现useObserverHook
+搜索页面 监听页面滑动到最底端
+``` pages/observer.js/func
+import React, { useState, useEffect } from 'react';
+import { history } from 'umi';
+import { useObserverHook } from '@/hooks';
+
+let observer;
+export default function (props) {
+  const [state, setState] = useState();
+
+  useObserverHook('#loading', (entries) => {
+    console.log(entries);
+  });
+  // useEffect(() => {
+  //   console.log('进入页面')
+  //   const elem = document.querySelector('#loading')
+  //   observer = new IntersectionObserver(entries => {
+  //     console.log(entries)
+  //   });
+  //   observer.observe(elem);
+
+  //   return () => {
+  //     console.log('离开页面')
+  //     if(observer){
+  //       // 解绑元素
+  //       observer.unobserve(elem);
+  //       // 停止监听
+  //       observer.disconnect();
+  //     }
+  //   }
+  // }, [])
+
+  const handleClick = () => {
+    history.push('/');
+  };
+
+  return (
+    <div>
+      observer
+      <button onClick={handleClick}>首页</button>
+      <div
+        id="loading"
+        style={{
+          width: '200px',
+          height: '200px',
+          background: '#f60',
+          marginTop: '1000px',
+        }}
+      ></div>
+    </div>
+  );
+}
+
+```
+``` umirc.ts
+
+  routes: [
+    ...
+    { path: '/observer', component: '@/pages/observer', title: 'observer' },
+  ]
+
+```
+
+``` src/hooks/useObserverHook.js
+import { useEffect } from 'react';
+
+let observer;
+export default function useObserverHook(selectors, callback, watch = []) {
+  
+  useEffect(() => {
+    const elem = document.querySelector(selectors)
+    observer = new IntersectionObserver((entries) => {
+      callback && callback(entries);
+    });
+
+    observer.observe(elem);
+    return () => {
+      if (observer) {
+        // 解绑元素
+        observer.unobserve(elem);
+        // 停止监听
+        observer.disconnect();
+      }
+    };
+  }, watch);
+}
+
+```
+
+``` src.hooks/indexjs
+export { default as useObserverHook } from './useObserverHook
+```
+

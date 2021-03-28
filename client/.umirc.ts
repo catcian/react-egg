@@ -13,6 +13,7 @@ export default defineConfig({
         { path: '/order', component: '@/pages/order', title: '订单' },
         { path: '/user', component: '@/pages/user', title: '我的' },
         { path: '/search', component: '@/pages/search', title: '搜索' },
+        { path: '/observer', component: '@/pages/observer', title: 'observer' },
       ]
     }
    
