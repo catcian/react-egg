@@ -3896,3 +3896,49 @@ const handleSumbimt = value => {
   -setHouseList([])
 }
 ```
+
+8-9 使用useImgHook实现图片懒加载
+
+1. 监听图片是否进入可视区域
+1. 将可视区域图片 src 属性值替换为真实的图片地址，data-src
+1. 停止监听当前的节点
+``` src/hooks/useImgHook.js
+import { useEffect } from 'react
+let observer
+export default function useImgHook(elem, callback, watch=[]) {
+  useEffect(() => {
+    const nodes = document.querSelectorAll(elem)
+    if (nodes && node.length) {
+      observer = new IntersectionObserver(entries => {
+        callback && callback(entries)
+        entries.forEach(item => {
+          log(item)
+          if (item.isIntersecting) {
+            const dataSrc = item.target.getAttribute('data-src')
+            item.target.setAttribute('src', dataSrc)
+            observer.unobserve(item.target)
+          }
+        })
+      })
+
+      nodes.forEach(item => {
+        observer.observe(item)
+      })
+    }
+    return () => {
+      if (nodes && node.length && observer) {
+        observer.disconnect()
+      }
+    }
+  }, watch)
+}
+
+
+src/pages/search/index.js
+
+useImgHook('.item-img', entries => {
+
+}, null)
+
+img className=item-img data-src=item.img src={require('../../assets/blank.png')}
+```

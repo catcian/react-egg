@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHttpHook, useObserverHook } from '@/hooks';
+import { useHttpHook, useObserverHook, useImgHook } from '@/hooks';
 import { SearchBar, ActivityIndicator } from 'antd-mobile';
 import { useLocation } from 'umi'
 import './index.less';
@@ -14,7 +14,6 @@ export default function (props) {
   const [showLoading, setShowLoading] = useState(true);
   const [houseSubmitName, setHouseSubmitName] = useState('');
   const { query } = useLocation()
-  console.log(query)
   const [houses, loading] = useHttpHook({
     url: '/house/search',
     body: {
@@ -27,10 +26,14 @@ export default function (props) {
     watch: [page.pageNum, houseSubmitName],
   });
 
+  useImgHook('.item-img', entries => {
+    console.log(entries)
+  }, null)
+
   useObserverHook(
     '#loading',
     (entries) => {
-      console.log('entries', entries[0].isIntersecting);
+      // console.log('entries', entries[0].isIntersecting);
       // 当页面内loading进入可视区域
       if (!loading && entries[0].isIntersecting) {
         setPage({
@@ -41,6 +44,8 @@ export default function (props) {
     },
     null,
   );
+
+  
 
   useEffect(() => {
     if (!loading && houses) {
@@ -96,7 +101,7 @@ export default function (props) {
         <div className="result">
           {houseLists.map((house) => (
             <div className="item" key={house.id}>
-              <img src={house.img} alt="img" />
+              <img className="item-img" data-src={house.img} src={require('../../assets/blank.png')} alt="img" />
               <div className="item-right">
                 <div className="title">{house.title}</div>
                 <div className="price">{house.price}</div>
