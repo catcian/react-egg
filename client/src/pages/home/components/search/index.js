@@ -36,7 +36,7 @@ export default function (props) {
       history.push({
         pathname: '/search',
         query: {
-          city: selectedCity,
+          code: selectedCity[0],
           startTime: times.split(' - ')[0],
           endTime: times.split(' - ')[1],
         },

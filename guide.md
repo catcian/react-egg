@@ -3850,3 +3850,49 @@ export default function (props) {
 }
 
 ```
+
+8-8 使用useObserverHook实现滚动加载（下）
+```pages/search/index.js
+import { useLocation } from 'umi'
+
+[houseSubmitName, setHouseSubmitName] = ('')
+{query} = useLocation()
+
+
+useHttpHook({
+  +houseName,
+  code: query?.code,
+  stratTime: query?.startTime +'00:00:00',
+  endTime: query?.endTime + '00:00:00'
+}, [..., houseSubitName])
+
+if (houses.length < page.pageSize>) {
+  setShowLoading(false)
+}
+
+const _handleSubmit = (value) => {
+  setHouseName(value)
+ setHouseSumbmitName(value)
+  // 重新发送请求，并且页码重置
+  setPage({
+    pageSize: 8,
+    pageNum: 1
+  })
+  setHouseList([])
+}
+const handleCancel = () => {
+  _handleSubmit('')
+}
+
+const handleSumbimt = value => {
+  +_handleSubmit(value)
+
+  -setHouseSumbmitName(value)
+  -// 重新发送请求，并且页码重置
+  -setPage({
+  -  pageSize: 8,
+  -  pageNum: 1
+  -})
+  -setHouseList([])
+}
+```

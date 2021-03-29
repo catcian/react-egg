@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useHttpHook, useObserverHook } from '@/hooks';
 import { SearchBar, ActivityIndicator } from 'antd-mobile';
+import { useLocation } from 'umi'
 import './index.less';
 
 export default function (props) {
   const [houseName, setHouseName] = useState('');
   const [page, setPage] = useState({
-    pageSize: 8,// 每页展示数码
-    pageNum: 1,// 当前页码
+    pageSize: 8, // 每页展示数码
+    pageNum: 1, // 当前页码
   });
   const [houseLists, setHouseLists] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
+  const [houseSubmitName, setHouseSubmitName] = useState('');
+  const { query } = useLocation()
+  console.log(query)
   const [houses, loading] = useHttpHook({
     url: '/house/search',
     body: {
       ...page,
+      houseName,
+      code: query?.code,
+      startTime: query?.startTime + ' 00:00:00',
+      endTime: query?.endTime + ' 00:00:00',
     },
-    watch: [page.pageNum],
+    watch: [page.pageNum, houseSubmitName],
   });
 
   useObserverHook(
@@ -38,6 +46,9 @@ export default function (props) {
     if (!loading && houses) {
       if (houses.length) {
         setHouseLists([...houseLists, ...houses]);
+        if (houses.length < page.pageSize) {
+          setShowLoading(false);
+        }
       } else {
         setShowLoading(false);
       }
@@ -48,12 +59,25 @@ export default function (props) {
     setHouseName(value);
   };
 
-  const handleCancel = () => {
-    setHouseName('');
+  const _handleSumbmit = (value) => {
+    if (!value) {
+      setHouseName(value);
+      return 
+    }
+    setHouseSubmitName(value);
+    setPage({
+      pageSize: 8,
+      pageNum: 1,
+    });
+    setHouseLists([]);
   };
 
-  const handleSubmit = () => {
-    console.log('1233');
+  const handleCancel = () => {
+    _handleSumbmit('');
+  };
+
+  const handleSubmit = (value) => {
+    _handleSumbmit(value);
   };
   return (
     <div className="search-page">
