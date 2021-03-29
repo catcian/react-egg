@@ -8,7 +8,6 @@ export default function Http({
   setResult,
   setLoading,
 }) {
-  console.log(url, method, headers, body, )
   setLoading && setLoading(true);
   const defaultHeader = {
     'Content-Type': 'application/json',

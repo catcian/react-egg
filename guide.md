@@ -4400,5 +4400,175 @@ export default function timer(time, type='all') {
   return dayjs(time).format(type === 'all' ? 'YYYY-MM-DD HH:mm:ss': 'YYYY-MM-DD")
 }
 ```
-src/pages/house/componens/Lists.js
+
+
+8-12 为民宿详情页面添加数据流管理（下）
+
+``` house/index.js
+const {house:{getCommentsAsync}} = useStoreHook()
+
+useEffect(() => {
+  getCommentsAsync({})
+},[reloadCommentsNum])
+
+useObserverHook('#'+CommonEnum.LOADING_ID, (entries) => {
+  console.log('entries', entries);
+  if( comments && comments.lengt && showLoading && entries[0],isIntersecting) {
+    reloadComments()
+  }
+}, [comments, showLoading]);
+```
+
+``` stores/house.js
+import Http from '../utils/http';
+import { CommonEnum } from '@/enums';
+state: {
+  page: CommonEnum.page,
+  showLoading: true
+  reloadCommentsNum:0
+}
+reducers: {
+  getComments(state, payload) {
+    return {
+      ...state,
+      comments: payload
+    }
+  }
+  setShowLoading(state, payload) {
+    return {
+      ...state,
+      showLoading: payload
+    }
+  }
+  reloadComments(state, payload){
+    return {
+      ...state,
+      reloadCommentsNum: state.reloadCommentsNum + 1
+      page: {
+        ...CommonEnum.PAGC,
+        pageNum: state.page.pageNum + 1
+      }
+    }
+  }
+  resetData() {
+    return {
+      ...state,
+      //detail:{}
+      comments:[],
+      page: CommonEnum.PAGE,
+      showLoading: true,
+      reloadCommentsNum:0
+      ,,,payload
+    }
+  }
+}
+effects: {
+    async getCommentsAsync(dispatch, rootState, payload) {
+      const { comments, page } = rootState.house;
+      const lists = await Http({
+        url: '/house/comments/lists',
+        body: {
+          ...payload,
+          pageSize: page.pageSize,
+          pageNum: page.pageNum,
+        },
+      });
+      dispatch({
+        type: 'getComments',
+        payload: [...comments, ...lists],
+      });
+      dispatch({
+        type: 'setShowLoading',
+        payload: lists.length ? true : false,
+      });
+    },
+    async addCommentsAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/comments/add',
+        body: payload,
+      });
+      if (result) {
+        dispatch({
+          type: 'resetData',
+          payload: {},
+        });
+      }
+    },
+  }
+}
+```
+
+``` src/pages/house/componens/Lists.js
 import { ShowLoading } from @/components
+
+return (
+  div.comment-lists
+  { props?.lists?.map(item => {}) }
+  ShowLoading{props?.showLoading}
+  /div
+)
+```
+
+``` mock/house.js
+  'POST /api/house/comments/lists': (req, res) => {
+    setTimeout(() => {
+      let data;
+      if (req.body.pageNum < 4) {
+        data = comments;
+      } else {
+        data = [];
+      }
+      res.json({
+        status: 200,
+        data,
+      });
+    }, 100);
+  },
+  'POST /api/comments/add': (req, res) => {
+    res.json({
+      status: 200,
+      data: 'ok',
+    });
+  },
+```
+
+``` house/Footer/index/js
+const {house: {addCommentsAsync}} = useStoreHook()
+[commentsValue, setCommentsValue] = ()
+handleChange = value => {
+  setCommentsValue(value)
+}
+const handleSubmit = value => {
+  if(commentsValue) {
+    handleClose()
+    addCommentsAsync({
+      comment: commentsValue
+    })
+  } else {
+    Toast.fail('请添加信息‘)
+  }
+}
+```
+
+``` home/hot/index.js
+history.push({
+  pathname: '/house
+  query:{
+    id
+  }
+})
+onClick ={() =>handleClick(item.id)}
+``` 
+
+``` house/index.js
+const { query } = useLocation()
+
+// 返回上一页，再次选择时候数据重置
+useEffect(() => {
+  return () => {
+    resetData({
+      detail: {}
+    })
+  }
+},)
+```

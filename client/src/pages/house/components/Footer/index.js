@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components';
 import { TextareaItem, Button } from 'antd-mobile';
-
+import { Toast } from 'antd-mobile';
+import { useStoreHook } from 'think-react-store';
 export default function (props) {
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {}, []);
+  const [commentsValue, setCommentsValue] = useState();
+  const {
+    house: { addCommentsAsync },
+  } = useStoreHook();
 
   const handleClick = () => {
     setShowModal(true);
@@ -16,7 +19,18 @@ export default function (props) {
   };
 
   const handleChange = (value) => {
-    console.log('value', value);
+    setCommentsValue(value);
+  };
+
+  const handleSubmit = () => {
+    if (commentsValue) {
+      handleClose()
+      addCommentsAsync({
+        comment: commentsValue,
+      });
+    } else {
+      Toast.fail('请添加评论信息～');
+    }
   };
   return (
     <>
@@ -38,7 +52,9 @@ export default function (props) {
             count={200}
             onChange={handleChange}
           ></TextareaItem>
-          <Button className="comment-btn" type="warning">评论</Button>
+          <Button className="comment-btn" type="warning" onClick={handleSubmit}>
+            评论
+          </Button>
         </div>
       </Modal>
     </>

@@ -1,4 +1,5 @@
 import houses from '../src/pages/home/components/hot/mock.json';
+import comments from '../src/pages/house/mock/comments.json';
 
 export default {
   'POST /api/house/search': (req, res) => {
@@ -35,6 +36,26 @@ export default {
           endTime: 1597917171000,
         },
       },
+    });
+  },
+  'POST /api/house/comments/lists': (req, res) => {
+    setTimeout(() => {
+      let data;
+      if (req.body.pageNum < 4) {
+        data = comments;
+      } else {
+        data = [];
+      }
+      res.json({
+        status: 200,
+        data,
+      });
+    }, 100);
+  },
+  'POST /api/comments/add': (req, res) => {
+    res.json({
+      status: 200,
+      data: 'ok',
     });
   },
 };

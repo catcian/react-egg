@@ -4,6 +4,7 @@ import { SearchBar, ActivityIndicator } from 'antd-mobile';
 import { useLocation } from 'umi';
 import { ShowLoading } from '@/components';
 import { CommonEnum } from '@/enums';
+import { history } from 'umi'
 import './index.less';
 
 export default function (props) {
@@ -82,6 +83,15 @@ export default function (props) {
   const handleSubmit = (value) => {
     _handleSumbmit(value);
   };
+
+  const handleClick = id => {
+    history.push({
+      pathname: '/house',
+      query: {
+        id
+      }
+    })
+  }
   return (
     <div className="search-page">
       {/* 顶部搜索栏 */}
@@ -98,7 +108,7 @@ export default function (props) {
       ) : (
         <div className="result">
           {houseLists.map((house) => (
-            <div className="item" key={house.id}>
+            <div className="item" key={house.id} onClick={() => handleClick(house.id)}>
               <img
                 className="item-img"
                 data-src={house.img}
