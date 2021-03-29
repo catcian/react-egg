@@ -4010,3 +4010,264 @@ components/ShowLoading/index.js
 project-libs
 yarn add project-libs
 import { isEmpty } from project-libs
+
+8-11 民宿详情页面界面开发
+``` umirc.ts
++ { path: '/house', component: /house title: 房屋}
+```
+
+pages/house/index.less
+
+```pages/house/index.js/func
+import Banner from './components/Banner
+import Info from './components/Info
+import Lists from './components/Lists
+import Footer from './components/Footer
+import './index.less
+
+
+return (
+  div.house-page
+    // banner
+    Banner
+    // 房屋信息
+    Info
+    // 评论列表
+    Lists
+    // footer
+    Footer
+  /div
+)
+```
+
+``` pages/house/components/Banner/index.js/func
+yarn add react-awesome-swiper@1.4.16 / 滑动
+import AwesomeSwiper from 'react-awesome-swiper'
+
+export default function (props) {
+  const [config, setConfig] = useState({
+    loop: true,
+    // autoplay: {
+    //   delay: 1500,
+    // },
+    pagination: {
+      el: '.swiper-pagination',
+    },
+  });
+
+  useEffect(() => {}, []);
+
+  return (
+    <AwesomeSwiper className="banner" config={config}>
+      <div className="swiper-wrapper">
+        <div className="swiper-slide">
+          <img
+            src={
+              'http://img2.mukewang.com/szimg/5dc9047a09bae31e12000676-360-202.png'
+            }
+            alt="house"
+          />
+        </div>
+        <div className="swiper-slide">
+          <img
+            src={
+              'http://img2.mukewang.com/szimg/5ad05dc00001eae705400300-360-202.jpg'
+            }
+            alt="house"
+          />
+        </div>
+        <div className="swiper-slide">
+          <img
+            src={
+              'http://img1.mukewang.com/szimg/5a1f65a900015d1505400300-360-202.jpg'
+            }
+            alt="house"
+          />
+        </div>
+      </div>
+      <div className="swiper-pagination"></div>
+    </AwesomeSwiper>
+  );
+}
+
+```
+
+``` pages/house/components/Info
+import {Button} from 'antd-mobile'
+return (
+  div.info
+    div.info-title /div
+    div.info-msg 简介：/div
+    div.info-price 价格：/div
+    div.info-time 发布时间：/div
+    div.info-time 开发出租时间：/div
+    div.info-time 结束出租时间：/div
+    Button.info-btn type warning 预定/Button
+  /div
+)
+```
+
+``` pages/house/components/Lists
+
+  return (
+    <div className="comment">
+      <h1 className="comment-title">评论</h1>
+      <div className="comment-lists">
+        <div className="comment-lists-item">
+          <img src="http://img2.mukewang.com/szimg/5ad05dc00001eae705400300-360-202.jpg" alt="lists" className="avatar"/>
+          <div className="right">
+            <div className="right-top">
+              <p>user</p>
+              <p>time</p>
+            </div>
+            <div className="right-bottom">
+              info
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+```
+
+``` components/Modal/index.js
+import React, { Component } from 'react';
+import CreatePortal from '@/components/CreatePortal';
+import { Icon } from 'antd-mobile';
+import PropTypes from 'prop-types';
+
+const Styles = {
+  modal: {
+    position: 'relative',
+    top: '0',
+    left: '0',
+    zIndex: '999',
+  },
+  body: {
+    backgroundColor: '#fff',
+    position: 'fixed',
+    height: '100%',
+    width: '100%',
+    top: '0',
+    left: '0',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  close: {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+  },
+};
+export default class Modal extends Component {
+  static defaultProps = {
+    show: false,
+    onClose: null,
+  };
+
+  static propTypes = {
+    show: PropTypes.bool,
+    onClose: PropTypes.func,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      showModal: false,
+    };
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.setState({
+      showModal: nextProps.show,
+    });
+  }
+
+  handleClick = () => {
+    const { onClose } = this.props;
+    onClose && onClose();
+  };
+
+  render() {
+    const { showModal } = this.state;
+    const { styleBody, styleClose } = this.props;
+    const _styleBody = {
+      ...Styles.body,
+      ...styleBody,
+    };
+    const _styleClose = {
+      ...Styles.close,
+      ...styleClose,
+    };
+    return (
+      <>
+        {showModal ? (
+          <CreatePortal style={Styles.modal}>
+            <div style={_styleBody}>
+              {this.props.children}
+              <Icon
+                type="cross"
+                size="lg"
+                style={_styleClose}
+                onClick={this.handleClick}
+              ></Icon>
+            </div>
+          </CreatePortal>
+        ) : null}
+      </>
+    );
+  }
+}
+
+```
+
+``` pages/house/components/Footer
+import React, { useState, useEffect } from 'react';
+import { Modal } from '@/components';
+import { TextareaItem, Button } from 'antd-mobile';
+
+export default function (props) {
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {}, []);
+
+  const handleClick = () => {
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  const handleChange = (value) => {
+    console.log('value', value);
+  };
+  return (
+    <>
+      <div className="footer" onClick={handleClick}>
+        评论...
+      </div>
+      <Modal
+        show={showModal}
+        styleBody={{
+          height: '220px',
+          bottom: '0px',
+          top: 'unset',
+        }}
+        onClose={handleClose}
+      >
+        <div className="modal-comment">
+          <TextareaItem
+            rows={2}
+            count={200}
+            onChange={handleChange}
+          ></TextareaItem>
+          <Button className="comment-btn" type="warning">评论</Button>
+        </div>
+      </Modal>
+    </>
+  );
+}
+
+```
