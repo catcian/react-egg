@@ -4271,3 +4271,134 @@ export default function (props) {
 }
 
 ```
+
+8-12 为民宿详情页面添加数据流管理（上）
+src/utils/http.js
+src/utils/index.js
+export {default as Http} from './http.js'
+
+``` src/layouts/index.js
+import { StroeProvider } from 'think-react-store'
+import { StoreProvider } from 'think-react-store'
+import * as store from "../stores";
+  return (
+    <StoreProvider store={store}>
+      ...
+    </StoreProvider>
+  );
+```
+
+``` src/stores/house.js
+import Http from '../utils/http';
+
+export default {
+  state: {
+    detail: {},
+    comments: [],
+  },
+  reducers: {
+    getDetail(state, payload) {
+      return {
+        ...state,
+        detail: payload,
+      };
+    },
+  },
+  effects: {
+    async getDetailAsync(dispatch, rootState, payload) {
+      const detail = await Http({
+        url: '/house/detail',
+        body: payload,
+      });
+      dispatch({
+        type: 'getDetail',
+        payload: detail,
+      });
+    },
+  },
+};
+
+```
+
+``` src/stores/index.js
+export { default as house } from './house'
+```
+
+``` mock/house.js
+'POST /api/house/detail': (req, res) => {
+    res.json({
+      status: 200,
+      data: {
+        id: 8,
+        banner: [
+          'http://img2.mukewang.com/szimg/5dc9047a09bae31e12000676-360-202.png',
+          'http://img2.mukewang.com/szimg/5ad05dc00001eae705400300-360-202.jpg',
+          'http://img1.mukewang.com/szimg/5a1f65a900015d1505400300-360-202.jpg',
+        ],
+        info: {
+          title: '老城民宿',
+          msg: '老城区风景秀美',
+          price: '220',
+          publishTime: 1595238771000,
+          startTime: 1595238771000,
+          endTime: 1597917171000,
+        },
+      },
+    });
+  },
+```
+
+``` src/pages/house/index.js
+import React, { useState, useEffect } from 'react';
+import Banner from './components/Banner';
+import Info from './components/Info';
+import Lists from './components/Lists';
+import Footer from './components/Footer';
+import { useStoreHook } from 'think-react-store';
+import { useObserverHook } from '@/hooks';
+import { CommonEnum } from '@/enums';
+import './index.less';
+
+export default function (props) {
+  const {
+    house: { detail, getDetailAsync },
+  } = useStoreHook();
+
+  useObserverHook(CommonEnum.LOADING_ID, (entries) => {
+    console.log('entries', entries);
+  });
+
+  useEffect(() => {
+    getDetailAsync({});
+  }, []);
+
+  return (
+    <div className="house-page">
+      {/* banner */}
+      <Banner banner={detail?.banner}></Banner>
+      {/* 房屋信息 */}
+      <Info detail={detail?.info}></Info>
+      {/* 评论 */}
+      <Lists></Lists>
+      {/* footer */}
+      <Footer></Footer>
+    </div>
+  );
+}
+
+```
+
+评论列表 需要用到滚动加载 数据流的方法：
+// 1. 页面 loading 是否展示出来
+// 2. 触发 reload 修改分页
+// 3. 监听 reload 变化重新请求接口
+// 4. 拼装数据
+
+``` src/utils/timer.js
+import dayjs from 'dayjs'
+export default function timer(time, type='all') {
+  return dayjs(time).format(type === 'all' ? 'YYYY-MM-DD HH:mm:ss': 'YYYY-MM-DD")
+}
+```
+src/pages/house/componens/Lists.js
+import { ShowLoading } from @/components

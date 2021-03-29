@@ -27,6 +27,7 @@
     "prop-types": "^15.7.2",
     "react-awesome-swiper": "^1.4.16",
     "react-icons": "^4.2.0",
+    "think-react-store": "^1.6.71",
     "umi": "^3.4.7"
   },
   "devDependencies": {
