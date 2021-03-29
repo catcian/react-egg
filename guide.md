@@ -3942,3 +3942,71 @@ useImgHook('.item-img', entries => {
 
 img className=item-img data-src=item.img src={require('../../assets/blank.png')}
 ```
+
+8-10 优化-提取公共组件，使用枚举，引入project-libs
+1. 底部展示数据 公共组件
+```src/components/ShowLoading/index.js/func
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { CommonEnum } from '@/enums'
+
+import './index.less'
+
+export default function ShowLoading(props) {
+  const [state, setState] = useState();
+
+  useEffect(() => {}, []);
+
+  return (
+    <div>
+      {props.showLoading ? (
+        <div className="loading-info" id={CommonEnum.LOADING_ID}>
+          - 加载中 -
+        </div>
+      ) : (
+        <div className="loading-info">- 没有更多数据啦 -</div>
+      )}
+    </div>
+  );
+}
+
+ShowLoading.defaultProps = {
+  showLoading: true,
+};
+
+ShowLoading.propTypes = {
+  showLoading: PropTypes.bool,
+};
+
+```
+2. id mk-loading
+
+3. id 处理出来常量
+```src/enums/common.js
+export const LOADING_ID = 'mk-loading';
+export const PAGE = {
+  pageSize: 8, // 每页展示数码
+  pageNum: 1, // 当前页码
+};
+
+
+src/enums/index.js
+import * as CommonEnum from './common
+
+export {
+  CommonEnum
+}
+```
+jsconfig.json
+@/enums
+
+search/index.js
+import {CommonEnum} from 
+components/ShowLoading/index.js
+
+4. 提取page相关属性
+
+5. useImgHook nodes && nodes.length == !isEmpty(nodes)
+project-libs
+yarn add project-libs
+import { isEmpty } from project-libs

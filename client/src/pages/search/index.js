@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useHttpHook, useObserverHook, useImgHook } from '@/hooks';
 import { SearchBar, ActivityIndicator } from 'antd-mobile';
-import { useLocation } from 'umi'
+import { useLocation } from 'umi';
+import { ShowLoading } from '@/components';
+import { CommonEnum } from '@/enums';
 import './index.less';
 
 export default function (props) {
   const [houseName, setHouseName] = useState('');
-  const [page, setPage] = useState({
-    pageSize: 8, // 每页展示数码
-    pageNum: 1, // 当前页码
-  });
+  const [page, setPage] = useState(CommonEnum.PAGE);
   const [houseLists, setHouseLists] = useState([]);
   const [showLoading, setShowLoading] = useState(true);
   const [houseSubmitName, setHouseSubmitName] = useState('');
-  const { query } = useLocation()
+  const { query } = useLocation();
   const [houses, loading] = useHttpHook({
     url: '/house/search',
     body: {
@@ -26,12 +25,16 @@ export default function (props) {
     watch: [page.pageNum, houseSubmitName],
   });
 
-  useImgHook('.item-img', entries => {
-    console.log(entries)
-  }, null)
+  useImgHook(
+    '.item-img',
+    (entries) => {
+      console.log(entries);
+    },
+    null,
+  );
 
   useObserverHook(
-    '#loading',
+    CommonEnum.LOADING_ID,
     (entries) => {
       // console.log('entries', entries[0].isIntersecting);
       // 当页面内loading进入可视区域
@@ -44,8 +47,6 @@ export default function (props) {
     },
     null,
   );
-
-  
 
   useEffect(() => {
     if (!loading && houses) {
@@ -67,13 +68,10 @@ export default function (props) {
   const _handleSumbmit = (value) => {
     if (!value) {
       setHouseName(value);
-      return 
+      return;
     }
     setHouseSubmitName(value);
-    setPage({
-      pageSize: 8,
-      pageNum: 1,
-    });
+    setPage(CommonEnum.PAGE);
     setHouseLists([]);
   };
 
@@ -101,18 +99,19 @@ export default function (props) {
         <div className="result">
           {houseLists.map((house) => (
             <div className="item" key={house.id}>
-              <img className="item-img" data-src={house.img} src={require('../../assets/blank.png')} alt="img" />
+              <img
+                className="item-img"
+                data-src={house.img}
+                src={require('../../assets/blank.png')}
+                alt="img"
+              />
               <div className="item-right">
                 <div className="title">{house.title}</div>
                 <div className="price">{house.price}</div>
               </div>
             </div>
           ))}
-          {showLoading ? (
-            <div id="loading">加载中～</div>
-          ) : (
-            <div>没有更多数据啦～</div>
-          )}
+          <ShowLoading showLoading={showLoading}></ShowLoading>
         </div>
       )}
     </div>

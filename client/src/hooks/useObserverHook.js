@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 let observer;
 export default function useObserverHook(selectors, callback, watch=[]) {
   useEffect(() => {
-    const elem = document.querySelector(selectors);
+    const elem = document.querySelector('#' + selectors);
     if (elem) {
       observer = new IntersectionObserver(entries => {
         callback && callback(entries);

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
+import { isEmpty } from 'project-libs'
 
 let observer;
 export default function useImgHook(elem, callback, watch = []) {
   useEffect(() => {
     const nodes = document.querySelectorAll(elem);
-    if (nodes && nodes.length) {
+    if (!isEmpty(nodes)) {
       observer = new IntersectionObserver((entries) => {
         callback && callback(entries);
         entries.forEach((item) => {
@@ -22,7 +23,7 @@ export default function useImgHook(elem, callback, watch = []) {
     }
 
     return () => {
-      if (nodes && nodes.length && observer) {
+      if (!isEmpty(nodes) && observer) {
         nodes.forEach(item => {
           observer.unobserve(item)
         })
