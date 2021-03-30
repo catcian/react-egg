@@ -4,35 +4,34 @@
 React.js -》主框架
 UmiJs -》 React 工具集锦
 比较方便的开发项目
-自定义hook-〉初衷提高研发效率
+自定义 hook-〉初衷提高研发效率
 think-react-store react 数据流解决方案
 通过使用 think-react-store 比较方便的对数据进行操作，包含实际项目中常用的特性，比较好的支持函数式组件
 实际项目中需要很多公共的函数，通过引入第三方的工具库
 Project-libs 常用函数集锦
 这个工具包括了很多常用的函数，比如浏览器相应的操作，数组相应的操作，以及缓存响应的操作。
-重要的API IntersectionObserver
-这个api 监听dom 元素是否进入展示区域，
-通过调用这个api 用来实现，列表的滚动加载，图片的懒加载效果
+重要的 API IntersectionObserver
+这个 api 监听 dom 元素是否进入展示区域，
+通过调用这个 api 用来实现，列表的滚动加载，图片的懒加载效果
 
 后端核心技术
 Egg.js 主框架
 JWT 用户登陆验证采用技术，目前主流技术
 Mysql 数据存储
-Sequelize ORM框架，操作MySql，SQLite，等
-使用对msql 常用的增删改查语句进行的封装，并且squelize 里面支持很多实用的特性，比如分页，多表联查，数据模型，等相关操作
+Sequelize ORM 框架，操作 MySql，SQLite，等
+使用对 msql 常用的增删改查语句进行的封装，并且 squelize 里面支持很多实用的特性，比如分页，多表联查，数据模型，等相关操作
 
-对egg框架进行扩展， 提高研发效率
+对 egg 框架进行扩展， 提高研发效率
 
 自定义中间件和插件，拦截请求等处理
 
+技术架构
+前端方面采用 React.js，主要处理页面展示，和处理交互逻辑
+前端分为 3 大模块：民宿模块，订单模块，我的模块
 
-技术架构 
-前端方面采用React.js，主要处理页面展示，和处理交互逻辑
-前端分为3大模块：民宿模块，订单模块，我的模块
+之后前端会想后端发送请求，请求会先经过中间件和插件，中间件和插件会对请求进行拦截，然后会做一些额外的处理，之后请求会经过 Controlle 层，这时会进行简单业务逻辑操作，数据库方面操作会放到 Service 层
 
-之后前端会想后端发送请求，请求会先经过中间件和插件，中间件和插件会对请求进行拦截，然后会做一些额外的处理，之后请求会经过Controlle 层，这时会进行简单业务逻辑操作，数据库方面操作会放到 Service 层
-
-数据库采用maysql 核心缓存会放入radis内
+数据库采用 maysql 核心缓存会放入 radis 内
 
 React.js(展示页面，处理交互逻辑)
 民宿模块，订单模块，我的模块
@@ -45,62 +44,63 @@ Service 层（操作数据库）
 数据库
 Mysql（业务数据） Redis（缓存数据）
 
-
 收获：
-自定义hook
-useTitleHook：动态修改浏览器title
-useHttpHook 发生HTTP请求，并对请求的某些状态值进行监听
-useObserverHook：监听dom元素是否进入展示区域
+自定义 hook
+useTitleHook：动态修改浏览器 title
+useHttpHook 发生 HTTP 请求，并对请求的某些状态值进行监听
+useObserverHook：监听 dom 元素是否进入展示区域
 useImgHook：用来实现图片的懒加载
 
 自定义组件
 createPortal、Modal
-采用react 最新的特性 createPortal 在根节点之外创建新的节点，实际项目中会出现因为某些组件错误，而引起页面白屏，或者系统抛出异常等情况，因此开发ErrorBoundary 组件，这个组件可以捕获组件的错误，然后展示一些友好信息
+采用 react 最新的特性 createPortal 在根节点之外创建新的节点，实际项目中会出现因为某些组件错误，而引起页面白屏，或者系统抛出异常等情况，因此开发 ErrorBoundary 组件，这个组件可以捕获组件的错误，然后展示一些友好信息
 最后是 MenuBar 底部导航组件
 LazyLoad 是懒加载组件
 showLoading 是底部加载组件
 
-
 后端方面会开发一些中间件，httpLog，日志中间件，userExist 这个中间件会判断用户是否存在
 另外同时开发一些插件，egg-auth 验证用户，比如用户是否登陆，egg-info 用来获取系统信息
 
-同时会对egg.js 框架进行扩展，从多个维度进行考虑，首先从 application，这个application是egg。js的应用实例，另外是helper，helper是一些帮助函数，常用的工具函数挂载在egg下面，使用工具函数，无需引入，直接使用帮助函数即可，然后是request，请求，可以对请求进行扩展，之后对context 上下文和response进行扩展
-
+同时会对 egg.js 框架进行扩展，从多个维度进行考虑，首先从 application，这个 application 是 egg。js 的应用实例，另外是 helper，helper 是一些帮助函数，常用的工具函数挂载在 egg 下面，使用工具函数，无需引入，直接使用帮助函数即可，然后是 request，请求，可以对请求进行扩展，之后对 context 上下文和 response 进行扩展
 
 课程安排：
+
 1. React 核心知识点
 2. 自定义组件
-3. 自定义hook
+3. 自定义 hook
 4. Egg 基础应用
 5. Egg 高级部分 框架扩展
 6. 实战前端界面
 7. 后端接口开发
-8. 系统安全处理 如何处理CSCF、接口缓存问题
+8. 系统安全处理 如何处理 CSCF、接口缓存问题
 9. 项目部署
 
 学习基础
+
 1. 熟悉 react。js 基础语法
-2. 1了解 node.js 基础语法
+2. 1 了解 node.js 基础语法
 3. 对全栈开发开发感兴趣
 
 2-1 本章
 组件经历的不同阶段
+
 1. 初始化- 挂载到页面 - 更新数据 - 条件判断 - 重新渲染组件 - 销毁组件
-组件间的通信
+   组件间的通信
 1. 父子组件通信 props
-2. 兄弟组件通信 dva
-3. 组件夸页面通信 context api
-Lazy 和 Suspence 实现懒加载
-每次进入页面，组件就会全部加载进去，有时，需要延迟加载这些组件，并在组件显示前显示 loading 状态，
+1. 兄弟组件通信 dva
+1. 组件夸页面通信 context api
+   Lazy 和 Suspence 实现懒加载
+   每次进入页面，组件就会全部加载进去，有时，需要延迟加载这些组件，并在组件显示前显示 loading 状态，
 
 组件报错了怎么办
-ErroBoundary react 官方提供了组件错误边界，通过相关的api 捕获组件的错误，展示友好的信息，之后将错误的信息上传到服务器，方便后续的问题排查
+ErroBoundary react 官方提供了组件错误边界，通过相关的 api 捕获组件的错误，展示友好的信息，之后将错误的信息上传到服务器，方便后续的问题排查
 
 CreatePortal 常见自定义弹窗
-一般所有的节点都会在dom 根节点内操作，
+一般所有的节点都会在 dom 根节点内操作，
 全部放在根节点会比较麻烦，新建自定义节点
 
 章节介绍
+
 1. umiJs 入门
 2. React 组件生命周期
 3. React 组件通信方式
@@ -109,39 +109,42 @@ CreatePortal 常见自定义弹窗
 6. 组件懒加载
 7. errorboundary 错我边界
 8. createPortal 自定弹窗
-9. ref api 操作dom 和组件
+9. ref api 操作 dom 和组件
 
 2-2 前端开发环境搭建
-1. vscode shift + commad + p /code 将 code 命令添加到path
+
+1. vscode shift + commad + p /code 将 code 命令添加到 path
 2. nodejs 12.18.1 lts node-v/12.18.1
 3. yarn/v1.22.4 Homebrew/brew install yarn。yarm -v/1.22.4
 4. Mac nvm/nvm version/12.18.1 nvm ls/12.18.1 nvm install 14.4.1/ nvm uninstall。/nvm use 12.16.1
 5. https://www.jianshu.com/p/27cd8ea20d7d
 
 2-4 使用 UmiJs。搭建 react 项目
-umi 是一个可插拔的企业级 react应用框架,集成 react、 react router.、 ant design等项目中常用的依赖包,可通过脚手架快速生成 项目。
+umi 是一个可插拔的企业级 react 应用框架,集成 react、 react router.、 ant design 等项目中常用的依赖包,可通过脚手架快速生成 项目。
 
 特点
+
 1. 可扩展性，内部工程插件构成
 2. 开箱即用
 3. 企业级 阿里、优酷、飞猪
 4. 大量自研
 5. 完备路由：动态、嵌套、权限
 6. 最新技术
-umi 版本
-1. Umi2/react
-2. umi3
-yarn 构建 umi2
-yarn create umi
-1. app
-1. TypeScript/n
-1. antd
-yarn install
+   umi 版本
+7. Umi2/react
+8. umi3
+   yarn 构建 umi2
+   yarn create umi
+9. app
+10. TypeScript/n
+11. antd
+    yarn install
 
-1. 使用umi 动态生成页面
-npx umi g page demo
-npx umm g page class/index
-``` class/index
+12. 使用 umi 动态生成页面
+    npx umi g page demo
+    npx umm g page class/index
+
+```class/index
 import styles from './index.css';
 
 export default function() {
@@ -152,10 +155,12 @@ export default function() {
   );
 }
 ```
+
 tips: command + T 打开新的 iterm 窗口
 
 1. 使用 umi 生成嵌套路由
-``` class/_layout.js
+
+```class/_layout.js
 import React from 'react'
 
 class Layout extends React.Component {
@@ -175,10 +180,12 @@ class Layout extends React.Component {
 
 export default Layout
 ```
-删除sec/.umirc.js 注销 routes
+
+删除 sec/.umirc.js 注销 routes
 
 1. Umi 如何生成 动态路由
-``` class/$id.js
+
+```class/$id.js
 import React from 'react'
 
 class Id extends React.Component {
@@ -206,10 +213,12 @@ index.tsx = index.js
 yarn install
 
 区别：
+
 1. .umi 路由区别 umi3 src/.umi; umi2 src/pages/.umi
 1. umi3 .umirc.js defineConfig
 1. 动态路由 以[id].js
-src/pages/[id].js
+   src/pages/[id].js
+
 ```
 export default class Id extends Component {
 
@@ -218,6 +227,7 @@ export default class Id extends Component {
   }
 }
 ```
+
 手动注释.umirc.js/routes
 
 2-6 react 组件生命周期
@@ -233,111 +243,110 @@ react 组件 旧生命周期 图解
 
 react 组件 新周期 图解
 
-
-
 .umirc.js/plugins
 'umi-plugin-react',
 {
-  antd: true
+antd: true
 }
 
 vscode / project-tpl 代码片段
 
-import { List } from 'antd-mobile // H5 项目 
+import { List } from 'antd-mobile // H5 项目
 import { Link } from 'umi
 class tab Index
 return (
-  div>h1{class demo}+List>List.Item>Link[to='/class/component-old']{component-old}^List.Item>Link[to='/class/component-new']{component-new}
+div>h1{class demo}+List>List.Item>Link[to='/class/component-old']{component-old}^List.Item>Link[to='/class/component-new']{component-new}
 )
 
 class/component-old.js
 constructor () {
-  this.state = {
-    text: 'demo'
-  }
-  console.log('constructor')
-  this.handleClick = this.handleClick.bind(this)// 方法一 初始化
+this.state = {
+text: 'demo'
+}
+console.log('constructor')
+this.handleClick = this.handleClick.bind(this)// 方法一 初始化
 }
 conponentWillMount() {
-  console.log('conponentWillMount)
+console.log('conponentWillMount)
 }
 conponentDidMount() {
-  console.log('conponentDidMount)
+console.log('conponentDidMount)
 }
 // 更新
 handleClick() {
-  console.log(')
+console.log(')
 }
 
 conponentWillUpdate() {
-  console.log()
+console.log()
 }
 
 conponentDigUpdate() {
-  console.log
+console.log
 }
 
-// 方法四 需要使用 ES最新特新 public flede
+// 方法四 需要使用 ES 最新特新 public flede
 handleClick = () => {
-  this.setState({
-    text: 'demo2'
-  })
+this.setState({
+text: 'demo2'
+})
 }
-// react 事件绑定 有三种不同写法 
+// react 事件绑定 有三种不同写法
 // 1. constructor / 组件初始化 组件性能优化
 // 2. jsx 代码块 绑定 .bind(this) / render 函数每次都会重新实例话 handleClick
 // 3. 采用 尖头函数
 // 4. 需要使用 es 最新特性 public filer
 console.log('render')
 return (
-  div onClick={this.handleClick (this.handleClick.bind(this) 组件每次render 实例话方法)(() => this.handleClick())(this.handleClick)} {component-old - {this.state.test}}
+div onClick={this.handleClick (this.handleClick.bind(this) 组件每次 render 实例话方法)(() => this.handleClick())(this.handleClick)} {component-old - {this.state.test}}
 )
-
 
 2-7 生命周期 下
 import { PureComopnent } from 'react'
+
 1. 比较 state 的属性，浅比较。
 
 this.state = {
-  text: {id: 1}
+text: {id: 1}
 }
 
 shouldComponentUpdate(props, state) {
-  console.log()
-  console.log(props,state)
-  // 组件 state 相同不进行渲染，此写法比较复杂 针对这种实现的效果 react 官方推出新的组件 PureComponent
-  if (state.text === 'demo-new' && this.state.text !== state.text) return true
-  return false
+console.log()
+console.log(props,state)
+// 组件 state 相同不进行渲染，此写法比较复杂 针对这种实现的效果 react 官方推出新的组件 PureComponent
+if (state.text === 'demo-new' && this.state.text !== state.text) return true
+return false
 }
 
 handleClick = () => {
-  this.setState ({
-    text: {id: 2}
-  })
+this.setState ({
+text: {id: 2}
+})
 }
 
 componentWillUnmount () {
-  console.log('componentWillUnmount)
+console.log('componentWillUnmount)
 }
 
 新生命周期
 
 static getDerivedStateFromProps(props, state) {
-  console.log()
-  console.log(props, state)
-  return state
+console.log()
+console.log(props, state)
+return state
 }
 
 getSnapshotBeforeUpdate () {
-  console.log
-  return 'getSnapshotBeforeUpdate'
+console.log
+return 'getSnapshotBeforeUpdate'
 }
 
 componmentDidUpdate(props, state, snapshot) {
-  console.log(snapshot)
+console.log(snapshot)
 }
 
 2-8 react 组件通信
+
 1. 父组件向子组件传值
 1. 子组件向父组件传值
 1. 兄弟间组件传值
@@ -347,47 +356,47 @@ import ListItem1 from './list-item1.js'
 import ListItem2 from './list-item2.js'
 
 handleChild = (msg) => {
-  console.log(msg)
-  + this.setState({
-    name: mes
+console.log(msg)
+
+- this.setState({
+  name: mes
   })
-}
+  }
 
 return (
-  div>ListItem1[name={'item1'} handleItem={this.handleChild}] 
-  +ListItem2[name={this.state.name}] 
+div>ListItem1[name={'item1'} handleItem={this.handleChild}]
++ListItem2[name={this.state.name}]
 )
-
 
 class/list-item1.js
 import PropTypes from 'prop-types'
 static defaultProps = {
-  name: 'item1'
+name: 'item1'
 }
 
 static propTypes = {
-  name: PropTypes.string 
+name: PropTypes.string
 }
 
 handleClick = () => {
-  this.props.handleItem('item1')
+this.props.handleItem('item1')
 }
 return (
-  div>h1[onClick={this.handleClick}]{item1-- {this.props.name}}
+div>h1[onClick={this.handleClick}]{item1-- {this.props.name}}
 )
 
 在父组件没有传递自组件属性值时，依然显示默认值，并且对属性的类型进行校验
-yarn add prop-types --save 
+yarn add prop-types --save
 
 class/list-item2.js
 
 return (
-  div>h1{item2 -- {this.props.name }}
+div>h1{item2 -- {this.props.name }}
 )
 
+2-9 dva 数据处理及数据 mock
 
-2-9 dva 数据处理及数据mock
-``` src/.umirc.js
+```src/.umirc.js
 plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     [
@@ -405,7 +414,8 @@ plugins: [
     ],
   ],
 ```
-``` mock/search.js
+
+```mock/search.js
 export default {
   'GET /api/getLists': {
     lists: ['a','b','c']
@@ -422,8 +432,10 @@ export default {
   }
 }
 ```
+
 关于 http 相关请求放置在 services
-``` src/services/search.js
+
+```src/services/search.js
 export function getLists (value) {
   return fetch('api/getLists?value=value) +getListsAsync
   .then(resp => resp.json())
@@ -431,8 +443,9 @@ export function getLists (value) {
 }
 ```
 
-src/models 放置dva 相关代码
-``` src/models/search.js
+src/models 放置 dva 相关代码
+
+```src/models/search.js
 + import { getLists } from '@/services/search.js
 export default {
   namespace: 'search',// 非必填项。没有取文件名字值
@@ -465,19 +478,20 @@ export default {
   }
 }
 ```
-``` class/index.js 
+
+```class/index.js
 <List.Item>
   <Link to='/class/dva'>dva</Link>
 </List.Item>
 ```
 
-``` class/dva/index.js Dva
+```class/dva/index.js Dva
 import Search from './Search'
 import Lists from './lists
 import { connect } from 'dva'
 
 return (
-  div> Search[{...this.props}] 
+  div> Search[{...this.props}]
   + Lists[{this.props}]
 )
 
@@ -485,7 +499,7 @@ export default connect(({search}) => ({search}))(Index)
 
 ```
 
-``` class/dva/search.js
+```class/dva/search.js
 import { SearchBar } from 'antd-mobile'
 this.state = {
   value: ''
@@ -518,7 +532,7 @@ return (
 
 2-10 基于 react context api 实现数据流管理
 
-``` class/index.js
+```class/index.js
 <List.Item>
   <Link to='/class/context'>context</Link>
 </List.Item>
@@ -528,7 +542,7 @@ return (
 // 消费组件用来订阅 Provider 里的属性
 // 如果 Provider 属性发生变化，所有订阅该属性的消费组件则会重新渲染
 
-``` class/context/index.js
+```class/context/index.js
 import SearchContext from './SearchContext'
 
 handleDispatch = async (action) => {
@@ -560,8 +574,7 @@ return (
 )
 ```
 
-
-``` class/context/searchContext.js
+```class/context/searchContext.js
 import React from 'react'
 
 const SearchContext = React.createContext()
@@ -569,7 +582,7 @@ const SearchContext = React.createContext()
 export default SearchContext
 ```
 
-``` class/context/lists.js
+```class/context/lists.js
 static contextType = SearchContext
 
 return (
@@ -582,7 +595,7 @@ return (
 )
 ```
 
-``` class/context/search.js
+```class/context/search.js
 import SearchContext from './SearchContext
 
 static contextType = SearchContext
@@ -599,7 +612,7 @@ handleSubmit = () => {
 }
 ```
 
-``` class/context/consumer.js
+```class/context/consumer.js
 import SearchContext from './SearchContext'
 
 render() {
@@ -622,15 +635,15 @@ render() {
 期望：能够对页面的某个组件按需加载
 class/index.js + lazy-load
 
-``` 0. /class/index.js
+```0. /class/index.js
 <List.Item>
   <Link to='/class/lazy-load'>lazy-load</Link>
 </List.Item>
 ```
 
-``` 1. /class/lazy-load/index.js
+```1. /class/lazy-load/index.js
 import React, { lazy, Suspense } from 'react'
-- import Demo from './demo' 
+- import Demo from './demo'
 // lazy 函数 接收一个函数，动态调用 import 方法，并且返回 Promise 对象
 + const Demo = lazy(()=> import('./demo'))
 
@@ -656,7 +669,7 @@ return (
 )
 ```
 
-``` 2. /class/lazy-load/demo.js
+```2. /class/lazy-load/demo.js
 return (
   <div>
     lazy-load: demo
@@ -665,7 +678,8 @@ return (
 ```
 
 // lazy suspense 封装
-``` 3. /src/components/LazyLoad/index.js
+
+```3. /src/components/LazyLoad/index.js
 import { lazy, Suspense } from 'react'
 
 _renderLazy = () => {
@@ -691,11 +705,11 @@ return (
 )
 ```
 
-``` 3.2 /src/components/Lazyload/error.js/Error
+```3.2 /src/components/Lazyload/error.js/Error
 return (div{组件引入错误})
 ```
 
-``` 3.3 /class/context/index.js
+```3.3 /class/context/index.js
 import LazyLoad from '@/components/Lazyload'
 
 return (
@@ -711,7 +725,8 @@ return (
 ```
 
 2-12 ErrorBoundary 父组件检测子组件发生的错误，不能检测本身的错误
-``` 1. /class/context/index.js
+
+```1. /class/context/index.js
 
 const house = {
   info: {}
@@ -721,7 +736,7 @@ return (
 )
 ```
 
-``` 2. src/components/ErrorBoundary/index.js
+```2. src/components/ErrorBoundary/index.js
 
 this.state = {
   flag: false
@@ -745,7 +760,7 @@ return (
 )
 ```
 
-``` 3. layouts/index.js
+```3. layouts/index.js
 import ErrorBoundary from '@/components/ErrorBounday'
 
 return (
@@ -765,17 +780,17 @@ return (
 // 1. 安装 TypeSciprt tsc -v version 3.7.2
 // 避免 vscode 编译代码报错
 
-// ErrorBoundary 错误边界并不是万能的，当遇到点击事件内部，以及setTimeout 等异步函数内部错误，是无法进行检测的。
+// ErrorBoundary 错误边界并不是万能的，当遇到点击事件内部，以及 setTimeout 等异步函数内部错误，是无法进行检测的。
 
-2-13 createPortal api  Modal组件
+2-13 createPortal api Modal 组件
 
-``` 1. /class/index.js
+```1. /class/index.js
 <List.Item>
   <Link to='/class/modal'>modal</Link>
 </List.Item>
 ```
 
-``` 2. /class/modal/index.js
+```2. /class/modal/index.js
 import CreatePortal from '@/components/CreatePortal'
 
 return (
@@ -786,7 +801,7 @@ return (
 
 ```
 
-``` 3. /components/CreatePortal/index.js
+```3. /components/CreatePortal/index.js
 import ReactDOM from 'react-dom'
 constructor(props) {
   super(props);
@@ -808,8 +823,10 @@ render() {
 }
 
 ```
-封装Modal
-``` 4. /components/Modal/index.js
+
+封装 Modal
+
+```4. /components/Modal/index.js
 import CreatePortal from '@/components/CreatePortal'
 import { Icon } from 'antd-mobile
 
@@ -844,7 +861,7 @@ handleClose = () => {
 const { show } = this.props
 return (
   <>
-    { this.props.show ? 
+    { this.props.show ?
       <CreatePortal style={Styles.modal}>
         <div style={Styles.body}>
           {this.props.children}
@@ -857,7 +874,7 @@ return (
 
 ```
 
-``` 5. /class/modal/index.js
+```5. /class/modal/index.js
 import Modal from '@/components/Modal
 import { Button } from 'antd-mobile
 
@@ -883,12 +900,14 @@ return (
 ```
 
 2-14 使用 ref api 操作 dom 组件
-``` 0. /class/index.js
+
+```0. /class/index.js
 <List.Item>
   <Link to='/class/refs'>refs</Link>
 </List.Item>
 ```
-``` 1. /class/refs/index.js/Refs
+
+```1. /class/refs/index.js/Refs
 import Child from './child'
 import InputForward from './forward'
 
@@ -920,7 +939,8 @@ return (
 ```
 
 // 操作子组件
-``` 2. /class/refs/child.js
+
+```2. /class/refs/child.js
 
 this.state = {
   text: 'old text'
@@ -940,7 +960,8 @@ return (
 ```
 
 // 父组件操作子组件的某些 dom 节点
-``` 3. /class/refs/forward.js
+
+```3. /class/refs/forward.js
 import React, { forwardRef } from 'react'
 
 const InputForward = forwardRef((props, ref) => {
@@ -956,7 +977,8 @@ export default InputForward
 ```
 
 3-1 react hook api 新组件开发模式
-``` 0 pages/function/index.js
+
+```0 pages/function/index.js
 import { WingBlank, WhiteSpace, List } from 'antd-mobile'
 import { Link } from 'umi'
 
@@ -974,13 +996,15 @@ return (
 
 useEffect 接收两个参数，第一个是函数，第二个是依赖项的数组，并且第二项是非必选项。
 因此存在三种情况：
+
 1. 没有依赖性，在组件渲染执行适合，和每次修改属性都会被执行
 1. 如果为空数组，在组件初始化时只会执行一次，
-1. 有依赖项，数组有依赖项，并且依赖项的值发生改变的时候useEffect方法回重新被执行
-useEffect如何执行异步操作：
+1. 有依赖项，数组有依赖项，并且依赖项的值发生改变的时候 useEffect 方法回重新被执行
+   useEffect 如何执行异步操作：
 1. fetch('/api/getLists)
 1. 并不支持 async/await
-``` 1 /pages/function/hook/index.js
+
+```1 /pages/function/hook/index.js
 
 1. useState
 const [count, setCount] = useState(0)
@@ -1019,7 +1043,8 @@ return (
   </div>
 )
 ```
-1. useLayoutEffect 是在所有的 dom 渲染完毕之后，才会同步执行effect，一般做dom相关操作
+
+1. useLayoutEffect 是在所有的 dom 渲染完毕之后，才会同步执行 effect，一般做 dom 相关操作
 1. useMemo 性能优化，经过缓存返回的值
 1. useCallback
 
@@ -1055,13 +1080,14 @@ return (
 
 ```
 
-3-2 useContext和useReducer实现数据流管理
+3-2 useContext 和 useReducer 实现数据流管理
 
-``` 0. /function/index.js
+```0. /function/index.js
 <List.Item><Link to="/function/context">context</Link></List.Item>
 
 ```
-``` 1. /function/context/index.js
+
+```1. /function/context/index.js
 import React, { useState, useEffect } from 'react';
 import App from './app'
 import { UserContextPrivider } from './userContext'
@@ -1076,7 +1102,7 @@ export default function(props){
 }
 ```
 
-``` 2. /function/context/app.js
+```2. /function/context/app.js
 import React, { useState, useEffect, useContext } from 'react';
 import User from './user'
 import { Button } from 'antd-mobile'
@@ -1099,7 +1125,7 @@ const handleLogin = () => {
 }
 ```
 
-``` 3. /function/context/user.js
+```3. /function/context/user.js
 import React, { useState, useEffect, useContext } from 'react';
 import { UserContext } from './userContext'
 
@@ -1115,7 +1141,7 @@ export default function(props){
 }
 ```
 
-``` 4. /function/context/userContext
+```4. /function/context/userContext
 import React, { useReducer } from 'react'
 
 const initState = {
@@ -1154,12 +1180,13 @@ export {
 }
 ```
 
-3-3 useTitleHook【根据url修改页面title的自定义hook】
+3-3 useTitleHook【根据 url 修改页面 title 的自定义 hook】
 
-``` 0. .class/function/index.js
+```0. .class/function/index.js
 <List.Item><Link to="/function/customize">customize</Link></List.Item>
 ```
-``` 1. function/customize/index.js
+
+```1. function/customize/index.js
 import React, { useState } from 'react';
 import { useTitleHook } from '@/hooks'
 
@@ -1178,7 +1205,7 @@ export default function(props){
 }
 ```
 
-``` 2. src/hooks/index.js
+```2. src/hooks/index.js
 export { default as useTitleHook } from './useTitleHook.js
 
 ```
@@ -1199,7 +1226,8 @@ export default function useTitleHook (title) {
 ```
 
 引入 hook 代码提示配置
-``` 4. /jsconfig/json vscode 配置
+
+```4. /jsconfig/json vscode 配置
 {
   "compilerOptions": {
     "baseUrl": "src",
@@ -1210,7 +1238,7 @@ export default function useTitleHook (title) {
 }
 ```
 
-3-4 useHttpHook【基于fetch api 封装具有监测功能的自定义hook】
+3-4 useHttpHook【基于 fetch api 封装具有监测功能的自定义 hook】
 
 0. /function/
 
@@ -1275,11 +1303,11 @@ export default function useHttpHook ({
 }
 ```
 
-``` 2. /src/hooks/index/js
+```2. /src/hooks/index/js
 export { default as useHttpHook } from './useHttpHook'
 ```
 
-``` 3. /function/customize/index.js
+```3. /function/customize/index.js
   const [result, loading] = useHttpHook({
     url: 'getListsAsync',
     // watch: [state]
@@ -1299,14 +1327,15 @@ export { default as useHttpHook } from './useHttpHook'
   }
 ```
 
-3-5 使用think-react-store实现数据处理【基于React context 和 hook的数据流解决方案】
+3-5 使用 think-react-store 实现数据处理【基于 React context 和 hook 的数据流解决方案】
 
 yarn add think-react-store
 
-``` 0. /function/index.js
+```0. /function/index.js
 <List.Item><Link to="/function/store">store</Link></List.Item>
 ```
-``` 1. /function/store/index.js
+
+```1. /function/store/index.js
 import React, { useState, useEffect } from 'react';
 import { StoreProvider } from 'think-react-store'
 import log from 'think-react-store/middlewares/log'
@@ -1329,12 +1358,12 @@ export default function(props){
 
 ```
 
-``` 2. /function/store/stores/index.js
+```2. /function/store/stores/index.js
 export { default as user } from './user
 
 ```
 
-``` 3. /function/store/stores/user.js
+```3. /function/store/stores/user.js
 export default {
   state: {
     id: '1',
@@ -1364,7 +1393,7 @@ export default {
 }
 ```
 
-``` 4. store/user.js
+```4. store/user.js
 import React, { useState, useEffect } from 'react';
 import { useStoreHook, useStateHook, useDispatchHook } from 'think-react-store'
 
@@ -1403,48 +1432,51 @@ export default function(props){
 }
 ```
 
-3-6 Fiber架构解析
+3-6 Fiber 架构解析
+
 1. 为什么需要 Fiber 架构
 1. Fiber 的执行流程
 1. Fiber 对 React 生命周期的 api 的影响
 
 为什么需要 Fiber 架构
-React 16之前渲染流程：属性更新到渲染页面过程中，浏览器一直处于忙碌状态，并且这个过程是不能终止的。
-假如有100个节点更新，那么浏览器在更新阶段内一直处于繁忙状态，假如有1000个、或这10000个节点更新，
-此时浏览器会在1s、2s甚至更长的时间段内，都进行节点的更新操作，这时，如果用户进行了鼠标、点击、滑动
+React 16 之前渲染流程：属性更新到渲染页面过程中，浏览器一直处于忙碌状态，并且这个过程是不能终止的。
+假如有 100 个节点更新，那么浏览器在更新阶段内一直处于繁忙状态，假如有 1000 个、或这 10000 个节点更新，
+此时浏览器会在 1s、2s 甚至更长的时间段内，都进行节点的更新操作，这时，如果用户进行了鼠标、点击、滑动
 或者滚轮相关的滑动，浏览器是无法进行响应的。会造成页面特别卡顿的感受
 
-针对这种问题。React 提出了Fiber 架构
-Fiber 架构是将整个渲染阶段分成2个小的阶段，分别是调度阶段、提交阶段，
+针对这种问题。React 提出了 Fiber 架构
+Fiber 架构是将整个渲染阶段分成 2 个小的阶段，分别是调度阶段、提交阶段，
 调度阶段 可以看到是有很多小的山峰，这些小曲线，指的是浏览器在渲染阶段的每一帧。
 调度阶段 react 这会在浏览器每一帧里运行，
-假如有100个节点需要更新，就会去判断那些节点是需要增加，哪些是可以修改，而哪些是可以直接删除的。
+假如有 100 个节点需要更新，就会去判断那些节点是需要增加，哪些是可以修改，而哪些是可以直接删除的。
 提交阶段 是将调度阶段返回的结果更新到视图上去。
 调度阶段是不能够被终止的，提交阶段可以被终止。
 
 Fiber 执行流程图 https://whimsical.com/react-fiber-K84ABiexufahf2StSRxNTU
 
-
 Fiber 架构对组件生命周期的影响
+
 1. 调度阶段
-componentWillMount
-componentWillReceiveProps
-shouldComponentUpdate
-componentWillUpdate
+   componentWillMount
+   componentWillReceiveProps
+   shouldComponentUpdate
+   componentWillUpdate
 
 1. 提交阶段
-componentDidMount
-componentDidUpdate
-componentWillUnmount
+   componentDidMount
+   componentDidUpdate
+   componentWillUnmount
 
 4-1 Egg.js 企业级开发的利器概述
-1. Egg.js是个适合开发企业级应用的 Node s框架,能够帮助开发团 队和开发人员降低开发和维护成本。
-企业级应用特点
+
+1. Egg.js 是个适合开发企业级应用的 Node s 框架,能够帮助开发团 队和开发人员降低开发和维护成本。
+   企业级应用特点
 1. 功能完善
 1. 规范性高
 1. 便于扩展、升级
 
 Egg.js 特点
+
 1. 提供基于 Egg 定制上层框架的能力
 1. 高度可扩展的插件机制
 1. 内置多进程管理
@@ -1454,31 +1486,33 @@ Egg.js 特点
 
 Egg.js Koa/Express 对比
 特性对比：
-1. 代码的规范性(是否提供明确的MVC架构开发模式)
-egg.js 三层架构 Controller/Service/View 具有明确的开发和命名规范
-express/koa 可以灵活编写带啊，没有明确规范
+
+1. 代码的规范性(是否提供明确的 MVC 架构开发模式)
+   egg.js 三层架构 Controller/Service/View 具有明确的开发和命名规范
+   express/koa 可以灵活编写带啊，没有明确规范
 1. 学习成本
-egg 中
-express/koa 易
+   egg 中
+   express/koa 易
 1. 插件机制/框架扩展机制
-egg 有
-express/koa 无
+   egg 有
+   express/koa 无
 1. 多进程管理
-egg 有
-express/koa 无
+   egg 有
+   express/koa 无
 1. HttpClient 集成
-egg 有
-express/koa 无
+   egg 有
+   express/koa 无
 
 4-2 Egg.js 初体验
-``` 0. 项目初始化
+
+```0. 项目初始化
 mkdir egg && cd egg
 yarn create egg --type=simple
 code .
 yarn install
 ```
 
-``` 1. package.json
+```1. package.json
   "dependencies": {
     "egg": "^2.15.1",
     "egg-scripts": "^2.11.0"
@@ -1492,7 +1526,7 @@ yarn install
     "eslint": "^5.13.0",
     "eslint-config-egg": "^7.1.0"
   },
-// start 线上运行环境 
+// start 线上运行环境
 // dev 本地开发环境
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-egg",
@@ -1501,11 +1535,12 @@ yarn install
   },
 
 ```
-3. 项目启动生成文件
-/logs
-/run
 
-``` 4. /app/controller/home.js/HomeController
+3. 项目启动生成文件
+   /logs
+   /run
+
+```4. /app/controller/home.js/HomeController
   async demo() {
     const { ctx } = this;
     ctx.body = 'hi CatCian';
@@ -1521,13 +1556,15 @@ module.exports = app => {
 
 4-3 Node.js 中的进程
 node.js 单线程单进程
-1. child_process 模块 创建子进程 ，通过子进程执行某些shell命令
-1. cluster 模块 可以充分利用cpu资源
+
+1. child_process 模块 创建子进程 ，通过子进程执行某些 shell 命令
+1. cluster 模块 可以充分利用 cpu 资源
 1. master 进程 和 cluster 进程通信方式
 
 /node
 touch child_process.js
 exec 创建子进程，将进程的结果缓存起来，之后再将缓存的结果返回给回调函数
+
 ```/node/child_process.js
 exec('cat a.js', (error, stdout, stderr) => {
   // 创建子进程时候如果出错，返回error
@@ -1542,7 +1579,7 @@ exec('cat a.js', (error, stdout, stderr) => {
 
 ```
 
-``` 2. spawn 创建子进程，返回的结果是stream流，执行shell命令，数组，配置项
+```2. spawn 创建子进程，返回的结果是stream流，执行shell命令，数组，配置项
 const ls = spawn('ls', ['-a'], { encoding: 'utf8' })
 // 成功流
 ls.stdout.on('data', data => {
@@ -1560,8 +1597,7 @@ ls.on('close', data => {
 })
 ```
 
-
-``` 3. node/cluster.js
+```3. node/cluster.js
 const cluster = require('cluster')
 const http = require('http')
 const numCPUs = require('os').cpus().length
@@ -1591,8 +1627,10 @@ if (cluster.isMaster) {
   console.log(`工作进程 ${process.pid} 已启动`)
 }
 ```
-4. master进程和cluster进程如何通信/ fork
-``` 1. node/child.js
+
+4. master 进程和 cluster 进程如何通信/ fork
+
+```1. node/child.js
 console.log('child 进程', process.pid)
 
 // 使用 process.send() 方法发送消息到父进程
@@ -1602,7 +1640,8 @@ process.on('message', msg => {
   console.log('child 进程接收', msg)
 })
 ```
-``` 2. node/master.js
+
+```2. node/master.js
 const childProcess = require('child_process')
 const child = childProcess.fork('./child.js')
 
@@ -1617,13 +1656,14 @@ child.send('master 进程发送消息')
 
 4-4 Egg.js 中多进程模式
 1 当一个应用启动时，会同时启动这三类进程。
-| 类型      | 进程数量 | 作用      | 稳定性 | 是否运行业务代码 |
+| 类型 | 进程数量 | 作用 | 稳定性 | 是否运行业务代码 |
 | ----------- | ----------- | ----------- | ----------- | ----------- |
-| Master      | 1       | 管理进程，进程间消息转发      | 非常高       | 否       |
-| Agent Worker   | 1        | 后台运行工作（长链接客户端）   | 高        | 少量        |
-| Worker   | CPUs 核数        | 执行业务代码   | 一般        | 是        |
+| Master | 1 | 管理进程，进程间消息转发 | 非常高 | 否 |
+| Agent Worker | 1 | 后台运行工作（长链接客户端） | 高 | 少量 |
+| Worker | CPUs 核数 | 执行业务代码 | 一般 | 是 |
 
-2 Master\Agent\Cluster进程之间的启动方式
+2 Master\Agent\Cluster 进程之间的启动方式
+
 1. 首先启动 master 进程
 1. master 进程会创建 agent 进程
 1. agent 进行创建成功之后会通过回调的方式告诉 master 进程（我已经创建成功了）
@@ -1635,7 +1675,8 @@ child.send('master 进程发送消息')
 
 https://eggjs.org/zh-cn/core/cluster-and-ipc.html
 3 Worker\Agent Worker 是如何进行通信？
-``` egg/agent.js
+
+```egg/agent.js
 module.exports = agent => {
   // 这里我们使用 messenger 对象来发送消息
   // 并且是在 egg 启动之后才能接收消息
@@ -1647,7 +1688,7 @@ module.exports = agent => {
 }
 ```
 
-``` egg/app.js
+```egg/app.js
 module.exports = app => {
   log(egg init)
   app.messenger.on('agentAction', data => {
@@ -1656,7 +1697,7 @@ module.exports = app => {
 }
 ```
 
-4-5 超越Express Koa2，Egg.js中的渐进式开发模式
+4-5 超越 Express Koa2，Egg.js 中的渐进式开发模式
 通用函数 - 框架扩展 - 内置插件 - 独立插件 - 抽象框架
 
 1. 实际项目中，经常会存在一些通用的逻辑，可以将通用的逻辑封装成一个个的通用函数
@@ -1664,14 +1705,15 @@ module.exports = app => {
 1. 针对这种需求 eggjs 提出 框架扩展，框架扩展不尽能够包含通用函数，还可以集成 eggjs 特有的属性和方法
 1. 还可将框架扩展继续改造，成为内置插件
 1. 内置插件不仅具有框架扩展的功能，还可以做一些自定义配置
-1. 如果使用的插件越来越多，可以将插件变为独立插件发布npm市场上去
+1. 如果使用的插件越来越多，可以将插件变为独立插件发布 npm 市场上去
 1. 如果框架内扩展和插件比较多，还可以封装成抽象框架里
 
 通用函数 - 框架扩展 - 内置插件开发
 需求：1. 获取本机信息
 
 通用函数
-``` 1. app/utils/info.js
+
+```1. app/utils/info.js
 'use strict';
 const os = require('os');
 
@@ -1690,7 +1732,8 @@ async index()
 log(info(), ctx.request.url)
 
 对框架进行扩展
-``` 2. app/extend/context.js
+
+```2. app/extend/context.js
 'use strict';
 const os = require('os')
 
@@ -1715,6 +1758,7 @@ log(ctx.info)
 内置插件开发
 /lib/plugin/egg-info/app/extend/context.js
 /lib/plugin/egg-info/app/extend/package.json
+
 ```
 {
   "eggPlugin": {
@@ -1723,7 +1767,7 @@ log(ctx.info)
 }
 ```
 
-``` /config/plugin.js
+```/config/plugin.js
 const path = require('path')
 
 exports.info = {
@@ -1745,20 +1789,20 @@ code .
 const Controller = require('egg').Controller
 
 class UserController extends Controller {
-  async index() {
-    const { ctx } = this
-    ctx.body = 'user index'
-  }
+async index() {
+const { ctx } = this
+ctx.body = 'user index'
+}
 
-  +async lists() {
-    const { ctx } = this
-    await new Promise((resolve) => {
-      setTimeout(()=> {
-        resolve
-      },1500)
-    })
-    ctx.body = [{id: 1s23}]
-  }
++async lists() {
+const { ctx } = this
+await new Promise((resolve) => {
+setTimeout(()=> {
+resolve
+},1500)
+})
+ctx.body = [{id: 1s23}]
+}
 }
 
 module.exports = UserController
@@ -1770,6 +1814,7 @@ router.get('/user', controller.user.index)
 3 单元测试
 /test/app/controller/xx.text.js
 /test/app/controller/user.text.js
+
 ```
 'use strict';
 
@@ -1793,13 +1838,15 @@ describe('test/app/controller/user.test.js', () => {
 });
 
 ```
+
 yarn test
 
 4 project-tpl
 controller
 
 5-2 Egg.js 路由中 get 请求的处理方式
-``` 1. /app/controller/user.js
+
+```1. /app/controller/user.js
 执行 GET /detail?id=10
 async detail() {
   const { ctx } = this
@@ -1815,12 +1862,14 @@ async detail2() {
 }
 ```
 
-``` 2. /app/router.js
+```2. /app/router.js
   router.get('/user/detail', controller.user.detail);
   router.get('/user/detail2/:id', controller.user.detail2);
 ```
-5-3 Egg.js 路由中 post put delete等请求的处理及参数校验
-``` /app/controller/user.js
+
+5-3 Egg.js  路由中  post put delete 等请求的处理及参数校验
+
+```/app/controller/user.js
   async add() {
     const { ctx } = this;
     console.log(ctx.request.body);
@@ -1836,12 +1885,13 @@ async detail2() {
   }
 ```
 
-``` /app/router/js
+```/app/router/js
 router.post('/user/add', controller.user.add);
 ```
 
 postman post /user/add
 body raw JSON
+
 ```
 {
   "name": "john",
@@ -1850,7 +1900,8 @@ body raw JSON
 ```
 
 Web 安全概念
-``` /app/config/config.defatult.js
+
+```/app/config/config.defatult.js
   config.security = {
     csrf: {
       enable: false,
@@ -1859,7 +1910,8 @@ Web 安全概念
 ```
 
 参数校验
-``` /app/config/plugin.js
+
+```/app/config/plugin.js
 'use strict';
 
 module.exports = {
@@ -1868,6 +1920,7 @@ module.exports = {
 ```
 
 post text
+
 ```/text/app/controller/user.text.js
   it('user add', async () => {
     await app.httpRequest()
@@ -1887,20 +1940,23 @@ post text
   });
 ```
 
-put 
-``` /app/controller/user.js
+put
+
+```/app/controller/user.js
   async edit() {
     const { ctx } = this;
     ctx.body = ctx.request.body;
   }
 
 ```
-``` router.js
+
+```router.js
 router.put('/user/edit', controller.user.edit);
 ```
 
 delete
-``` /app/controller/user.js
+
+```/app/controller/user.js
   async del() {
     const { ctx } = this;
     ctx.body = ctx.request.body.id;
@@ -1915,7 +1971,8 @@ postman
 ```
 
 5-4 Egg.js 中 Service 服务和单元测试
-``` 1. /app/servuce/user.js
+
+```1. /app/servuce/user.js
 'use strict'
 
 const Service = require('egg').Service
@@ -1933,8 +1990,7 @@ class UserService extends Service {
 module.exports = UserService
 ```
 
-
-``` 2. /app/controller/user.js
+```2. /app/controller/user.js
 async detail() {
   const res = await ctx.service.user.detail(10)
   console.log(res)
@@ -1949,7 +2005,8 @@ async index() {
 ```
 
 test
-``` 3. /test/app/service/user.test.js
+
+```3. /test/app/service/user.test.js
 'use strict'
 
 const {app, assert} = require('egg-mock-bootstrap')
@@ -1965,6 +2022,7 @@ describe('service user test'm () => {
 ```
 
 5-5 Egg.js 中使用 Ejs 模版引擎
+
 1. 后端渲染由来已久，渲染性能得到业界认可
 1. 利于 SEO 优化，对纯展示类网站页面体验较好
 1. 对前后端分离开发模式的补充（单点登陆的登陆页面）
@@ -1972,7 +2030,7 @@ describe('service user test'm () => {
 Egg.js 支持多套模板引擎
 npm i egg-view-ejs --save
 
-``` 1. /config/plugin.js
+```1. /config/plugin.js
 'use strict';
 
 module.exports = {
@@ -1984,7 +2042,7 @@ module.exports = {
 
 ```
 
-``` 2. config/default.js
+```2. config/default.js
   config.view = {
     mapping: {
       '.ejs': 'ejs',
@@ -1993,11 +2051,11 @@ module.exports = {
   };
 
   config.ejs = {
-  
+
   };
 ```
 
-``` 3. /app/controll/user.js
+```3. /app/controll/user.js
   async index() {
     const { ctx } = this;
     await ctx.render('user.html', {
@@ -2008,7 +2066,7 @@ module.exports = {
   }
 ```
 
-``` 4. /app/view/user.html
+```4. /app/view/user.html
   <div>
     <h1>id: <%= id %></h1>
     <%# 注释 #%>
@@ -2023,7 +2081,7 @@ module.exports = {
   </div>
 ```
 
-``` 5. config.default.js
+```5. config.default.js
   config.ejs = {
     // 全局修改分割符
     delimiter: '%',
@@ -2031,7 +2089,8 @@ module.exports = {
 ```
 
 同时满足 /app/view/user.html& /app/html/user.html
-``` 6 config.default.js
+
+```6 config.default.js
 const path = require('path')
 
   config.view = {
@@ -2046,35 +2105,38 @@ const path = require('path')
 ```
 
 5-6 Ejs 模版引擎中静态资源的使用和配置
-``` 0 app/html/user-header.html
+
+```0 app/html/user-header.html
 <h1>user header</h1>
 ```
 
-``` 1 app/html/user.html
+```1 app/html/user.html
 <% include user-header.html %>
 ```
+
 配置静态资源默认路径 /app/public/..
 public/img
 public/js/user.js
 alert('user')
 public/css/user.css
 #user{
-  color #f60
-  font-size 30px
+color #f60
+font-size 30px
 }
 
 localhost:7001/public/css/user.css
 
 node_modules/egg-static/config/config.default.js
 手动修改配置
-``` 2 confit/config.default.js
+
+```2 confit/config.default.js
 config.static = {
   prefix: "/assets/"
   dir: path.join(appInfo.baseDir, 'app/assets')
 }
 ```
 
-``` 3 app/html/user.html
+```3 app/html/user.html
 <link rel="stylesheet" href="assets/css/user.css">
 
 ul#user
@@ -2083,13 +2145,14 @@ ul#user
 
 ```
 
-5-7 Egg.js 中 Cookie 的配置和使用以及如何设置中文cookie
-``` 0 /app/html/user.html
+5-7 Egg.js 中 Cookie 的配置和使用以及如何设置中文 cookie
+
+```0 /app/html/user.html
     <button onclick="login()">登陆</button>
     <button onclick="logout()">退出</button>
 ```
 
-``` 1 assets/js/user.js
+```1 assets/js/user.js
 function login() {
   fetch('/login', {
     method: 'POST',
@@ -2107,7 +2170,7 @@ function login() {
 }
 ```
 
-``` 2 app/controller/user.js
+```2 app/controller/user.js
   async login() {
     const { ctx } = this;
     const body = ctx.request.body;
@@ -2129,7 +2192,7 @@ app/router
 router.post('/login', controller.user.login);
 ```
 
-``` 3 app/assets/user.html
+```3 app/assets/user.html
     <h1>user:</h1>
     <% if (user) { %>
       已经登陆：<%= user.name%>
@@ -2139,7 +2202,7 @@ router.post('/login', controller.user.login);
     <hr>
 ```
 
-``` 4 app/controller/user.js
+```4 app/controller/user.js
   async index() {
     const { ctx } = this;
     // 获取 cookies
@@ -2152,7 +2215,8 @@ router.post('/login', controller.user.login);
 ```
 
 注销操作
-``` 5 app/assets/js/user.js
+
+```5 app/assets/js/user.js
 function logout() {
   fetch('/logout', {
     method: 'POST',
@@ -2170,7 +2234,7 @@ function logout() {
 }
 ```
 
-``` 5.1 controller
+```5.1 controller
 /app/controller/user.js
   async logout() {
     const { ctx } = this;
@@ -2187,7 +2251,8 @@ router.post('/logout, controller.user.logout)
 js 不能操作 document.cookie
 
 egg 设置中文 cookies
-``` controller/user.js
+
+```controller/user.js
 encode(str) {
   return new Buffer(str).toString('base64')
 }
@@ -2207,19 +2272,22 @@ async index() {
   const base64 = this.decode(ctx.cookied.get('base64'))
 }
 ```
+
 1. 设置中文时候加密
 1. base64 方式
+
 ```user.html
 div{中文zh：<%= zh %>}
 div{中文base64：<%= base64 %>}
 ```
 
 5-8 Egg.js 中 Session 的配置和使用
+
 1. cookie sessiont 区别
 1. 如何操作 session
 1. seestion 扩展
 
-``` 0 app/controller/user.js
+```0 app/controller/user.js
   aysnc index() {
       const user2 = ctx.session.user;
       console.log('user session', user2);
@@ -2242,6 +2310,7 @@ div{中文base64：<%= base64 %>}
 ```
 
 session 配置
+
 ```config.default.js
   config.session = {
     key: 'CAT_SESS',
@@ -2255,6 +2324,7 @@ session 配置
 默认情况下，session 会保存在浏览器 cookie 某个字段中
 如果 session 内容越来越多，那么 cookie 相应也会越来越多，直到浏览器拒绝相关 session
 这样就对 session 进行简单的扩展，将 session 一部分内容保存在内存当中
+
 ```/app.js
 'use strict';
 
@@ -2279,7 +2349,7 @@ ctx.session.test = 'test'
 
 5-9 Egg.js 中使用 HttpClient 请求其他接口
 
-``` 1 /app/controller/curl.js
+```1 /app/controller/curl.js
   async curlGet() {
     const { ctx } = this;
     const res = await ctx.curl('http://localhost:7001/', {
@@ -2305,14 +2375,15 @@ app/router.js
   router.post('/curlPost', controller.curl.curlPost);
 ```
 
-6-1 中间件，绕不开的洋葱圈模型【实现日志中间件httpLog】
+6-1 中间件，绕不开的洋葱圈模型【实现日志中间件 httpLog】
 为什么叫洋葱圈模型？
 因为中间件是按照顺序，由外而内，一层一层执行，并且每个中间件都会执行两次。
 
 实际项目中，使用中间件对请求进行拦截，然后增加额外的处理
 
 eggjs 如何使用中间件？
-``` 1 app/middlerware/m2.js
+
+```1 app/middlerware/m2.js
 'use strict';
 
 module.exports = options => {
@@ -2324,7 +2395,7 @@ module.exports = options => {
 }
 ```
 
-``` 1 app/middlerware/m1.js
+```1 app/middlerware/m1.js
 'use strict';
 
 module.exports = options => {
@@ -2336,13 +2407,15 @@ module.exports = options => {
 };
 
 ```
-``` 2 config.default.js
+
+```2 config.default.js
 config.middleware = ['m1', 'm2']
 config.middleware = ['httLog']
 ```
+
 http://localhost:7001/ 刷新
 
-``` 3 app/midleware/httpLog.js
+```3 app/midleware/httpLog.js
 拦截请求，将请求相关的内容输出到文件中
 dayjs npm install dayjs --save
 'use strict';
@@ -2368,8 +2441,10 @@ module.exports = options => {
   };
 };
 ```
+
 // 中间件的参数
-``` /app/config.default.js
+
+```/app/config.default.js
 config.httpLog = {
   type: 'all'
 }
@@ -2377,6 +2452,7 @@ config.httpLog = {
 
 6-2/-3 丰富的扩展方式，项目开发得心应手【提取公共逻辑，提升开发效率】
 appliction 扩展
+
 ```app/extend/appliction.js
 'use strict';
 const path = require('path');
@@ -2400,7 +2476,8 @@ function getPack() {
 }
 
 ```
-``` home.js
+
+```home.js
   async newApplication() {
     const { ctx, app } = this;
     // const pack = app.getPackage('scripts');
@@ -2414,7 +2491,8 @@ router.get('/newApplication', controller.home.newApplication);
 ```
 
 context 扩展
-``` home.js
+
+```home.js
   async newContext() {
     const { ctx } = this;
     const params = ctx.params();
@@ -2424,7 +2502,8 @@ context 扩展
 router.js
 router.post('/newContext' controller.home.newContext)
 ```
-``` app/extend/context.js
+
+```app/extend/context.js
 'use strict';
 
 module.exports = {
@@ -2441,7 +2520,8 @@ module.exports = {
 ```
 
 request 扩展
-``` app/extend/request.js
+
+```app/extend/request.js
 'use strict';
 
 module.exports = {
@@ -2453,7 +2533,8 @@ module.exports = {
 };
 
 ```
-``` home.js
+
+```home.js
   async newRequest() {
     const { ctx } = this;
     const token = ctx.request.token;
@@ -2464,7 +2545,8 @@ router.get('/newRequest' controller.home.newRequest)
 ```
 
 response/help 扩展
-``` app/extend/reponse.js
+
+```app/extend/reponse.js
 'use strict';
 
 module.exports = {
@@ -2498,7 +2580,8 @@ module.exports = {
 };
 
 ```
-6-4 插件机制， Egg.js 灵活应用【实现用户登录验证插件egg-auth】
+
+6-4 插件机制， Egg.js 灵活应用【实现用户登录验证插件 egg-auth】
 
 ```1 /lib/plugin/egg-auth/app/middleware/
 'use strict';
@@ -2521,7 +2604,7 @@ module.exports = options => {
 };
 ```
 
-``` 2 /lib/plugin/egg-auth/app/package.json
+```2 /lib/plugin/egg-auth/app/package.json
 {
   "name": "egg-auth",
   "eggPlugin": {
@@ -2530,7 +2613,7 @@ module.exports = options => {
 }
 ```
 
-``` 3 /config/plugin.js
+```3 /config/plugin.js
 'use strict';
 const path = require('path');
 
@@ -2549,7 +2632,7 @@ module.exports = {
 
 ```
 
-``` 4 /config.default.js
+```4 /config.default.js
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
@@ -2576,8 +2659,9 @@ module.exports = appInfo => {
 
 ```
 
-也可以添加midlleware
-``` 4 app.js
+也可以添加 midlleware
+
+```4 app.js
 'use strict';
 
 const store = {};
@@ -2588,7 +2672,7 @@ module.exports = app => {
 
 ```
 
-``` 5 /lib/plugin/egg-info/extend/context.js
+````5 /lib/plugin/egg-info/extend/context.js
 'use strict';
 const os = require('os');
 
@@ -2611,10 +2695,10 @@ module.exports = {
     "name": "info"
   }
 }
-```
-
+````
 
 6-5 Egg.js 中的定时任务
+
 1. 定时上报应用状态，便于系统监控
 1. 定时从远程接口更新数据
 1. 定时处理文件（清理过期日志文件）
@@ -2648,7 +2732,7 @@ macOs 10.15(x86,64-bit),DMG Archive
 mysql -uroot -p /无密码
 
 1. 本机所有数据库
-mysql> show databases
+   mysql> show databases
 
 系统自带数据库
 information_schema
@@ -2657,7 +2741,7 @@ performance_schema
 sys
 
 1. 创建数据库
-create datebase egg;
+   create datebase egg;
 
 show databases
 
@@ -2680,10 +2764,10 @@ create database egg
 use egg;
 
 create table user(
-	id int(10) not null auto_increment/自增,
-    name varchar(20) not null default 'admin' comment '用户名',
-    pwd varchar(50) not null comment '密码',
-    primary key(id)
+id int(10) not null auto_increment/自增,
+name varchar(20) not null default 'admin' comment '用户名',
+pwd varchar(50) not null comment '密码',
+primary key(id)
 )engine=InnoDB charset=utf8;
 
 -- 查看表
@@ -2700,7 +2784,7 @@ insert into user values(1, 'user1', '123')
 insert into user(name, pwd) values('user2', '123')
 
 -- 查询表数据
-select * from user
+select \* from user
 select id,name from user where id = 1
 
 -- 修改表数据
@@ -2709,10 +2793,10 @@ update user set pwd = '123456' where id = 1
 -- 删除表数据
 delete from user where id = 2
 
-7-3 使用egg-mysql插件操作数据库
+7-3 使用 egg-mysql 插件操作数据库
 npm install --save egg-mysql@3.0.0
 
-``` 0 egg-mysql 
+```0 egg-mysql
 config/plugin.js
   auth: {
     enable: false,
@@ -2745,7 +2829,7 @@ config.default.js
   };
 ```
 
-``` 1 app/controller/user.js
+```1 app/controller/user.js
   async lists() {
     const { ctx } = this;
     const res = await ctx.service.user.lists();
@@ -2799,7 +2883,7 @@ config.default.js
 }
 ```
 
-``` 2 app/service/user.js
+```2 app/service/user.js
 'use strict';
 
 const Service = require('egg').Service;
@@ -2869,12 +2953,14 @@ module.exports = UserService;
 7-4 Egg.js 中使用 Sequelize 操作 mysql 数据库
 分页、多表联查
 npm install egg-sequelize mysql2 --save
-``` config/plugin/js
+
+```config/plugin/js
   sequelize: {
     enable: true,
     package: 'egg-sequelize',
   },
 ```
+
 ```config.default.js
   config.sequelize = {
     dialect: 'mysql',
@@ -2884,7 +2970,7 @@ npm install egg-sequelize mysql2 --save
     username: 'root',
     password: '',
     define: {
-    // 不需要sequelize自动添加时间相关字段  
+    // 不需要sequelize自动添加时间相关字段
       timestamps: false,
     // 在 sequelize 使用用原始表名称
       freezeTableName: true,
@@ -2908,7 +2994,7 @@ module.exports = app => {
 
 ```
 
-``` app/controller/user.js
+```app/controller/user.js
   async lists() {
     const { ctx } = this;
     // const res = await ctx.service.user.lists();
@@ -2997,34 +3083,36 @@ module.exports = app => {
 7-5/6 Sequlize 查询操作
 各表之间存在的联系：
 user、userDetail 一对一关系，一个用户只有一条详情信息
-user、comment    一对多关系，一个用户有多条评论
-user、roles      多对多关系，存在一张中间表 userRoles 一个用户有多个角色，一个角色有多个用户
+user、comment 一对多关系，一个用户有多条评论
+user、roles 多对多关系，存在一张中间表 userRoles 一个用户有多个角色，一个角色有多个用户
 
-在Model实例里面，重新Model的associate方法，将关联关系写在内部实现关联：
-has 方法 如果有 foreignKey 属性值是从对方的表上找，如果有targetKey则是自己的主键。
+在 Model 实例里面，重新 Model 的 associate 方法，将关联关系写在内部实现关联：
+has 方法 如果有 foreignKey 属性值是从对方的表上找，如果有 targetKey 则是自己的主键。
 belongs 方法 如果有 foreignKey 属性值是自身表的主键，targetKey 是对方表上的。
-
 
 8-1 本章概览
 章节目标
+
 1. 完成前端界面开发
-1. 实现列表的滚动加载，图片的懒加载效果 
-目前列表滚动加载是一种常用的展现方式，当页面滚动到底部时候会向后端发送请求，来获取一些数据，然后再将数据拼装到列表的底部。
-而图片的懒加载一般是项目的优化，默认情况下是展示一张空白的图片，并且这张空白图片的体积是非常小的，当图片没有进入到浏览器的可是区域时候，不展示真实图片，然后图片滑动到可是区域时候，才展示真实的图片
-1. 使用mock数据模拟接口
+1. 实现列表的滚动加载，图片的懒加载效果
+   目前列表滚动加载是一种常用的展现方式，当页面滚动到底部时候会向后端发送请求，来获取一些数据，然后再将数据拼装到列表的底部。
+   而图片的懒加载一般是项目的优化，默认情况下是展示一张空白的图片，并且这张空白图片的体积是非常小的，当图片没有进入到浏览器的可是区域时候，不展示真实图片，然后图片滑动到可是区域时候，才展示真实的图片
+1. 使用 mock 数据模拟接口
 
 系统模块
+
 1. 民宿模块：首页、搜索页面、民宿详情页面
 1. 订单模块：订单详情
 1. 我的模块：我的页面、编辑页面
 
 技术要点：
-核心api useState useEffect IntersectionOberver/检测元素是否进入可是区域
-工具库 think-react-stroe/数据流管理 project-libs/常用函数集锦 catch缓存操作，数组操作， 浏览器相应操作，rc-from/处理表单相关问题
+核心 api useState useEffect IntersectionOberver/检测元素是否进入可是区域
+工具库 think-react-stroe/数据流管理 project-libs/常用函数集锦 catch 缓存操作，数组操作， 浏览器相应操作，rc-from/处理表单相关问题
 公共组件： MenuBar ShowLoading Modal
-自定义hook useHttpHook userOberverHook/检测元素是否进入可是区域 useImgHook/实现图片的懒加载效果
+自定义 hook useHttpHook userOberverHook/检测元素是否进入可是区域 useImgHook/实现图片的懒加载效果
 
 学习收获
+
 1. 可以学习到前端系统的开发流程
 1. 了解并实现滚动加载和图片懒加载的思路
 1. 前端项目的优化思路(公共组件、缓存、骨架屏)
@@ -3034,7 +3122,7 @@ client/pages/home/index.js
 client/pages/order/
 client/pages/user/
 
-``` .umirc.js [
+```.umirc.js [
 import { defineConfig } from 'umi';
 
 export default defineConfig({
@@ -3051,14 +3139,14 @@ export default defineConfig({
         { path: '/user', component: '@/pages/user', title: '我的' },
       ]
     }
-   
+
   ],
   fastRefresh: {},
 });
 
 ```
 
-``` src/layouts/index.js
+```src/layouts/index.js
 import styles from './index.css';
 import { MenuBar, ErrorBoundary } from '@/components'
 import { useLocation } from 'umi'
@@ -3091,7 +3179,7 @@ export default BasicLayout;
 }
 ```
 
-``` src/components/index.js
+```src/components/index.js
 export { default as CreatePortal } from './CreatePortal'
 export { default as ErrorBoundary } from './ErrorBoundary'
 export { default as LazyLoad } from './LazyLoad'
@@ -3101,7 +3189,8 @@ export { default as MenuBar } from './MenuBar'
 
 底部导航条
 react-icons Bootstrap Icons npm install react-icons@3.10.0 --save
-``` src/components/MenuBar/index.js
+
+```src/components/MenuBar/index.js
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import { TabBar } from "antd-mobile";
@@ -3152,15 +3241,15 @@ export default class MenuBar extends Component {
     return (
       <div className="menu-bar">
           <TabBar hidden={!this.props.show}>
-            { 
+            {
               this.state.tabs.map(
                 tab => <TabBar.Item key={tab.link}
                 icon={tab.select}
                 selectedIcon={tab.selectedIcon}
                 selected={tab.link === this.props.pathname}
                 title={tab.title}
-                onPress={() => history.push(tab.link)}></TabBar.Item> 
-              ) 
+                onPress={() => history.push(tab.link)}></TabBar.Item>
+              )
             }
           </TabBar>
       </div>
@@ -3169,7 +3258,7 @@ export default class MenuBar extends Component {
 }
 ```
 
-``` src/components/MenuBar/index.less
+```src/components/MenuBar/index.less
 .menu-bar {
   .am-tab-bar {
     position: relative;
@@ -3185,7 +3274,7 @@ export default class MenuBar extends Component {
   .am-tab-bar-item {
     height: auto !important;
   }
-  
+
   .am-tabs-tab-bar-wrap {
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -3200,7 +3289,8 @@ export default class MenuBar extends Component {
 ```
 
 8-3 首页开发
-``` src/assets/mixin.less
+
+```src/assets/mixin.less
 .flex(@direction: row, @justify: center, @align: center) {
   display: flex;
   flex-driection: @direction
@@ -3209,7 +3299,7 @@ export default class MenuBar extends Component {
 }
 ```
 
-``` src/pages/home/index.less
+```src/pages/home/index.less
 @import '../../assets/mixin.less';
 
 .home {
@@ -3291,7 +3381,7 @@ export default class MenuBar extends Component {
 
 ```
 
-``` src/pages/home/index.js/func
+```src/pages/home/index.js/func
 import React, { useState, useEffect } from 'react';
 import Header from './components/header'
 import Search from './components/search'
@@ -3315,7 +3405,7 @@ export default function(props){
 }
 ```
 
-``` src/pages/home/components/header/index.js/func
+```src/pages/home/components/header/index.js/func
 import React, { useState, useEffect } from 'react';
 import { Link } from 'umi'
 
@@ -3338,7 +3428,7 @@ export default function(props){
 }
 ```
 
-``` src/pages/home/components/search/index.js/func
+```src/pages/home/components/search/index.js/func
 import React, { useState, useEffect } from 'react';
 import { Picker, List, Button, Calendar } from 'antd-mobile';
 import dayjs from 'dayjs';
@@ -3410,8 +3500,8 @@ export default function (props) {
 }
 
 ```
- 
-``` src/pages/home/components/hot/index.js/func
+
+```src/pages/home/components/hot/index.js/func
 import React, { useState, useEffect } from 'react';
 import data from './mock.json';
 
@@ -3438,9 +3528,9 @@ export default function (props) {
 
 ```
 
-8-4 为首页添加数据mock（使用useHttpHook请求数据）
+8-4 为首页添加数据 mock（使用 useHttpHook 请求数据）
 
-``` src/pages/home/index.js
+```src/pages/home/index.js
 import React, { useState, useEffect } from 'react';
 import Header from './components/header';
 import Search from './components/search';
@@ -3469,7 +3559,7 @@ export default function (props) {
 
 ```
 
-``` mock/home.js
+```mock/home.js
 import citys from '../src/pages/home/components/search/citys.json';
 import houses from '../src/pages/home/components/hot/mock.json';
 
@@ -3489,12 +3579,12 @@ export default {
 };
 ```
 
-``` search/index.js
+```search/index.js
 {!props.citysLoading ? Picker}
 
 ```
 
-``` hot/index
+```hot/index
   {props?.houses?.map((house) => (
     <div className="hot-lists-item" key={house.id}>
       <img className="img" src={house.img} alt={house.title} />
@@ -3581,6 +3671,7 @@ export default function (props) {
 }
 
 ```
+
 ```pages/search/index.less
 @import '../../assets/mixin.less';
 
@@ -3627,6 +3718,7 @@ export default function (props) {
   }
 }
 ```
+
 ```/mock/house.js
 import houses from '../src/pages/home/components/hot/mock.json';
 
@@ -3642,9 +3734,11 @@ export default {
 };
 
 ```
-8-6 初识IntersectionObserver，实现useObserverHook
+
+8-6 初识 IntersectionObserver，实现 useObserverHook
 搜索页面 监听页面滑动到最底端
-``` pages/observer.js/func
+
+```pages/observer.js/func
 import React, { useState, useEffect } from 'react';
 import { history } from 'umi';
 import { useObserverHook } from '@/hooks';
@@ -3697,7 +3791,8 @@ export default function (props) {
 }
 
 ```
-``` umirc.ts
+
+```umirc.ts
 
   routes: [
     ...
@@ -3706,12 +3801,12 @@ export default function (props) {
 
 ```
 
-``` src/hooks/useObserverHook.js
+```src/hooks/useObserverHook.js
 import { useEffect } from 'react';
 
 let observer;
 export default function useObserverHook(selectors, callback, watch = []) {
-  
+
   useEffect(() => {
     const elem = document.querySelector(selectors)
     observer = new IntersectionObserver((entries) => {
@@ -3732,16 +3827,17 @@ export default function useObserverHook(selectors, callback, watch = []) {
 
 ```
 
-``` src.hooks/indexjs
+```src.hooks/indexjs
 export { default as useObserverHook } from './useObserverHook
 ```
 
-8-7 使用useObserverHook实现滚动加载（上）
-``` 0 src/hooks/useObserverHooks.js
+8-7 使用 useObserverHook 实现滚动加载（上）
+
+```0 src/hooks/useObserverHooks.js
 
 ```
 
-``` mock/house.js 
+```mock/house.js
 1. 增加数据
 
 let data;
@@ -3751,12 +3847,15 @@ if (req.body.pageNum < 4) {
   data = []
 }
 ```
+
 滚动加载效果：
+
 1. 监听页面内 #loading 是否展示出来
 2. 修改分页数据
 3. 监听分页数据的修改，发送接口，请求下一页的数据
 4. 监听 loading 状态的变化，拼装数据
-``` src/pages/search/index.js
+
+```src/pages/search/index.js
 import React, { useState, useEffect } from 'react';
 import { useHttpHook, useObserverHook } from '@/hooks';
 import { SearchBar, ActivityIndicator } from 'antd-mobile';
@@ -3851,7 +3950,8 @@ export default function (props) {
 
 ```
 
-8-8 使用useObserverHook实现滚动加载（下）
+8-8 使用 useObserverHook 实现滚动加载（下）
+
 ```pages/search/index.js
 import { useLocation } from 'umi'
 
@@ -3897,12 +3997,13 @@ const handleSumbimt = value => {
 }
 ```
 
-8-9 使用useImgHook实现图片懒加载
+8-9 使用 useImgHook 实现图片懒加载
 
 1. 监听图片是否进入可视区域
 1. 将可视区域图片 src 属性值替换为真实的图片地址，data-src
 1. 停止监听当前的节点
-``` src/hooks/useImgHook.js
+
+```src/hooks/useImgHook.js
 import { useEffect } from 'react
 let observer
 export default function useImgHook(elem, callback, watch=[]) {
@@ -3943,8 +4044,10 @@ useImgHook('.item-img', entries => {
 img className=item-img data-src=item.img src={require('../../assets/blank.png')}
 ```
 
-8-10 优化-提取公共组件，使用枚举，引入project-libs
+8-10 优化-提取公共组件，使用枚举，引入 project-libs
+
 1. 底部展示数据 公共组件
+
 ```src/components/ShowLoading/index.js/func
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -3979,9 +4082,11 @@ ShowLoading.propTypes = {
 };
 
 ```
+
 2. id mk-loading
 
 3. id 处理出来常量
+
 ```src/enums/common.js
 export const LOADING_ID = 'mk-loading';
 export const PAGE = {
@@ -3997,22 +4102,24 @@ export {
   CommonEnum
 }
 ```
+
 jsconfig.json
 @/enums
 
 search/index.js
-import {CommonEnum} from 
+import {CommonEnum} from
 components/ShowLoading/index.js
 
-4. 提取page相关属性
+4. 提取 page 相关属性
 
 5. useImgHook nodes && nodes.length == !isEmpty(nodes)
-project-libs
-yarn add project-libs
-import { isEmpty } from project-libs
+   project-libs
+   yarn add project-libs
+   import { isEmpty } from project-libs
 
 8-11 民宿详情页面界面开发
-``` umirc.ts
+
+```umirc.ts
 + { path: '/house', component: /house title: 房屋}
 ```
 
@@ -4040,7 +4147,7 @@ return (
 )
 ```
 
-``` pages/house/components/Banner/index.js/func
+```pages/house/components/Banner/index.js/func
 yarn add react-awesome-swiper@1.4.16 / 滑动
 import AwesomeSwiper from 'react-awesome-swiper'
 
@@ -4092,7 +4199,7 @@ export default function (props) {
 
 ```
 
-``` pages/house/components/Info
+```pages/house/components/Info
 import {Button} from 'antd-mobile'
 return (
   div.info
@@ -4107,7 +4214,7 @@ return (
 )
 ```
 
-``` pages/house/components/Lists
+```pages/house/components/Lists
 
   return (
     <div className="comment">
@@ -4130,7 +4237,7 @@ return (
   )
 ```
 
-``` components/Modal/index.js
+```components/Modal/index.js
 import React, { Component } from 'react';
 import CreatePortal from '@/components/CreatePortal';
 import { Icon } from 'antd-mobile';
@@ -4222,7 +4329,7 @@ export default class Modal extends Component {
 
 ```
 
-``` pages/house/components/Footer
+```pages/house/components/Footer
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components';
 import { TextareaItem, Button } from 'antd-mobile';
@@ -4277,7 +4384,7 @@ src/utils/http.js
 src/utils/index.js
 export {default as Http} from './http.js'
 
-``` src/layouts/index.js
+```src/layouts/index.js
 import { StroeProvider } from 'think-react-store'
 import { StoreProvider } from 'think-react-store'
 import * as store from "../stores";
@@ -4288,7 +4395,7 @@ import * as store from "../stores";
   );
 ```
 
-``` src/stores/house.js
+```src/stores/house.js
 import Http from '../utils/http';
 
 export default {
@@ -4320,11 +4427,11 @@ export default {
 
 ```
 
-``` src/stores/index.js
+```src/stores/index.js
 export { default as house } from './house'
 ```
 
-``` mock/house.js
+```mock/house.js
 'POST /api/house/detail': (req, res) => {
     res.json({
       status: 200,
@@ -4348,7 +4455,7 @@ export { default as house } from './house'
   },
 ```
 
-``` src/pages/house/index.js
+```src/pages/house/index.js
 import React, { useState, useEffect } from 'react';
 import Banner from './components/Banner';
 import Info from './components/Info';
@@ -4394,17 +4501,16 @@ export default function (props) {
 // 3. 监听 reload 变化重新请求接口
 // 4. 拼装数据
 
-``` src/utils/timer.js
+```src/utils/timer.js
 import dayjs from 'dayjs'
 export default function timer(time, type='all') {
   return dayjs(time).format(type === 'all' ? 'YYYY-MM-DD HH:mm:ss': 'YYYY-MM-DD")
 }
 ```
 
-
 8-12 为民宿详情页面添加数据流管理（下）
 
-``` house/index.js
+```house/index.js
 const {house:{getCommentsAsync}} = useStoreHook()
 
 useEffect(() => {
@@ -4419,7 +4525,7 @@ useObserverHook('#'+CommonEnum.LOADING_ID, (entries) => {
 }, [comments, showLoading]);
 ```
 
-``` stores/house.js
+```stores/house.js
 import Http from '../utils/http';
 import { CommonEnum } from '@/enums';
 state: {
@@ -4498,7 +4604,7 @@ effects: {
 }
 ```
 
-``` src/pages/house/componens/Lists.js
+```src/pages/house/componens/Lists.js
 import { ShowLoading } from @/components
 
 return (
@@ -4509,7 +4615,7 @@ return (
 )
 ```
 
-``` mock/house.js
+```mock/house.js
   'POST /api/house/comments/lists': (req, res) => {
     setTimeout(() => {
       let data;
@@ -4532,7 +4638,7 @@ return (
   },
 ```
 
-``` house/Footer/index/js
+```house/Footer/index/js
 const {house: {addCommentsAsync}} = useStoreHook()
 [commentsValue, setCommentsValue] = ()
 handleChange = value => {
@@ -4550,7 +4656,7 @@ const handleSubmit = value => {
 }
 ```
 
-``` home/hot/index.js
+```home/hot/index.js
 history.push({
   pathname: '/house
   query:{
@@ -4558,9 +4664,9 @@ history.push({
   }
 })
 onClick ={() =>handleClick(item.id)}
-``` 
+```
 
-``` house/index.js
+```house/index.js
 const { query } = useLocation()
 
 // 返回上一页，再次选择时候数据重置
@@ -4574,7 +4680,8 @@ useEffect(() => {
 ```
 
 8-14 开发订单页面
-``` 1 page/order/index.js
+
+```1 page/order/index.js
 import React, { useState, useEffect } from 'react';
 import { Tabs } from 'antd-mobile';
 import { useHttpHook } from '@/hooks';
@@ -4591,7 +4698,7 @@ const tabs = [
   {title 未支付, sub 0}
   {title 已支付, sub 1}
 ]
-return 
+return
 div.order-page
   Tabs[tabs={tabs}]
   div.tab 1
@@ -4603,7 +4710,7 @@ div.order-page
 /div
 ```
 
-``` 2 page/order/components/Lists/index.js/func
+```2 page/order/components/Lists/index.js/func
 import OrderItem from '../Item
 import {ActivityIndicator}  from antd-mobile
 import {isEmpty} from project-libs
@@ -4620,7 +4727,7 @@ return (
 )
 ```
 
-``` 3 page/order/components/Item/index.js/func
+```3 page/order/components/Item/index.js/func
 import {Button} from 'antd-mobile'
 const renderPag = () => {
   switch(props.type)
@@ -4642,7 +4749,7 @@ const renderPag = () => {
   </div>
 ```
 
-``` 4 mock/order.js
+```4 mock/order.js
 export default {
   POSTS /api/order/lists : (req, res) => {
     res.json({
@@ -4653,19 +4760,19 @@ export default {
 }
 ```
 
-8-15 为订单页面添加滚动加载效果（使用useObserverHook，但不监听数据）
+8-15 为订单页面添加滚动加载效果（使用 useObserverHook，但不监听数据）
 滚动加载：
 搜索页面，采用 useHttpHook 结合数据监听的方式
 房屋详情，采用 think-react-store 结合数据监听的方法
 订单列表，不采用数据监听，而是等底部 loading 展示出来之后，直接发送请求
 
-``` src/order/components/Lists/index.js
+```src/order/components/Lists/index.js
 import { ShowLoading } from @/components
 
 ShowLoading showLoading={props.showloading}
 ```
 
-``` src/order/index.js
+```src/order/index.js
 import { useObserverHook } from '@/hooks
 import { Http } from '@/utils
 [orders, setOrders] = ([])
@@ -4712,7 +4819,7 @@ useObserverHook('#'+CommonEnum.LOADING_ID, async entries => {
       }
     })
     if (!isEmpty(orders) && !isEmpty(result) && reuslt.length === page.pageSize) {
-     setOrder([...orders, ...result])  
+     setOrder([...orders, ...result])
      setPage({
        ...page,
        pageNum: page.pageNum + 1
@@ -4738,8 +4845,9 @@ const hanldeChange = e => {
 Tabs [onChange={handleChange}]
 ```
 
-8-16 开发我的页面（使用rc-form处理表单数据）
-``` pages/user/index/js
+8-16 开发我的页面（使用 rc-form 处理表单数据）
+
+```pages/user/index/js
 import {Lists} from antd-mobile
 import {history} from umi
 import './index.less
@@ -4773,7 +4881,7 @@ div.user-page
 /div
 ```
 
-``` pages/user/edit/index.js/func
+```pages/user/edit/index.js/func
 yarn add rc-form
 import React, { useState, useEffect } from 'react';
 import { List, Button, ImagePicker, Toast, InputItem } from 'antd-mobile';
@@ -4848,10 +4956,12 @@ function Edit(props) {
 export default createForm()(Edit);
 
 ```
-umirc.js + router 
+
+umirc.js + router
 
 8-17 为我的页面添加数据管理
-``` stroes/index.js
+
+```stroes/index.js
 export { default as user } from './user'
 ```
 
@@ -4905,7 +5015,8 @@ export default {
   }
 }
 ```
-``` mock/user.js
+
+```mock/user.js
 export default {
   POST /api/user/detail: req, res => {
     res.json({
@@ -4949,7 +5060,8 @@ editUserAsync({
 8-18 开发用户登录和注册页面
 umirc.ts + route
 pages/login/index.less
-``` pages/login/index.js/func
+
+```pages/login/index.js/func
 import React, { useState, useEffect } from 'react';
 import { createForm } from 'rc-form';
 import { List, InputItem, Button, Toast } from 'antd-mobile';
@@ -5017,7 +5129,7 @@ export default createForm()(Login);
 
 pages/register/index.js/func
 
-``` mock/user.js
+```mock/user.js
 POST /api/user/login req,res => {
   res.json({
     status: 200,
@@ -5039,12 +5151,13 @@ async loginAsync(dispatch, rootState, payload){
 
 8-19 通过 umi 运行时配置，对页面进行登陆验证
 
-1. 在用户，登陆或注册成功之后，将用户的信息保存在cookie 中，这样用户刷新页面或者关闭浏览器，再次进入系统，用户依然处登陆状态
-1. 针对某些页面，用户需要登陆访问的，使用umi 运行时配置src/app/onRouteChange
-pages/login/index.js
+1. 在用户，登陆或注册成功之后，将用户的信息保存在 cookie 中，这样用户刷新页面或者关闭浏览器，再次进入系统，用户依然处登陆状态
+1. 针对某些页面，用户需要登陆访问的，使用 umi 运行时配置 src/app/onRouteChange
+   pages/login/index.js
+
 - List.Item
 
-``` mock/user.js
+```mock/user.js
 
 data: {
   id: 100,
@@ -5064,7 +5177,7 @@ useEffect(() => {
 })
 ```
 
-``` // src/app.js
+```// src/app.js
 // 初始加载，路由切换
 import { cookie } from 'project-libs';
 import { history } from 'umi';
@@ -5086,15 +5199,15 @@ export function onRouteChange(route) {
 8-20 优化-使用 React.memo 减少渲染次数
 react 当页面内的属性发生改变，整个页面的组件就会重新渲染
 
-``` home/header/index.js
+```home/header/index.js
 import { + memo } from 'react'
 function Header() {
   log('header render')
 }
 export default memo(Header)
-``` 
+```
 
-``` home/search/index.js
+```home/search/index.js
 function Search(props) {
 
 }
@@ -5103,4 +5216,30 @@ function areEqual(prevProps, nextProps) {
   if(prevProps.citys === nextProps.citys && prevProps.citysLoading === nextProps.citysLoading)
 }
 export default memo(Search, areEqual)
+```
+
+8-21 优化-订单页面添加骨架屏
+骨架屏思路：
+1. 通过伪元素实现骨架样式
+1. 制作布局组件，添加骨架样式
+1. 替换默认 Loading 效果
+global.css
+
+src/skeletones/OrderSkeletones/index.less
+
+``` src/skeletones/OrderSkeletones/index.js/func
+import './index.less'
+    <div className="order-skeletons">
+      <div className="order-item">
+        div.skeletons left
+        <div className="center">
+          <div className="skeletons title"></div>
+          <div className="skeletons price"></div>
+          <div className="skeletons time"></div>
+        </div>
+        <div className="skeletons pay"></div>
+      </div>
+    </div>
+src/skeletones/index.js/func
+export { default as OrderSkeletone } from './OrderSkeletones'
 ```
