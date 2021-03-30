@@ -4572,3 +4572,83 @@ useEffect(() => {
   }
 },)
 ```
+
+8-14 开发订单页面
+``` 1 page/order/index.js
+import React, { useState, useEffect } from 'react';
+import { Tabs } from 'antd-mobile';
+import { useHttpHook } from '@/hooks';
+import { CommonEnum } from '@/enums';
+import Lists from './components/Lists';
+import './index.less'
+
+[page, setPage] = (CommonEnum.PAGE)
+const [orders] = useHttpHook({
+  url /order/lists
+  body:{...page}
+})
+const tabs = [
+  {title 未支付, sub 0}
+  {title 已支付, sub 1}
+]
+return 
+div.order-page
+  Tabs[tabs={tabs}]
+  div.tab 1
+    Lists orders={orders} type={0}
+  /div
+  div.tab 2
+    Lists orders={orders} type={0}
+  /div
+/div
+```
+
+``` 2 page/order/components/Lists/index.js/func
+import OrderItem from '../Item
+import {ActivityIndicator}  from antd-mobile
+import {isEmpty} from project-libs
+
+return (
+  div
+    isEmpty(props?.order) ? ActivityIndicator toast :
+    div.tab-lists
+      props.orders.map(itme => {
+        OrderItem type={prosp,type} key=item.id {...item}
+      })
+    /div
+  /
+)
+```
+
+``` 3 page/order/components/Item/index.js/func
+import {Button} from 'antd-mobile'
+const renderPag = () => {
+  switch(props.type)
+  case 0:
+  retrun Button size small type warning 去支付
+  case 1:
+  retrun Button size small 已完成
+  default
+  breack
+}
+  <div className="order-item">
+    <img src={props?.img} alt="order" />
+    <div className="center">
+      <div className="title">{props?.title}</div>
+      <div className="price">{props?.price}</div>
+      <div className="time">{props?.createTime}</div>
+    </div>
+    <div className="pay">{handlePay()}</div>
+  </div>
+```
+
+``` 4 mock/order.js
+export default {
+  POSTS /api/order/lists : (req, res) => {
+    res.json({
+      status: 200,
+      data
+    })
+  }
+}
+```
