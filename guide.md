@@ -4737,3 +4737,115 @@ const hanldeChange = e => {
 
 Tabs [onChange={handleChange}]
 ```
+
+8-16 开发我的页面（使用rc-form处理表单数据）
+``` pages/user/index/js
+import {Lists} from antd-mobile
+import {history} from umi
+import './index.less
+
+const handleClick = () => {
+  history.push({
+    pathname: /user/edit
+    query: {
+      id: 10
+    }
+  })
+}
+div.user-page
+  // 用户信息
+  div.info
+    div.set onClick={handleClick} 设置
+    div.user
+      img alt=user src={''}
+      duv.tel{tel}
+      duv.sign{sign}
+    /div
+  /div
+  // 列表
+  div.lists
+    List
+      List.Item arrow=horizontal 用户协议 /List.Item
+      List.Item arrow=horizontal 常见问题 /List.Item
+      List.Item arrow=horizontal 联系客户 /List.Item
+    /List
+  /div
+/div
+```
+
+``` pages/user/edit/index.js/func
+yarn add rc-form
+import React, { useState, useEffect } from 'react';
+import { List, Button, ImagePicker, Toast, InputItem } from 'antd-mobile';
+import { createForm } from 'rc-form';
+import { isEmpty } from 'project-libs';
+
+function Edit(props) {
+  const { getFieldProps, validateFields } = props.form;
+  const [files, setFiles] = useState([]);
+
+  useEffect(() => {}, []);
+
+  const handleChange = (files) => {
+    if (files[0]?.file?.size / 1024 / 1024 < 0.1) {
+      Toast.fail('图片大小不能小于0.1M');
+      // return;
+    }
+    setFiles(files);
+  };
+
+  const handleSubmit = () => {
+    if (isEmpty(files)) {
+      Toast.fail('请上传图片!');
+      return;
+    }
+    validateFields((error, value) => {
+      console.log('err', error, value);
+      if (err) {
+        Toast.fail('请讲信息补充完整！');
+        return;
+      } else {
+      }
+    });
+  };
+
+  return (
+    <div className="user-edit">
+      <List>
+        <List.Item>
+          <ImagePicker files={files} selectable={files.length < 1} onChange={handleChange}></ImagePicker>
+        </List.Item>
+        <List.Item>
+          <InputItem
+            placeholder="电话"
+            {...getFieldProps('tel', {
+              rules: [{ required: true }],
+              initialValue: '15319175131',
+            })}
+          >
+            电话
+          </InputItem>
+        </List.Item>
+        <List.Item>
+          <InputItem
+            placeholder="签名"
+            {...getFieldProps('sign', {
+              rules: [{ required: true }],
+              initialValue: '及时当勉励，岁月不待人',
+            })}
+          >
+            签名
+          </InputItem>
+        </List.Item>
+      </List>
+      <Button type="warning" style={{ marginTop: '20px' }} onClick={handleSubmit}>
+        修改
+      </Button>
+    </div>
+  );
+}
+
+export default createForm()(Edit);
+
+```
+umirc.js + router 
