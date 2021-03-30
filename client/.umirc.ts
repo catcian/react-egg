@@ -16,6 +16,8 @@ export default defineConfig({
         { path: '/search', component: '@/pages/search', title: '搜索' },
         { path: '/observer', component: '@/pages/observer', title: 'observer' },
         { path: '/house', component: '@/pages/house', title: '房屋' },
+        { path: '/login', component: '@/pages/login', title: '登陆' },
+        { path: '/register', component: '@/pages/register', title: '注册' },
       ]
     }
    
