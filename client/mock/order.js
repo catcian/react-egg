@@ -5,6 +5,7 @@ export default {
     setTimeout(() => {
       let data;
       if (req.body.pageNum < 4) {
+        // data = orders.slice(7);
         data = orders;
       } else {
         data = [];

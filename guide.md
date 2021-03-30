@@ -4652,3 +4652,88 @@ export default {
   }
 }
 ```
+
+8-15 为订单页面添加滚动加载效果（使用useObserverHook，但不监听数据）
+滚动加载：
+搜索页面，采用 useHttpHook 结合数据监听的方式
+房屋详情，采用 think-react-store 结合数据监听的方法
+订单列表，不采用数据监听，而是等底部 loading 展示出来之后，直接发送请求
+
+``` src/order/components/Lists/index.js
+import { ShowLoading } from @/components
+
+ShowLoading showLoading={props.showloading}
+```
+
+``` src/order/index.js
+import { useObserverHook } from '@/hooks
+import { Http } from '@/utils
+[orders, setOrders] = ([])
+[showLoading, setShowLoading] = (true)
+[type, setType] = (0)
+
+const invokeHttp = async(pageNum) => {
+    const result = await Http({
+    url /order/lists
+    body: {
+      ...page,
+      pageNum
+    }
+  })
+  return result
+}
+
+const fetchOrder = async (pageNum) => {
+  const result = await Http({
+    url /order/lists
+    body: {
+      ...page
+    }
+  })
+  if (!isEmpty(result) && result.length === page.pageSize){
+    setOrders(result)
+    setShowLoading(true)
+  } else {
+    setShowLoading(false)
+  }
+}
+
+1. 页面初始化，请求结接口
+2. 监听 loading 组件是否展示出来
+3. 修改 page.pageNum + 1，再次重新请求接口
+4. 拼装数据，然后 page
+useObserverHook('#'+CommonEnum.LOADING_ID, async entries => {
+  if(entries[0].isIntersection) {
+    const result = await Http({
+      url /order/lists
+      body: {
+        ...page,
+        pageNum: pageNum + 1
+      }
+    })
+    if (!isEmpty(orders) && !isEmpty(result) && reuslt.length === page.pageSize) {
+     setOrder([...orders, ...result])  
+     setPage({
+       ...page,
+       pageNum: page.pageNum + 1
+     })
+     setShowLoading(true)
+    } else {
+      setShowLoading(false)
+    }
+  }
+})
+
+useEffect(() => {
+  fetchOrder(1)
+}, + [type])
+
+const hanldeChange = e => {
+  setType(e.sub)
+  setPage(CommonEnum.PAGE)
+  setOrder([])
+  setShowLoading(true)
+}
+
+Tabs [onChange={handleChange}]
+```
