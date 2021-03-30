@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { List, Button, ImagePicker, Toast, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { isEmpty } from 'project-libs';
+import { useStoreHook } from 'think-react-store';
 
 function Edit(props) {
+  const {
+    user: { editUserAsync },
+  } = useStoreHook();
   const { getFieldProps, validateFields } = props.form;
   const [files, setFiles] = useState([]);
 
@@ -23,11 +27,15 @@ function Edit(props) {
       return;
     }
     validateFields((error, value) => {
-      console.log('err', error, value);
-      if (err) {
+      if (error) {
         Toast.fail('请讲信息补充完整！');
         return;
       } else {
+        editUserAsync({
+          img: files[0].url,
+          tel: value.tel,
+          sign: value.sign
+        })
       }
     });
   };

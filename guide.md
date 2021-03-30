@@ -4849,3 +4849,99 @@ export default createForm()(Edit);
 
 ```
 umirc.js + router 
+
+8-17 为我的页面添加数据管理
+``` stroes/index.js
+export { default as user } from './user'
+```
+
+```stroes/user.js
+import { Http } from '@/utils
+import { Toast } from 'antd-mobile
+export default {
+  state: {
+    id: undefined
+    username undefined
+    avatar undefined
+    tel undefined
+    sign undefined
+  },
+  reducers: {
+    getUser(state, payload) {
+      return {
+        ...state,
+        ...paryload
+      }
+    },
+    editUser(state, payload){
+      return {
+        ...state,
+      }
+    }
+  },
+  effects:{
+    async getUserAsync(dispatch, rootState, payload) {
+      const user = await Http({
+        url: '/user/detail
+        body: payload
+      })
+      if(user) {
+        dispatch({
+          type: 'getUser,
+          payload: user
+        })
+      }
+    }
+    async editUserAsync() {
+      const result = await Http({
+        url /user/edit
+        body: payload
+      })
+      if(result) {
+        Toast.sucess('编辑成功‘)
+        history.push('/user')
+      }
+    }
+  }
+}
+```
+``` mock/user.js
+export default {
+  POST /api/user/detail: req, res => {
+    res.json({
+      status: 200,
+      data:{
+        id: 10,
+        username: 'CatCian',
+        avatar: '',
+        tel: '15319175131',
+        sign: '及时当勉励，岁月不待人'
+      }
+    })
+  }
+  POST /api/user/edit req, res => {
+    res.json({
+      status: 200,
+      data: 'ok'
+    })
+  }
+}
+```
+
+```pages/user/index.js
+import {useStoreHook} from think-react-store
+const {user: {username, avatar, tel, sign getUserAsync} }= useStoreHook()
+
+useEffect(() => {
+  getUserAsync({id: 10})
+}, [])
+
+page/user/edit/index.js
+const {user: {editUserAsync}} = useStoreHook()
+
+editUserAsync({
+  img: file[0].url,
+  tel: value.tel,
+  sign: value.sign
+})
+```
