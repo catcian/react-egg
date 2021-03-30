@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import data from './mock.json';
 import { history } from 'umi'
 
-export default function (props) {
-
+function Hot(props) {
+  console.log(props)
   const handleClick = id => {
     history.push({
       pathname: '/house',
@@ -29,3 +29,10 @@ export default function (props) {
     </div>
   );
 }
+function areEqual(prevProps, nextProps) {
+  if (prevProps.houses === nextProps.houses && prevProps.housesLoading === nextProps.housesLoading) {
+    return true;
+  }
+}
+
+export default memo(Hot, areEqual);

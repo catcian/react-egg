@@ -5082,3 +5082,25 @@ export function onRouteChange(route) {
   }
 }
 ```
+
+8-20 优化-使用 React.memo 减少渲染次数
+react 当页面内的属性发生改变，整个页面的组件就会重新渲染
+
+``` home/header/index.js
+import { + memo } from 'react'
+function Header() {
+  log('header render')
+}
+export default memo(Header)
+``` 
+
+``` home/search/index.js
+function Search(props) {
+
+}
+
+function areEqual(prevProps, nextProps) {
+  if(prevProps.citys === nextProps.citys && prevProps.citysLoading === nextProps.citysLoading)
+}
+export default memo(Search, areEqual)
+```

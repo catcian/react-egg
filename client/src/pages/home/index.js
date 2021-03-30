@@ -6,14 +6,13 @@ import './index.less';
 import { useHttpHook } from '@/hooks';
 
 export default function (props) {
-  const [state, setState] = useState();
   const [citys, citysLoading] = useHttpHook({
     url: '/commons/citys',
   });
   const [houses, housesLoading] = useHttpHook({
     url: '/house/hot',
   });
-  useEffect(() => {}, []);
+  
 
   return (
     <div className="home">

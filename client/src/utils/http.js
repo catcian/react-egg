@@ -1,13 +1,6 @@
 import { Toast } from 'antd-mobile';
 
-export default function Http({
-  url,
-  method = 'POST',
-  headers,
-  body,
-  setResult,
-  setLoading,
-}) {
+export default function Http({ url, method = 'POST', headers, body, setResult, setLoading }) {
   setLoading && setLoading(true);
   const defaultHeader = {
     'Content-Type': 'application/json',

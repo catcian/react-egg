@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { Picker, List, Button, Calendar, Toast } from 'antd-mobile';
 import dayjs from 'dayjs';
 import { history } from 'umi';
 import defaultCitys from './citys.json';
 
-export default function (props) {
-  // const [citys, setCitys] = useState(defaultCitys);
+function Search(props) {
+  // console.log('search re-render');
+  // console.log(props); 
   const [selectedCity, setSelectedCity] = useState(['10001']);
   const [times, setTimes] = useState('可选时间');
   const [dataShow, setDataShow] = useState(false);
@@ -21,11 +22,7 @@ export default function (props) {
   };
 
   const handleDataConfirm = (startTime, endTime) => {
-    setTimes(
-      dayjs(startTime).format('YYYY-MM-DD') +
-        ' - ' +
-        dayjs(endTime).format('YYYY-MM-DD'),
-    );
+    setTimes(dayjs(startTime).format('YYYY-MM-DD') + ' - ' + dayjs(endTime).format('YYYY-MM-DD'));
     setDataShow(!dataShow);
   };
 
@@ -70,11 +67,15 @@ export default function (props) {
       <Button type="warning" onClick={handleSearch} size="large">
         搜索民宿
       </Button>
-      <Calendar
-        visible={dataShow}
-        onCancel={handleData}
-        onConfirm={handleDataConfirm}
-      ></Calendar>
+      <Calendar visible={dataShow} onCancel={handleData} onConfirm={handleDataConfirm}></Calendar>
     </div>
   );
 }
+
+function areEqual(prevProps, nextProps) {
+  if (prevProps.citys === nextProps.citys && prevProps.citysLoading === nextProps.citysLoading) {
+    return true;
+  }
+}
+
+export default memo(Search, areEqual);
