@@ -5036,3 +5036,49 @@ async loginAsync(dispatch, rootState, payload){
   }
 }
 ```
+
+8-19 通过 umi 运行时配置，对页面进行登陆验证
+
+1. 在用户，登陆或注册成功之后，将用户的信息保存在cookie 中，这样用户刷新页面或者关闭浏览器，再次进入系统，用户依然处登陆状态
+1. 针对某些页面，用户需要登陆访问的，使用umi 运行时配置src/app/onRouteChange
+pages/login/index.js
+- List.Item
+
+``` mock/user.js
+
+data: {
+  id: 100,
+  username: 'admin'
+}
+
+// 保存cookie信息
+import { cookie } from 'project-libs'
+
+cookie.set('user' result)
+
+home/index.js
+import {cookie} from 'project-libs'
+
+useEffect(() => {
+  cookie.get('user')
+})
+```
+
+``` // src/app.js
+// 初始加载，路由切换
+import { cookie } from 'project-libs';
+import { history } from 'umi';
+export function onRouteChange(route) {
+  const nowPath = route.routes[0].routes.find((item) => item.path === route.location.pathname);
+  const isLogin = cookie.get('user');
+  if (nowPath && nowPath.auth && !isLogin) {
+    console.log(route.location.pathname)
+    history.push({
+      pathname: '/login',
+      query: {
+        from: route.location.pathname,
+      },
+    });
+  }
+}
+```

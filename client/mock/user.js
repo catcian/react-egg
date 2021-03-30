@@ -20,13 +20,19 @@ export default {
   'POST /api/user/login': (req, res) => {
     res.json({
       status: 200,
-      data: 'ok',
+      data: {
+        id: 10,
+        username: 'CatCian',
+      },
     });
   },
   'POST /api/user/register': (req, res) => {
     res.json({
       status: 200,
-      data: 'ok',
+      data: {
+        id: 10,
+        username: 'CatCian',
+      },
     });
   },
 };

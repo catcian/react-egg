@@ -10,8 +10,8 @@ export default defineConfig({
       component: '@/layouts/index',
       routes: [
         { path: '/', component: '@/pages/home', title: '首页' },
-        { path: '/order', component: '@/pages/order', title: '订单' },
-        { path: '/user', component: '@/pages/user', title: '我的' },
+        { path: '/order', component: '@/pages/order', title: '订单', auth: true },
+        { path: '/user', component: '@/pages/user', title: '我的', auth: true },
         { path: '/user/edit', component: '@/pages/user/edit', title: '我的设置' },
         { path: '/search', component: '@/pages/search', title: '搜索' },
         { path: '/observer', component: '@/pages/observer', title: 'observer' },

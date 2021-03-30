@@ -1,6 +1,7 @@
 import { Http } from '@/utils';
 import { Toast } from 'antd-mobile';
 import { history } from 'umi';
+import { cookie, urlGet } from 'project-libs'
 export default {
   state: {
     id: undefined,
@@ -53,9 +54,11 @@ export default {
         body: payload
       })
       if (result) {
+        const from = urlGet('from')
+        cookie.set('user', result)
         Toast.success('登陆成功')
         setTimeout(() => {
-          history.push('/');
+          history.push(from);
         }, 1500)
       }
     },
@@ -65,9 +68,11 @@ export default {
         body: payload
       })
       if (result) {
+        const from = urlGet('from')
+        cookie.set('user', result)
         Toast.success('注册成功')
         setTimeout(() => {
-          history.push('/');
+          history.push(from);
         }, 1500)
       }
     }
