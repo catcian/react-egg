@@ -5274,7 +5274,14 @@ export { default as OrderSkeletone } from './OrderSkeletones'
 
 9-2 创建用户表，建基于 Sequelize 编写用户模型
 SERVER
-/app.sql
+- assest 
+- app/controller/curl.js
+- app/controller/home.js
+- app/htmp
+- app/middleware/m1.js
+- app/middleware/m2.js
+- app/router.js
++ app.sql
 create database egg_house;
 
 use egg_house;
@@ -5299,16 +5306,19 @@ use egg_house;
 
 show table;
 
-app/model/user.js
+``` app/model/user.js
+  const { STRING, INTEGER, TEXT, DATE } = app.Sequelize;
 
-const User = app.model.define('user', {
-id: { type: TNTEGER, primaryKey: true, autoIncrement: true }
-username: STRING(20)
-password: STRING(64)
-avatar: TEXT('long')
-phone: STRING(20)
-sign: STRING(300)
-createTime: DATE
-updateTime: DATE
-})
-return User
+  const User = app.model.define('user', {
+    id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+    username: STRING(20),
+    password: STRING(64),
+    avatar: TEXT('long'),
+    phone: STRING(20),
+    sign: STRING(300),
+    createTime: DATE,
+    updateTime: DATE,
+  });
+
+  return User
+```

@@ -80,13 +80,13 @@ module.exports = appInfo => {
       // password
       passward: '',
       // database
-      database: 'egg',
+      database: 'egg_house',
     },
   };
 
   config.sequelize = {
     dialect: 'mysql',
-    database: 'egg',
+    database: 'egg_house',
     host: '127.0.0.1',
     port: '3306',
     username: 'root',
