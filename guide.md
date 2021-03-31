@@ -5499,3 +5499,36 @@ module.exports = {
   }
 
 ```
+
+9-6 什么是 JWT 技术？
+JSON Web Tokens
+1. JWT 全称 JSON Web Tokens,是一种规范化的 token。它里面包含用户信息,具有验证用户身份、防止CSRF攻击等优点。
+http://jsw.io
+Header.payload.sign
+
+
+1. 头部 header
+头部包含了两部分,釆用的签名算法和 token 类型
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+2. 载荷 payload
+载荷用来存放信息,data (用户数据),exp(过期时间),iat(签发时间)
+{
+  "data": "xxx",
+  "iat": 1441593502,
+  "exp": 1441594722,
+}
+
+3. 签名 signature
+Header和 Payload编码后的字符串拼接 后以及 secret(密钥)进行加密,得到签名
+HMAC-SHA256(encodeBase64Url(header) + "." + encodeBase64Url(payload) + secret)
+
+jwt 使用
+Client -> Server
+1. C 请求登陆接口
+2. S 使用JWT进行签名，返回token /解析用户名和密码。
+3. C 请求接口携带token /可以拼接到url，也可以添加到header
+3. S 验证token，返回结果
