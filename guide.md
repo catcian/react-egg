@@ -5322,3 +5322,73 @@ show table;
 
   return User
 ```
+
+9-3 开发用户注册接口
+yarn add md5
+``` config.default.js
+const userConfig = {
+  salt: 'cat'
+}
+router.js
+router.post('/api/user/register', controller.user.register)
+```
+
+``` controller/user.js
+  async register() {
+    const { ctx, app } = this;
+    const params = ctx.request.body;
+    console.log(params);
+    const user = await ctx.service.user.getUser(params.username);
+    if (user) {
+      ctx.body = {
+        status: 500,
+        errMsg: '用户已存在',
+      };
+      return;
+    }
+    const result = await ctx.service.user.addUser({
+      ...params,
+      password: md5(params.password + app.config.salt),
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    });
+    if (result) {
+      ctx.body = {
+        status: 200,
+        data: result,
+      };
+    } else {
+      ctx.body = {
+        status: 500,
+        errMsg: '注册用户失败',
+      };
+    }
+  }
+}
+```
+
+``` service/user.js
+  async getUser(username) {
+    try {
+      const { app } = this;
+      const user = await app.model.User.findOne({
+        where: {
+          username,
+        },
+      });
+      return user;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async addUser(params) {
+    try {
+      const { app } = this;
+      const result = await app.model.User.create(params);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+```
