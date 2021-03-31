@@ -5220,14 +5220,15 @@ export default memo(Search, areEqual)
 
 8-21 优化-订单页面添加骨架屏
 骨架屏思路：
+
 1. 通过伪元素实现骨架样式
 1. 制作布局组件，添加骨架样式
 1. 替换默认 Loading 效果
-global.css
+   global.css
 
 src/skeletones/OrderSkeletones/index.less
 
-``` src/skeletones/OrderSkeletones/index.js/func
+```src/skeletones/OrderSkeletones/index.js/func
 import './index.less'
     <div className="order-skeletons">
       <div className="order-item">
@@ -5247,23 +5248,67 @@ export { default as OrderSkeletone } from './OrderSkeletones'
 9 服务端用户模块及优化
 9-1 章节导读
 章节目标
+
 1. 完成用户模块的接口开发
 1. 使用 JWT 技术验证用户：将用户信息进行加密，生成字符串，最后在对字符串进行解密，对用户进行验证。
 1. 提取公共逻辑，优化系统
 
 技术要点
 核心技术：
+
 1. Sequelize
 1. JWT
 1. Redis 保存核心的内容
 
 框架扩展
+
 1. 扩展 egg.js
 1. 优化 egg-auth
 1. userExist 中间件 从数据库读取数据判断当前用户是否存在
 
 学习收获：
+
 1. 学习如何开发登录、注册接口以及注意事项
-1. 学习到如何使用T技术进行用户验证
+1. 学习到如何使用 T 技术进行用户验证
 1. 如如何根据项目需求进行优化(框架扩展、中间件、公共类)
 
+9-2 创建用户表，建基于 Sequelize 编写用户模型
+SERVER
+/app.sql
+create database egg_house;
+
+use egg_house;
+
+-- 用户表
+create table `user` (
+`id` int not null auto_increment;
+`username` varchar(20) default null comment '用户名',
+`password` varchart(64) default null comment '密码',
+`avatar` text comment '头像',
+`phone` varchar(20) default null comment '电话',
+`sign` varchar(300) default null comment '用户签名',
+`createTime` timestamp defautl null comment '创建时间',
+`updateTime` timestamp default null comment '更新时间',
+primary key(`id`)
+)engine=InnoDB auto_increment=1 default charset=utf8 comment='用户表';
+
+-- 查看当前数据库
+show database;
+
+use egg_house;
+
+show table;
+
+app/model/user.js
+
+const User = app.model.define('user', {
+id: { type: TNTEGER, primaryKey: true, autoIncrement: true }
+username: STRING(20)
+password: STRING(64)
+avatar: TEXT('long')
+phone: STRING(20)
+sign: STRING(300)
+createTime: DATE
+updateTime: DATE
+})
+return User

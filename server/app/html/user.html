@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>user page</title>
+  <link rel="stylesheet" href="assets/css/user.css">
+</head>
+<body>
+  <div>
+    <% include user-header.html %>
+    <hr>
+    <button onclick="login()">登陆</button>
+    <button onclick="logout()">退出</button>
+    <h1>user:</h1>
+    <% if (user) { %>
+      已经登陆：<%= user.name%>
+    <% } else { %>
+      未登陆
+    <% }%>
+    <hr>
+    <h1>cookies 中文</h1>
+    <%= zh %>
+    <hr>
+    <h1>id: <%= id %></h1>
+    <%# 注释 #%>
+    <h1>name: <%= name %></h1>
+    <%# 渲染数据 #%>
+    <h1>lists:</h1>
+    <ul id="user">
+      <% for (let i=0; i<lists.length; i++) { %>
+        <li><%= lists[i] %></li>
+      <% } %>
+    </ul>
+    <hr>
+    <img src="assets/img/1.jpg" alt="" width="100px" height="100px">
+  </div>
+  <script src="assets/js/user.js"></script>
+</body>
+</html>
