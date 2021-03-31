@@ -1,7 +1,6 @@
 'use strict';
 const Controller = require('egg').Controller;
 const md5 = require('md5');
-const dayjs = require('dayjs');
 
 class UserController extends Controller {
   async register() {
@@ -19,12 +18,16 @@ class UserController extends Controller {
     const result = await ctx.service.user.addUser({
       ...params,
       password: md5(params.password + app.config.salt),
-      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      createTime: ctx.helper.time(),
     });
+    console.log(result);
     if (result) {
       ctx.body = {
         status: 200,
-        data: result,
+        data: {
+          ...ctx.helper.unPick(result.dataValues, ['password']),
+          createTime: ctx.helper.timestamp(result.createTime),
+        },
       };
     } else {
       ctx.body = {

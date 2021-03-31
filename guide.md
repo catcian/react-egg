@@ -5392,3 +5392,68 @@ router.post('/api/user/register', controller.user.register)
     }
   }
 ```
+
+9-4 扩展Egg.js的帮助函数
+1. 返回字段不需要展示
+1. 时间函数
+
+``` extend/helper.js
+'use strict';
+const dayjs = require('dayjs');
+
+module.exports = {
+  time() {
+    return dayjs().format('YYYY-MM-DD HH:mm:ss');
+  },
+  timestamp(date) {
+    return new Date(date).getTime();
+  },
+  unPick(source, arr) {
+    if (Array.isArray(arr)) {
+      const obj = {};
+      for (const i in source) {
+        if (!arr.includes(i)) {
+          obj[i] = source[i];
+        }
+      }
+      return obj;
+    }
+  },
+
+};
+
+```
+``` controller/user.js
+  async register() {
+    const { ctx, app } = this;
+    const params = ctx.request.body;
+    console.log(params);
+    const user = await ctx.service.user.getUser(params.username);
+    if (user) {
+      ctx.body = {
+        status: 500,
+        errMsg: '用户已存在',
+      };
+      return;
+    }
+    const result = await ctx.service.user.addUser({
+      ...params,
+      password: md5(params.password + app.config.salt),
+    + createTime: ctx.helper.time(),
+    });
+    if (result) {
+      ctx.body = {
+        status: 200,
+        data: {
+        + ...ctx.helper.unPick(result.dataValues, ['password']),
+        + createTime: ctx.helper.timestamp(result.createTime),
+        },
+      };
+    } else {
+      ctx.body = {
+        status: 500,
+        errMsg: '注册用户失败',
+      };
+    }
+  }
+```
