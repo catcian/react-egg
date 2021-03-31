@@ -25,7 +25,7 @@ class UserController extends Controller {
       ctx.body = {
         status: 200,
         data: {
-          ...ctx.helper.unPick(result.dataValues, ['password']),
+          ...ctx.helper.unPick(result.dataValues, [ 'password' ]),
           createTime: ctx.helper.timestamp(result.createTime),
         },
       };
@@ -33,6 +33,27 @@ class UserController extends Controller {
       ctx.body = {
         status: 500,
         errMsg: '注册用户失败',
+      };
+    }
+  }
+
+  async login() {
+    const { ctx } = this;
+    const { username, password } = ctx.request.body;
+    const user = await ctx.service.user.getUser(username, password);
+    if (user) {
+      ctx.session.userId = user.id;
+      ctx.body = {
+        status: 200,
+        data: {
+          ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
+          createTime: ctx.helper.timestamp(user.createTime),
+        },
+      };
+    } else {
+      ctx.body = {
+        status: 500,
+        errMsg: '用户不存在',
       };
     }
   }

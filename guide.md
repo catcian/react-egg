@@ -5457,3 +5457,45 @@ module.exports = {
     }
   }
 ```
+
+9-5 开发用户登陆接口
+/api/user/login
+``` controller/user.js
+  async login() {
+    const { ctx } = this;
+    const { username, password } = ctx.request.body;
+    const user = await ctx.service.user.getUser(username, password);
+    if (user) {
+      ctx.session.userId = user.id;
+      ctx.body = {
+        status: 200,
+        data: {
+          ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
+          createTime: ctx.helper.timestamp(user.createTime),
+        },
+      };
+    } else {
+      ctx.body = {
+        status: 500,
+        errMsg: '用户不存在',
+      };
+    }
+  }
+```
+
+``` service/user.js
+  async getUser(username, password) {
+    try {
+      const { app } = this;
+    + const _where = password ? { username, password: md5(password + app.config.salt) } : { username };
+    + const user = await app.model.User.findOne({
+        where: _where,
+      });
+      return user;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+```
