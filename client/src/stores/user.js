@@ -54,8 +54,9 @@ export default {
         body: payload
       })
       if (result) {
+        localStorage.setItem('token', result.token)
+        localStorage.setItem('username', result.username)
         const from = urlGet('from')
-        cookie.set('user', result)
         Toast.success('登陆成功')
         setTimeout(() => {
           history.push(from);
@@ -68,8 +69,9 @@ export default {
         body: payload
       })
       if (result) {
+        localStorage.setItem('token', result.token)
+        localStorage.setItem('usernname', result.usernname)
         const from = urlGet('from')
-        cookie.set('user', result)
         Toast.success('注册成功')
         setTimeout(() => {
           history.push(from);

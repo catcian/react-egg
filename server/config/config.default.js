@@ -96,6 +96,10 @@ module.exports = appInfo => {
       freezeTableName: true,
     },
   };
+
+  config.jwt = {
+    secret: 'cat',
+  };
   // add your user config here
   const userConfig = {
     salt: 'egg',

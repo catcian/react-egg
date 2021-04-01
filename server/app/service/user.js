@@ -16,6 +16,7 @@ class UserService extends Service {
       return null;
     }
   }
+
   async addUser(params) {
     try {
       const { app } = this;

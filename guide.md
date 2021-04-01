@@ -5532,3 +5532,70 @@ Client -> Server
 2. S 使用JWT进行签名，返回token /解析用户名和密码。
 3. C 请求接口携带token /可以拼接到url，也可以添加到header
 3. S 验证token，返回结果
+
+9-7 使用 JWT 改造注册和登陆接口，并联调登录注册接口
+1. yarn add egg-jwt
+
+2. app/config/plugin.js
+exports.jwt = {
+  enable: true,
+  package: 'egg-jwt
+}
+
+3. config.default.js
+config.jwt = {
+  secret: 'cat'
+}
+
+4. controller/user.js
+async jwtSign() {
+  const { ctx, app} = this
+  const { userame } = ctx.request.body
+  const token = app.jwt.sgin({
+    username
+  }, app.config.secret)
+  return token
+}
+
+async login() {
+  const {ctx, app} = this
+  // 参数：payload secret
+  const token = app.jwt.sign({
+    username
+  }, app.config.jwt.secret)
+  // 缓存中又用户名即可
+  ctx.session[username] = 1
+  ctx.body = {
+    + token
+  }
+}
+
+async register() {
+
+}
+
+client 端
+``` 1. umirc.js
+mock: false
+proxy: {
+  '/api': {
+    'target': 'http://127.0.0.1:7001/',
+    'changeOrigin': true
+  }
+}
+```
+
+``` 2. stores/user.js
+async loginAsync() {
+  // cookie 是有过期时间 和服务端过期时间不一致
+  localStorage.setItem('token', result.token)
+}
+```
+
+``` 3. src/app.js
+const isLogin = localStorage.getItem('token')
+```
+
+``` 4. pages/home/components/header/index.js
+const [username, setState] = useState(localStorage.getItem('username'))
+```
