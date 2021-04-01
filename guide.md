@@ -5689,3 +5689,53 @@ client
       }
     }
 ```
+
+9-9 优化用户登录验证插件
+1. 该用户未登陆，访问用户页面，提示该用户未登陆
+1. 中间件，对请求进行拦截
+
+``` 2. config/config.default.js
+config.auth = {
+  exclude: ['/api/user/login', '/api/user/logout']
+}
+```
+
+``` 1. config/plugin.js
+exports.auth = {
+  + enable: true,
+}
+```
+
+3. app.js
+
+``` 4. lib/plugin/auth.js
+const user = ctx.session[ctx.username]
+```
+
+``` 5. config/config.default.js 
+// 修改sessesion 过期时间
+  config.session = {
+    key: 'CAT_SESS',
+    httpOnly: false,
+    // maxAge: 1000 * 60 * 10,
+    maxAge: 1000 * 3,
+    renew: true,
+  };
+```
+
+client
+``` 1 http.js
+ else if(resp.status === 10001) {
+          localStorage.clear()
+          Toast.fail(resp.errMsg)
+          reject(resp.errMsg)
+          setTimeout(() => {
+            history.push({
+              pathname: '/login',
+              query: {
+                from: location.pathname,
+              }
+            })
+          }, 1500)
+        }
+```

@@ -34,7 +34,7 @@ export default {
           type: 'getUser',
           payload: user,
         });
-      }
+      } 
     },
     async editUserAsync(dispatch, rootState, payload) {
       const result = await Http({

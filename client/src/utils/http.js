@@ -1,4 +1,6 @@
 import { Toast } from 'antd-mobile';
+import { history } from 'umi'
+// import {  } from 'project-libs'
 
 export default function Http({ url, method = 'POST', headers, body, setResult, setLoading }) {
   setLoading && setLoading(true);
@@ -32,15 +34,27 @@ export default function Http({ url, method = 'POST', headers, body, setResult, s
         if (resp.status === 200) {
           resolve(resp.data);
           setResult && setResult(resp.data);
+        } else if(resp.status === 10001) {
+          localStorage.clear()
+          Toast.fail(resp.errMsg)
+          reject(resp.errMsg)
+          setTimeout(() => {
+            history.push({
+              pathname: '/login',
+              query: {
+                from: location.pathname,
+              }
+            })
+          }, 1500)
         } else {
-          Toast.fail(resp.Msg);
-          reject(resp.Msg);
+          Toast.fail(resp.errMsg);
+          reject(resp.errMsg);
         }
       })
       .catch((err) => {
         console.log('err', err);
-        Toast.fail(err.Msg);
-        reject(err.Msg);
+        Toast.fail(err.errMsg);
+        reject(err.errMsg);
       })
       .finally(() => {
         setLoading && setLoading(false);

@@ -52,7 +52,9 @@ class UserController extends Controller {
     const user = await ctx.service.user.getUser(username, password);
     if (user) {
       const token = await this.jwtSign();
+      console.log('login username', username);
       ctx.session[username] = 1;
+      console.log('ctx.session[username]', ctx.session[username]);
       ctx.body = {
         status: 200,
         data: {
@@ -72,7 +74,7 @@ class UserController extends Controller {
 
   async detail() {
     const { ctx } = this;
-    const user = await ctx.service.user.getUser(ctx.username());
+    const user = await ctx.service.user.getUser(ctx.username);
     if (user) {
       ctx.body = {
         status: 200,
@@ -93,7 +95,7 @@ class UserController extends Controller {
   async logout() {
     const { ctx } = this;
     try {
-      const username = ctx.username();
+      const username = ctx.username;
       ctx.session[username] = null;
       ctx.body = {
         status: 200,

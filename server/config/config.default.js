@@ -18,7 +18,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'httpLog' ];
+  config.middleware = [ 'httpLog', 'auth' ];
 
   // httpLog options
   config.httpLog = {
@@ -56,12 +56,13 @@ module.exports = appInfo => {
   config.session = {
     key: 'CAT_SESS',
     httpOnly: false,
-    maxAge: 1000 * 60 * 10,
+    // maxAge: 1000 * 60 * 10,
+    maxAge: 1000 * 3,
     renew: true,
   };
 
   config.auth = {
-    exclude: [ '/', '/user', '/login', 'logout' ],
+    exclude: [ '/api/user/login', '/api/user/logout' ],
   };
 
   config.mysql = {

@@ -12,7 +12,7 @@ module.exports = {
     package: 'egg-view-ejs',
   },
   auth: {
-    enable: false,
+    enable: true,
     path: path.join(__dirname, '../lib/plugin/egg-auth'),
   },
   info: {
