@@ -28,12 +28,13 @@ class UserController extends Controller {
     });
     if (result) {
       const token = await this.jwtSign();
-      ctx.session.username = 1;
+      ctx.session[params.username] = 1;
       ctx.body = {
         status: 200,
         data: {
           ...ctx.helper.unPick(result.dataValues, [ 'password' ]),
           createTime: ctx.helper.timestamp(result.createTime),
+          updateTime: ctx.helper.timestamp(result.updateTime),
           token,
         },
       };
@@ -51,12 +52,13 @@ class UserController extends Controller {
     const user = await ctx.service.user.getUser(username, password);
     if (user) {
       const token = await this.jwtSign();
-      ctx.session.username = 1;
+      ctx.session[username] = 1;
       ctx.body = {
         status: 200,
         data: {
           ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
           createTime: ctx.helper.timestamp(user.createTime),
+          updateTime: ctx.helper.timestamp(user.updateTime),
           token,
         },
       };
@@ -64,6 +66,44 @@ class UserController extends Controller {
       ctx.body = {
         status: 500,
         errMsg: '用户不存在',
+      };
+    }
+  }
+
+  async detail() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username());
+    if (user) {
+      ctx.body = {
+        status: 200,
+        data: {
+          ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
+          createTime: ctx.helper.timestamp(user.createTime),
+          updateTime: ctx.helper.timestamp(user.updateTime),
+        },
+      };
+    } else {
+      ctx.body = {
+        status: 500,
+        errMsg: '用户不存在',
+      };
+    }
+  }
+
+  async logout() {
+    const { ctx } = this;
+    try {
+      const username = ctx.username();
+      ctx.session[username] = null;
+      ctx.body = {
+        status: 200,
+        data: 'ok',
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        status: 500,
+        errMsg: '服务器开小差~',
       };
     }
   }

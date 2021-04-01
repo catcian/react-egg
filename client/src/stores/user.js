@@ -56,10 +56,11 @@ export default {
       if (result) {
         localStorage.setItem('token', result.token)
         localStorage.setItem('username', result.username)
-        const from = urlGet('from')
+        const fromPath = urlGet('from')
+        console.log(fromPath)
         Toast.success('登陆成功')
         setTimeout(() => {
-          history.push(from);
+          history.push(fromPath);
         }, 1500)
       }
     },
@@ -71,10 +72,28 @@ export default {
       if (result) {
         localStorage.setItem('token', result.token)
         localStorage.setItem('usernname', result.usernname)
-        const from = urlGet('from')
+        const fromPath = urlGet('from')
         Toast.success('注册成功')
         setTimeout(() => {
-          history.push(from);
+          history.push(fromPath);
+        }, 1500)
+      }
+    },
+    async logoutAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/user/logout',
+        body: payload
+      })
+      if (result) {
+        localStorage.clear()
+        Toast.success('退出成功')
+        setTimeout(() => {
+          history.push({
+            pathname: '/login',
+            query: {
+              from: location.pathname
+            }
+          })
         }, 1500)
       }
     }

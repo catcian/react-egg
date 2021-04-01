@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { List } from 'antd-mobile';
+import { List, Button } from 'antd-mobile';
 import { history } from 'umi';
 import { useStoreHook } from 'think-react-store';
 import './index.less';
 
 export default function (props) {
   const {
-    user: { avatar, tel, sign, getUserAsync },
+    user: { avatar, tel, sign, getUserAsync, logoutAsync },
   } = useStoreHook();
 
   useEffect(() => {
@@ -21,6 +21,10 @@ export default function (props) {
       },
     });
   };
+
+  const handleLogout = () => {
+    logoutAsync()
+  }
   return (
     <div className="user-page">
       {/* 用户信息 */}
@@ -29,7 +33,7 @@ export default function (props) {
           设置
         </div>
         <div className="user">
-          <img src={avatar} alt="user" />
+          <img src={avatar || require('../../assets/yay.jpg')} alt="user" />
           <div className="tel">{tel}</div>
           <div className="sign">{sign}</div>
         </div>
@@ -40,6 +44,7 @@ export default function (props) {
         <List.Item arrow="horizontal">常见问题</List.Item>
         <List.Item arrow="horizontal">联系客户</List.Item>
       </List>
+      <Button type="warning" onClick={handleLogout}>退出</Button>
     </div>
   );
 }

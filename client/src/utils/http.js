@@ -2,9 +2,15 @@ import { Toast } from 'antd-mobile';
 
 export default function Http({ url, method = 'POST', headers, body, setResult, setLoading }) {
   setLoading && setLoading(true);
-  const defaultHeader = {
+  const token = localStorage.getItem('token')
+  let defaultHeader = {
     'Content-Type': 'application/json',
   };
+  defaultHeader = token ? {
+    ...defaultHeader,
+    token
+  } : defaultHeader;
+
   let params;
   if (method.toUpperCase() === 'GET') {
     params = undefined;

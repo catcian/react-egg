@@ -5599,3 +5599,93 @@ const isLogin = localStorage.getItem('token')
 ``` 4. pages/home/components/header/index.js
 const [username, setState] = useState(localStorage.getItem('username'))
 ```
+
+9-8 开发用户详情接口和用户退出登录接口
+用户详情/退出登陆
+``` 2. extend/context.js
+get username() {
+  const token = this.request.header.token
+  const tokenCache = token ? this.app.jwt.verify(token, this.app.config.jwt.secret) : undefined
+  return tokenCache ?  tokenCache.username : undefined
+}
+```
+
+``` 1. app/controller/user.js
+async detail () {
+  const {ctx} = this
+  cosnt user = await ctx.service.user.getUser(ctx.username)
+  if(user) {
+    ctx.body = {
+      status: 200,
+      data: {
+        ..ctx.helper.unPick(user.dataValues, [ 'password' ]),
+          createTime: ctx.helper.timestamp(user.createTime),
+
+      }
+    }
+  }
+}
+```
+
+``` 3. app/contoller/user.js
+  async logout() {
+    const { ctx } = this;
+    try {
+      const username = ctx.username();
+      ctx.session[username] = null;
+      ctx.body = {
+        status: 200,
+        data: 'ok',
+      };
+    } catch (error) {
+      console.log(error);
+      ctx.body = {
+        status: 500,
+        errMsg: '服务器开小差~',
+      };
+    }
+  }
+```
+
+client
+``` 1. utils/http.js
+  const token = localStorage.getItem('token')
+
+  defaultHeader = token ? {
+    ...defaultHeader,
+    token
+  } : defaultHeader;
+```
+
+2. src/assets/yay.js 默认头像
+``` pages/user/index.js
+1. 默认头像
+1. 退出登陆
+
+  const handleLogout = () => {
+    logoutAsync()
+  }
+
+  <Button type="warning" onClick={handleLogout}>退出</Button>
+```
+
+``` 3. stores/user.js
+    async logoutAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/user/logout',
+        body: payload
+      })
+      if (result) {
+        localStorage.clear()
+        Toast.success('退出成功')
+        setTimeout(() => {
+          history.push({
+            pathname: '/login',
+            query: {
+              from: location.pathname
+            }
+          })
+        }, 1500)
+      }
+    }
+```
