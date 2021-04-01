@@ -5739,3 +5739,95 @@ client
           }, 1500)
         }
 ```
+
+9-10 redis 的简单使用,将用户基础信息存储在 redis 中
+1. 将用户的信息存储在 session 中：
+实际项目当中可能出现的风险：
+1. 如果重启了服务 session 会被清除
+1. 或者又多台 node 服务，因为每台 node 启动时间不同，以及服务直接来回切换等问题，会导致session 不一致
+
+redis 可以将业务逻辑和缓存结偶，彼此不影响
+
+redis 缓存
+Redis是一个基于内存的高性能key- value数据库。具有储存速度快、 支持丰富的数据类型、过期后自动删除缓存等特点。被广泛地应用于企 业级项目。
+
+brew 按照 redis
+brew install redis
+
+brew 查看 redis 服务
+brew services list
+
+brew 启动/停止 redis
+brew services start/stop redis
+
+redis 终端
+redis-cli
+
+设置 redis
+set id/key 1/value
+
+获取 redis
+get id
+
+// 设置 key 过期时间 3s
+expire id 3
+
+// 删除
+del id
+
+// 退出redis 终端
+exit
+
+// 设置 redis 密码
+/usr/local/etc/redis.conf
+requirepass
+
+// 重启 redis
+brew service restart redis
+
+// 登陆输入密码 abc123456
+redis-cli -a abc123456
+
+localhost:etc mac$ redis-cli
+(error) NOAUTH Authentication required.
+127.0.0.1:6379> auth abc123456
+
+egg-redis
+yarn add egg-redis
+
+``` config/plugin.js
+export.redis = {
+  enable: true
+  package: egg-redis
+}
+```
+
+``` config/config.default.js
+config.redis = {
+  client: {
+    port: 6379,
+    host: '127.0.0.1',
+    password: 'abc123456',
+    db: 0// 数据库
+  }
+}
+
+userConfig = {
+  redisExpire: 60 * 60 * 24l
+}
+```
+
+``` controller/user.js
+async jwtSign() {
+  // redis 操作是异步过程
+  + await app.redis.set('username', 1, 'EX', app.config.redisExpire)// 过期时间 5 s
+}
+
+async logout() {
+  + app.redis.del(username);
+}
+```
+
+``` auth.js
+const user = await ctx.app.redis.get(ctx.username)
+``` 

@@ -6,6 +6,7 @@ class UserController extends Controller {
   async jwtSign() {
     const { ctx, app } = this;
     const { username } = ctx.request.body;
+    await app.redis.set(username, 1, 'EX', app.config.redisExpire);
     const token = app.jwt.sign({ username }, app.config.jwt.secret);
     return token;
   }
@@ -28,7 +29,7 @@ class UserController extends Controller {
     });
     if (result) {
       const token = await this.jwtSign();
-      ctx.session[params.username] = 1;
+      // ctx.session[params.username] = 1;
       ctx.body = {
         status: 200,
         data: {
@@ -47,14 +48,14 @@ class UserController extends Controller {
   }
 
   async login() {
-    const { ctx } = this;
+    const { ctx, app } = this;
     const { username, password } = ctx.request.body;
     const user = await ctx.service.user.getUser(username, password);
     if (user) {
       const token = await this.jwtSign();
       console.log('login username', username);
-      ctx.session[username] = 1;
-      console.log('ctx.session[username]', ctx.session[username]);
+      // ctx.session[username] = 1;
+      console.log('login app.redis.get(username)', await app.redis.get(username));
       ctx.body = {
         status: 200,
         data: {
@@ -93,10 +94,11 @@ class UserController extends Controller {
   }
 
   async logout() {
-    const { ctx } = this;
+    const { ctx, app } = this;
     try {
       const username = ctx.username;
-      ctx.session[username] = null;
+      // ctx.session[username] = null;
+      app.redis.del(username);
       ctx.body = {
         status: 200,
         data: 'ok',

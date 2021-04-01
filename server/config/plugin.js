@@ -31,4 +31,8 @@ module.exports = {
     enable: true,
     package: 'egg-jwt',
   },
+  redis: {
+    enable: true,
+    package: 'egg-redis',
+  },
 };
