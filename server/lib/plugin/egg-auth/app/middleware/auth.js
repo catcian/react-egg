@@ -4,7 +4,7 @@ module.exports = options => {
   return async (ctx, next) => {
     const url = ctx.request.url;
     console.log('middleware ctx.username', ctx.username);
-    const user = await ctx.app.redis.get(ctx.username)
+    const user = await ctx.app.redis.get(ctx.username);
     // const user = ctx.session[ctx.username];
     // session 中是否存在
     // console.log('ctx.session[ctx.username]', user);
