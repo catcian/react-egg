@@ -5917,3 +5917,52 @@ module.exports = app => {
   return Comment;
 };
 ```
+
+10-2 开发egg-notFound 插件，处理接口不存在问题
+client
+1. ErrorBoundary 从全局移除修改
+src/layouts/index.js/ErrorBoundary -
+
+pages/home/index.ks
+import {ErrorBoundary} from @/components
+
+ErrorBoundary
+
+/ErrorBoundary
+
+pages/order/index.js
+pages/user/index.js
+
+server
+2. 插件判断接口是否存在
+``` notFound.js
+log(ctx.app.router)
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+    const lists = ctx.app.router.stack.filter(item => item.regexp.test(ctx.request.url));
+    console.log('lists', lists);
+    if (lists.length) {
+      await next();
+    } else {
+      ctx.body = {
+        status: 404,
+        errMsg: '接口' + ctx.request.url + '不存在',
+      };
+    }
+  };
+};
+```
+
+package.json
+config/plugin.js
+exports.notFound = {
+  enable: true
+  path: path.join(__dirname. '../lib')
+}
+
+app.js
+log(app.config.coreMiddleware)
+app.config.coreMiddleware.push('notFound')
+app.config.coreMiddleware.push('auth')

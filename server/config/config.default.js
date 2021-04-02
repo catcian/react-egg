@@ -18,7 +18,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'httpLog', 'auth' ];
+  config.middleware = [ 'httpLog', 'notFound', 'auth' ];
 
   // httpLog options
   config.httpLog = {
@@ -48,10 +48,12 @@ module.exports = appInfo => {
     delimiter: '%',
   };
 
-  config.static = {
-    prefix: '/assets/',
-    dir: path.join(appInfo.baseDir, 'app/assets'),
-  };
+  // config.static = {
+  //   prefix: '/assets/',
+  //   dir: path.join(appInfo.baseDir, 'app/assets'),
+  // };
+
+  config.static = {};
 
   config.session = {
     key: 'CAT_SESS',

@@ -35,4 +35,8 @@ module.exports = {
     enable: true,
     package: 'egg-redis',
   },
+  notFound: {
+    enable: true,
+    path: path.join(__dirname, '../lib/plugin/egg-notFound'),
+  },
 };

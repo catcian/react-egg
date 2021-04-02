@@ -4,6 +4,7 @@ import Search from './components/search';
 import Hot from './components/hot';
 import './index.less';
 import { useHttpHook } from '@/hooks';
+import { ErrorBoundary } from '@/components';
 
 export default function (props) {
   const [citys, citysLoading] = useHttpHook({
@@ -15,10 +16,12 @@ export default function (props) {
   
 
   return (
-    <div className="home">
-      <Header></Header>
-      <Search citys={citys} citysLoading={citysLoading}></Search>
-      <Hot houses={houses} housesLoading={housesLoading}></Hot>
-    </div>
+    <ErrorBoundary>
+      <div className="home">
+        <Header></Header>
+        <Search citys={citys} citysLoading={citysLoading}></Search>
+        <Hot houses={houses} housesLoading={housesLoading}></Hot>
+      </div>
+    </ErrorBoundary>
   );
 }

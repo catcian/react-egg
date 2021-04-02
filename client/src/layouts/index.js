@@ -10,10 +10,9 @@ function BasicLayout(props) {
 
   return (
     <StoreProvider store={store}>
-      <MenuBar show={path.includes(location.pathname)} pathname={location.pathname}></MenuBar>
-      <ErrorBoundary>
-        {props.children}
-      </ErrorBoundary>
+      <MenuBar show={path.includes(location.pathname)} pathname={location.pathname}>
+      </MenuBar>
+      {props.children}
     </StoreProvider>
   );
 }

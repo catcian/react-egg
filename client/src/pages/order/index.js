@@ -5,6 +5,7 @@ import { CommonEnum } from '@/enums';
 import Lists from './components/Lists';
 import { Http } from '@/utils';
 import { isEmpty } from 'project-libs';
+import { ErrorBoundary } from '@/components';
 import './index.less';
 
 export default function (props) {
@@ -87,15 +88,17 @@ export default function (props) {
   }
 
   return (
-    <div className="order-page">
-      <Tabs tabs={tabs} onChange={handleChange}>
-        <div className="tab">
-          <Lists orders={orders} type="0" showLoading={showLoading}></Lists>
-        </div>
-        <div className="tab">
-          <Lists orders={orders} type="1" showLoading={showLoading}></Lists>
-        </div>
-      </Tabs>
-    </div>
+    <ErrorBoundary>
+      <div className="order-page">
+        <Tabs tabs={tabs} onChange={handleChange}>
+          <div className="tab">
+            <Lists orders={orders} type="0" showLoading={showLoading}></Lists>
+          </div>
+          <div className="tab">
+            <Lists orders={orders} type="1" showLoading={showLoading}></Lists>
+          </div>
+        </Tabs>
+      </div>
+    </ErrorBoundary>
   );
 }
