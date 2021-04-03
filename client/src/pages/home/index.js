@@ -19,8 +19,8 @@ export default function (props) {
     <ErrorBoundary>
       <div className="home">
         <Header></Header>
-        <Search citys={citys} citysLoading={citysLoading}></Search>
-        <Hot houses={houses} housesLoading={housesLoading}></Hot>
+        { citys && <Search citys={citys} citysLoading={citysLoading}></Search>}
+        { houses && <Hot houses={houses} housesLoading={housesLoading}></Hot>}
       </div>
     </ErrorBoundary>
   );

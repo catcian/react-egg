@@ -5966,3 +5966,82 @@ app.js
 log(app.config.coreMiddleware)
 app.config.coreMiddleware.push('notFound')
 app.config.coreMiddleware.push('auth')
+
+
+10-3 获取城市列表数据，基于Sequelize多表联查编写热门民宿接口
+
+client 解决异常问题
+``` pages/home.index.js
+citys && Search
+house && Hot
+``` 
+
+2 处理城市接口
+``` controller/commons.js
+const BaseController = require('./base') // 统一返回模板
+
+  async citys() {
+    const { app } = this;
+    const resp = await app.httpclient.curl('https://apis.imooc.com/?icode=89773B5DA84CA283', { dataType: 'json' });
+    if (resp.status === 200) {
+      if (resp.data && resp.data.code === 200) {
+        await this.success(resp.data.data);
+      } else {
+        console.log(errorData);
+        await this.success(errorData);
+      }
+    } else {
+      this.error('获取城市数据失败');
+    }
+  }
+
+router.js + /api/commons/citys
+
+```
+
+
+``` controller/house.js
+  const BaseController = require('./base')
+  async hot() {
+    const { ctx } = this;
+    const result = await ctx.service.house.hot();
+    if (result) {
+      await this.success(result);
+    } else {
+      await this.error();
+    }
+  }
+
+service/house.js
+  const BaseService = require('./base')
+  async hot() {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.House.findAll({
+        limit: 4,
+        order: [
+          [ 'showCount', 'DESC' ],
+        ],
+        attributes: {
+          exclude: [ 'name', 'address', 'startTime', 'endTime', 'publishTime' ],
+        },
+        include: [
+          { model: app.model.Imgs, limit: 1, attributes: [ 'url' ] },
+        ],
+      });
+      return result;
+    });
+  }
+```
+
+``` model/house.js
+  House.associate = function() {
+    // 一个房屋对应多个图片 一对多
+    app.model.House.hasMany(app.model.Imgs, { foreignKey: 'houseId' });
+  };
+```
+
+client
+``` pages/hot/index.js
+<img className="img" src={house?.imgs[0]?.url} alt={house.title} />
+
+```

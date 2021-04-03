@@ -3,7 +3,6 @@
 module.exports = options => {
   return async (ctx, next) => {
     const lists = ctx.app.router.stack.filter(item => item.regexp.test(ctx.request.url));
-    console.log('lists', lists);
     if (lists.length) {
       await next();
     } else {

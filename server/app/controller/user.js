@@ -1,8 +1,9 @@
 'use strict';
-const Controller = require('egg').Controller;
+// const Controller = require('egg').Controller;
+const BaseController = require('./base');
 const md5 = require('md5');
 
-class UserController extends Controller {
+class UserController extends BaseController {
   async jwtSign() {
     const { ctx, app } = this;
     const { username } = ctx.request.body;
@@ -16,10 +17,7 @@ class UserController extends Controller {
     const params = ctx.request.body;
     const user = await ctx.service.user.getUser(params.username);
     if (user) {
-      ctx.body = {
-        status: 500,
-        errMsg: '用户已存在',
-      };
+      await this.error('用户已存在');
       return;
     }
     const result = await ctx.service.user.addUser({
@@ -30,20 +28,13 @@ class UserController extends Controller {
     if (result) {
       const token = await this.jwtSign();
       // ctx.session[params.username] = 1;
-      ctx.body = {
-        status: 200,
-        data: {
-          ...ctx.helper.unPick(result.dataValues, [ 'password' ]),
-          createTime: ctx.helper.timestamp(result.createTime),
-          updateTime: ctx.helper.timestamp(result.updateTime),
-          token,
-        },
-      };
+      await this.success({
+        ...ctx.helper.unPick(result.dataValues, [ 'password' ]),
+        createTime: ctx.helper.timestamp(result.createTime),
+        token,
+      });
     } else {
-      ctx.body = {
-        status: 500,
-        errMsg: '注册用户失败',
-      };
+      await this.error('注册失败');
     }
   }
 
@@ -56,20 +47,14 @@ class UserController extends Controller {
       console.log('login username', username);
       // ctx.session[username] = 1;
       console.log('login app.redis.get(username)', await app.redis.get(username));
-      ctx.body = {
-        status: 200,
-        data: {
-          ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
-          createTime: ctx.helper.timestamp(user.createTime),
-          updateTime: ctx.helper.timestamp(user.updateTime),
-          token,
-        },
-      };
+      await this.success({
+        ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
+        createTime: ctx.helper.timestamp(user.createTime),
+        updateTime: ctx.helper.timestamp(user.updateTime),
+        token,
+      });
     } else {
-      ctx.body = {
-        status: 500,
-        errMsg: '用户不存在',
-      };
+      await this.error('用户不存在');
     }
   }
 
@@ -77,19 +62,13 @@ class UserController extends Controller {
     const { ctx } = this;
     const user = await ctx.service.user.getUser(ctx.username);
     if (user) {
-      ctx.body = {
-        status: 200,
-        data: {
-          ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
-          createTime: ctx.helper.timestamp(user.createTime),
-          updateTime: ctx.helper.timestamp(user.updateTime),
-        },
-      };
+      await this.success({
+        ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
+        createTime: ctx.helper.timestamp(user.createTime),
+        updateTime: ctx.helper.timestamp(user.updateTime),
+      });
     } else {
-      ctx.body = {
-        status: 500,
-        errMsg: '用户不存在',
-      };
+      await this.error('用户不存在');
     }
   }
 
@@ -98,17 +77,11 @@ class UserController extends Controller {
     try {
       const username = ctx.username;
       // ctx.session[username] = null;
-      app.redis.del(username);
-      ctx.body = {
-        status: 200,
-        data: 'ok',
-      };
+      await app.redis.del(username);
+      await this.success('ok');
     } catch (error) {
       console.log(error);
-      ctx.body = {
-        status: 500,
-        errMsg: '服务器开小差~',
-      };
+      await this.error();
     }
   }
 }

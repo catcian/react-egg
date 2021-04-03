@@ -29,7 +29,7 @@ export default function (props) {
   useImgHook(
     '.item-img',
     (entries) => {
-      console.log(entries);
+      // console.log(entries);
     },
     null,
   );

@@ -3,7 +3,7 @@ import data from './mock.json';
 import { history } from 'umi'
 
 function Hot(props) {
-  console.log(props)
+  // console.log(props)
   const handleClick = id => {
     history.push({
       pathname: '/house',
@@ -19,7 +19,7 @@ function Hot(props) {
       <div className="hot-lists">
         {props?.houses?.map((house) => (
           <div className="hot-lists-item" key={house.id} onClick={() => handleClick(house.id)}>
-            <img className="img" src={house.img} alt={house.title} />
+            <img className="img" src={house?.imgs[0]?.url} alt={house.title} />
             <div className="title">{house.title} </div>
             <div className="info">{house.info}</div>
             <div className="price">{house.price}</div>
