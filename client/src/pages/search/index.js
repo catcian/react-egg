@@ -111,12 +111,12 @@ export default function (props) {
             <div className="item" key={house.id} onClick={() => handleClick(house.id)}>
               <img
                 className="item-img"
-                data-src={house.img}
+                data-src={house?.imgs[0]?.url}
                 src={require('../../assets/blank.png')}
                 alt="img"
               />
               <div className="item-right">
-                <div className="title">{house.title}</div>
+                <div className="title">{house.info}</div>
                 <div className="price">{house.price}</div>
               </div>
             </div>

@@ -11,7 +11,6 @@ class CommonsController extends BaseController {
       if (resp.data && resp.data.code === 200) {
         await this.success(resp.data.data);
       } else {
-        console.log(errorData);
         await this.success(errorData);
       }
     } else {

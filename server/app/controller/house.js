@@ -12,6 +12,16 @@ class HouseController extends BaseController {
       await this.error();
     }
   }
+
+  async search() {
+    const { ctx } = this;
+    const result = await ctx.service.house.search(ctx.params());
+    if (result) {
+      await this.success(result);
+    } else {
+      await this.error();
+    }
+  }
 }
 
 module.exports = HouseController;

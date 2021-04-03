@@ -6045,3 +6045,67 @@ client
 <img className="img" src={house?.imgs[0]?.url} alt={house.title} />
 
 ```
+
+
+10-4 编写搜索民宿接口，与前端联调
+``` controller/house.js
+  async search() {
+    const { ctx } = this;
+    const result = await ctx.service.house.search(ctx.params());
+    if (result) {
+      await this.success(result);
+    } else {
+      await this.error();
+    }
+  }
+```
+// 数字比较
+[Op.gt]: 6,                              // > 6
+[Op.gte]: 6,                             // >= 6
+[Op.lt]: 10,                             // < 10
+[Op.lte]: 10,                            // <= 10
+``` service/house.js
+  commonAttr(app) {
+    return {
+      order: [
+        [ 'id', 'DESC' ],
+      ],
+      attributes: {
+        exclude: [ 'name', 'startTime', 'endTime', 'address', 'publishTime' ],
+      },
+      include: [
+        { model: app.model.Imgs, limit: 1, attributes: [ 'url' ] },
+      ],
+    };
+  }
+
+  async search(params) {
+    return this.run(async (ctx, app) => {
+      const { lte, gte, like } = app.Sequelize.Op;
+      const where = {
+        cityCode: Array.isArray(params.code) ? params.code[0] : params.code,
+        startTime: {
+          [lte]: params.startTime,
+        },
+        endTime: {
+          [gte]: params.endTime,
+        },
+        name: {
+          [like]: '%' + params.houseName + '%',
+        },
+      };
+      if (!params.houseName) {
+        delete where.name;
+      }
+      const result = await app.model.House.findAll({
+        ...this.commonAttr(app),
+        limit: 8,
+        offset: (params.pageNum - 1) * params.pageSize,
+
+        where,
+      });
+
+      return result;
+    });
+  }
+```
