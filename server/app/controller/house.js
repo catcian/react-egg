@@ -22,6 +22,19 @@ class HouseController extends BaseController {
       await this.error();
     }
   }
+
+  async detail() {
+    const { ctx } = this;
+    const result = await ctx.service.house.detail(ctx.params('id'));
+    if (result) {
+      await this.success({
+        banner: result.imgs,
+        info: result,
+      });
+    } else {
+      await this.error();
+    }
+  }
 }
 
 module.exports = HouseController;

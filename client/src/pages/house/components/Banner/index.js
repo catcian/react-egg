@@ -17,7 +17,7 @@ export default function (props) {
       <div className="swiper-wrapper">
         {props?.banner?.map((item, index) => (
           <div className="swiper-slide" key={index}>
-            <img src={item} alt="house" />
+            <img src={item.url} alt="house" />
           </div>
         ))}
       </div>

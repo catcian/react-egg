@@ -7,7 +7,7 @@ class HouseService extends BaseService {
   commonAttr(app) {
     return {
       order: [
-        [ 'id', 'DESC' ],
+        [ 'showCount', 'DESC' ],
       ],
       attributes: {
         exclude: [ 'name', 'startTime', 'endTime', 'address', 'publishTime' ],
@@ -51,6 +51,29 @@ class HouseService extends BaseService {
         offset: (params.pageNum - 1) * params.pageSize,
 
         where,
+      });
+
+      return result;
+    });
+  }
+
+  async detail(id) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.House.findOne({
+        where: {
+          id,
+        },
+        include: [
+          { model: app.model.Imgs, limit: 3, attributes: [ 'url' ] },
+        ],
+      });
+
+      await app.model.House.update({
+        showCount: result.dataValues.showCount + 1,
+      }, {
+        where: {
+          id,
+        },
       });
 
       return result;

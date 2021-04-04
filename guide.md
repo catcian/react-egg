@@ -6109,3 +6109,66 @@ client
     });
   }
 ```
+
+10-5 编写民宿详情接口，与前端联调
+
+``` 3. model/house.js 处理时间
+    startTime: {
+      type: DATE,
+      get() {
+        return new Date(this.getDataValue('startTime')).getTime();
+      },
+    },
+```
+``` 1. controller/detail
+  async detail() {
+    const { ctx } = this;
+    const result = await ctx.service.house.detail(ctx.params('id'));
+    if (result) {
+      await this.success({
+        banner: result.imgs,
+        info: result,
+      });
+    } else {
+      await this.error();
+    }
+  }
+```
+
+``` 2. service/house.js
+  async detail(id) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.House.findOne({
+        where: {
+          id,
+        },
+        include: [
+          { model: app.model.Imgs, limit: 3, attributes: [ 'url' ] },
+        ],
+      });
+
+      await app.model.House.update({
+        showCount: result.dataValues.showCount + 1,
+      }, {
+        where: {
+          id,
+        },
+      });
+
+      return result;
+    });
+  }
+```
+
+client
+``` house/info/index.js
+    <div className="info-title">{props?.detail?.name}</div>
+    <div className="info-msg">简介：{props?.detail?.info}</div>
+```
+``` house/Banner/index.js
+    {props?.banner?.map((item, index) => (
+      <div className="swiper-slide" key={index}>
+        <img src={item.url} alt="house" />
+      </div>
+    ))}
+```
