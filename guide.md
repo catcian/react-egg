@@ -6264,3 +6264,38 @@ const BaseService = require(./base)
     app.model.Comment.belongsTo(app.model.User, { foreignKey: 'userId' });
   };
 ```
+
+10-7 创建订单表，基于 Sequelize 编写订单模型
+
+-- 订单表
+```
+ create table `order` (
+  `id` int not null auto_increment,
+  `order_number` varchar(20) default null comment '订单编号',
+  `userId` int not null comment '用户id',
+  `houseId` int not null comment '房屋id',
+  `isPayed` int default 0 comment '是否支付，0未支付，1已支付',
+  `createTime` timestamp default CURRENT_TIMESTAMP comment '创建时间',
+  `updateTime` timestamp default CURRENT_TIMESTAMP comment '更新时间',
+  primary key(id)
+)engine=InnoDB auto_increment=1 default charset=utf8 comment='订单表';
+```
+
+``` model/order.js
+'use strict';
+
+module.exports = app => {
+  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const Order = app.model.define('order', {
+    id: { type: INTEGER, primaryKey: true, autoIncrement: true },
+    order_number: STRING(20),
+    userId: INTEGER,
+    houseId: INTEGER,
+    isPayed: INTEGER,
+    createTime: { type: DATE, get() { return new Date(this.getDataValue('createTime').getTime()); } },
+    updateTime: { type: DATE, get() { return new Date(this.getDataValue('updateTime').getTime()); } },
+  });
+  return Order;
+};
+
+```

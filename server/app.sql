@@ -98,3 +98,34 @@ INSERT INTO `imgs` VALUES
 (18,'https://img4.mukewang.com/szimg/5f20e20109429b5f12000676-360-202.png',15,'2020-08-11 13:37:57');
 
 
+
+SELECT `imgs`.* FROM (SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 1 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 2 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 15 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 4 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 5 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 6 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 8 LIMIT 1) AS sub UNION ALL 
+SELECT * FROM 
+(SELECT `id`, `url`, `houseId` FROM `imgs` AS `imgs` WHERE `imgs`.`houseId` = 11 LIMIT 1) AS sub)
+ AS `imgs`;
+
+
+-- 订单表
+ create table `order` (
+  `id` int not null auto_increment,
+  `order_number` varchar(20) default null comment '订单编号',
+  `userId` int not null comment '用户id',
+  `houseId` int not null comment '房屋id',
+  `isPayed` int default 0 comment '是否支付，0未支付，1已支付',
+  `createTime` timestamp default CURRENT_TIMESTAMP comment '创建时间',
+  `updateTime` timestamp default CURRENT_TIMESTAMP comment '更新时间',
+  primary key(id)
+)engine=InnoDB auto_increment=1 default charset=utf8 comment='订单表';

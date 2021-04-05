@@ -4,7 +4,7 @@ const BaseService = require('./base');
 
 class CommentService extends BaseService {
 
-  async lists(params, userId) {
+  async lists(params) {
     return this.run(async (ctx, app) => {
       const result = await app.model.Comment.findAll({
         where: {
