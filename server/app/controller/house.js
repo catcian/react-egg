@@ -35,6 +35,7 @@ class HouseController extends BaseController {
       await this.error();
     }
   }
+
 }
 
 module.exports = HouseController;

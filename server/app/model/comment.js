@@ -11,9 +11,9 @@ module.exports = app => {
     createTime: DATE,
   });
 
-  // Comment.associate = function() {
-  //   // 评论与用户 多对一 关系
-  //   app.model.Comment.belongsTo(app.model.User, { foreignKey: 'userId' });
-  // };
+  Comment.associate = function() {
+    // 评论与用户 多对一 关系
+    app.model.Comment.belongsTo(app.model.User, { foreignKey: 'userId' });
+  };
   return Comment;
 };

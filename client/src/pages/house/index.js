@@ -47,7 +47,7 @@ export default function (props) {
 
   useEffect(() => {
     getCommentsAsync({
-      id: query?.id
+      houseId: query?.id
     });
   }, [reloadCommentsNum]);
 

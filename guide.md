@@ -6172,3 +6172,95 @@ client
       </div>
     ))}
 ```
+
+10-6 编写添加评论和评论列表接口，与前端联调
+/api/comment/add
+
+client
+``` house/Footer/index.js
+const { query } = useLocation()
+
+  const handleSubmit = () => {
+    if (commentsValue) {
+      handleClose()
+      addCommentsAsync({
+        comment: commentsValue,
+        houseId: urlGet('id')
+        //houseId: query?.id
+      });
+    } else {
+      Toast.fail('请添加评论信息～');
+    }
+  };
+```
+
+server
+``` controller/comment.js
+const BaseController = require('./base')
+  async add() {
+    const { ctx } = this;
+    // 添加评论，不仅需要houseId 还需要userId
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.comment.add({
+      userId: user.id,
+      houseId: ctx.params('houseId'),
+      msg: ctx.params('comment'),
+      createTime: ctx.helper.time(),
+    });
+    console.log('-- /controller/comment/add result --', result);
+    if (result) {
+      await this.success(result);
+    } else {
+      await this.error();
+    }
+  }
+
+  async lists() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.comment.lists(ctx.params(), user.id);
+    console.log('-- /controller/comment/lists result --', result);
+    if (result) {
+      await this.success(result);
+    } else {
+      await this.error();
+    }
+  }
+
+```
+
+``` service/comment.js
+const BaseService = require(./base)
+  async lists(params, userId) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.Comment.findAll({
+        where: {
+          houseId: params.houseId,
+        },
+        limit: params.pageSize,
+        offset: (params.pageNum - 1) * params.pageSize,
+        include: [
+          { model: app.model.User, attributes: [ 'avatar', 'username' ] },
+        ],
+      });
+      return result;
+    });
+  }
+
+  async add(params) {
+    return this.run(async (ctx, app) => {
+      return await app.model.Comment.create(params);
+    });
+  }
+
+}
+
+```
+
+``` model/comment.js
+  多条评论对应一个用户
+  Comment.associate = function() {
+    // 评论与用户 多对一 关系
+    app.model.Comment.belongsTo(app.model.User, { foreignKey: 'userId' });
+  };
+```

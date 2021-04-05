@@ -57,10 +57,18 @@ export default {
         localStorage.setItem('token', result.token)
         localStorage.setItem('username', result.username)
         const fromPath = urlGet('from')
-        console.log(fromPath)
+        let query = {}
+        if (fromPath === '/house') {
+          query = {
+            id: urlGet('id')
+          }
+        }
         Toast.success('登陆成功')
         setTimeout(() => {
-          history.push(fromPath);
+          history.push({
+            pathname:fromPath || "/",
+            query
+          });
         }, 1500)
       }
     },

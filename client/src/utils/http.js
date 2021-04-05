@@ -1,6 +1,6 @@
 import { Toast } from 'antd-mobile';
 import { history } from 'umi'
-// import {  } from 'project-libs'
+import { urlGet } from 'project-libs'
 
 export default function Http({ url, method = 'POST', headers, body, setResult, setLoading }) {
   setLoading && setLoading(true);
@@ -39,11 +39,18 @@ export default function Http({ url, method = 'POST', headers, body, setResult, s
           Toast.fail(resp.errMsg)
           reject(resp.errMsg)
           setTimeout(() => {
+            let query = {
+              from: location.pathname
+            }
+            if (location.pathname === '/house') {
+              query = {
+                ...query,
+                id: urlGet('id')
+              }
+            }
             history.push({
               pathname: '/login',
-              query: {
-                from: location.pathname,
-              }
+              query,
             })
           }, 1500)
         } else {
