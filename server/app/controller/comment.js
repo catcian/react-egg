@@ -6,8 +6,7 @@ class CommentController extends BaseController {
 
   async lists() {
     const { ctx } = this;
-    const user = await ctx.service.user.getUser(ctx.username);
-    const result = await ctx.service.comment.lists(ctx.params(), user.id);
+    const result = await ctx.service.comment.lists(ctx.params(), ctx.userId);
     if (result) {
       await this.success(result);
     } else {
@@ -17,9 +16,8 @@ class CommentController extends BaseController {
 
   async add() {
     const { ctx } = this;
-    const user = await ctx.service.user.getUser(ctx.username);
     const result = await ctx.service.comment.add({
-      userId: user.id,
+      userId: ctx.userId,
       houseId: ctx.params('houseId'),
       msg: ctx.params('comment'),
       createTime: ctx.helper.time(),

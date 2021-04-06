@@ -4,11 +4,11 @@ const BaseController = require('./base');
 const md5 = require('md5');
 
 class UserController extends BaseController {
-  async jwtSign() {
-    const { ctx, app } = this;
-    const { username } = ctx.request.body;
+  async jwtSign(id, username) {
+    const { app } = this;
+    // const { username } = ctx.request.body;
     await app.redis.set(username, 1, 'EX', app.config.redisExpire);
-    const token = app.jwt.sign({ username }, app.config.jwt.secret);
+    const token = app.jwt.sign({ username, id }, app.config.jwt.secret);
     return token;
   }
 
@@ -25,8 +25,11 @@ class UserController extends BaseController {
       password: md5(params.password + app.config.salt),
       createTime: ctx.helper.time(),
     });
+    console.log('/UserController/register');
+    console.log(result);
     if (result) {
-      const token = await this.jwtSign();
+
+      const token = await this.jwtSign(result.id, result.username);
       // ctx.session[params.username] = 1;
       await this.success({
         ...ctx.helper.unPick(result.dataValues, [ 'password' ]),
@@ -42,8 +45,10 @@ class UserController extends BaseController {
     const { ctx, app } = this;
     const { username, password } = ctx.request.body;
     const user = await ctx.service.user.getUser(username, password);
+    console.log('/UserController/login');
+    console.log(user);
     if (user) {
-      const token = await this.jwtSign();
+      const token = await this.jwtSign(user.id, user.username);
       console.log('login username', username);
       // ctx.session[username] = 1;
       console.log('login app.redis.get(username)', await app.redis.get(username));
@@ -87,9 +92,8 @@ class UserController extends BaseController {
 
   async edit() {
     const { ctx } = this;
-    const user = await ctx.service.user.getUser(ctx.username);
     const result = await ctx.service.user.edit({
-      id: user.id,
+      id: ctx.userId,
       avatar: ctx.params('img'),
       sign: ctx.params('sign'),
       phone: ctx.params('tel'),

@@ -8,6 +8,7 @@ import { history } from 'umi'
 import './index.less';
 
 export default function (props) {
+  const [state, setState] = useState(false)
   const [houseName, setHouseName] = useState('');
   const [page, setPage] = useState(CommonEnum.PAGE);
   const [houseLists, setHouseLists] = useState([]);
@@ -62,6 +63,12 @@ export default function (props) {
     }
   }, [loading]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setState(true)
+    } , 1500)
+  }, [])
+
   const handleChange = (value) => {
     setHouseName(value);
   };
@@ -104,7 +111,7 @@ export default function (props) {
       ></SearchBar>
       {/* 搜索结构 */}
       {!houseLists.length ? (
-        <ActivityIndicator toast></ActivityIndicator>
+        <>{ state ? <div className="result"><ShowLoading showLoading={showLoading}></ShowLoading></div> : <ActivityIndicator toast></ActivityIndicator>}</>
       ) : (
         <div className="result">
           {houseLists.map((house) => (

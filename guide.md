@@ -6646,3 +6646,25 @@ client
     });
   }
 ```
+
+10-11 优化用户信息获取方式，对egg框架进行扩展
+controller/orders.js
+将 user.id 进行优化 存储在 token 中
+const user = await ctx.service.user.getUser(ctx.username);
+
+``` controller/user.js
+  async jwtSign(id, username) {
+    const { app } = this;
+    // const { username } = ctx.request.body;
+    await app.redis.set(username, 1, 'EX', app.config.redisExpire);
+    const token = app.jwt.sign({ username, id }, app.config.jwt.secret);
+    return token;
+  }
+```
+``` extend/context.js
+  get userId() {
+    const token = this.request.header.token;
+    const tokenCache = token ? this.app.jwt.verify(token, this.app.config.jwt.secret) : undefined;
+    return tokenCache ? tokenCache.id : undefined;
+  },
+```
