@@ -21,12 +21,16 @@ export default function (props) {
       reloadComments,
       reloadCommentsNum,
       resetData,
+      order,
+      hasOrdersAsync,
+      addOrdersAsync,
+      delOrderAsync,
     },
   } = useStoreHook();
 
   useObserverHook(
     CommonEnum.LOADING_ID,
-    (entries) => {
+    entries => {
       if (
         comments &&
         comments.length &&
@@ -52,6 +56,12 @@ export default function (props) {
   }, [reloadCommentsNum]);
 
   useEffect(() => {
+    hasOrdersAsync({
+      houseId: query?.id
+    })
+  }, [])
+
+  useEffect(() => {
     return () => {
       resetData({
         detail: {}
@@ -59,12 +69,24 @@ export default function (props) {
     }
   }, [])
 
+  const handleBtnClick = id => {
+    if (!id) {
+      addOrdersAsync({
+        houseId: query?.id
+      })
+    } else {
+      delOrderAsync({
+        houseId: query?.id
+      })
+    }
+  }
+
   return (
     <div className="house-page">
       {/* banner */}
       <Banner banner={detail?.banner}></Banner>
       {/* 房屋信息 */}
-      <Info detail={detail?.info}></Info>
+      <Info detail={detail?.info} order={order} btnClick={handleBtnClick}></Info>
       {/* 评论 */}
       <Lists lists={comments} showLoading={showLoading}></Lists>
       {/* footer */}

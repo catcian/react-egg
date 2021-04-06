@@ -13,6 +13,12 @@ class BaseService extends Service {
       return null;
     }
   }
+
+  async findOne(modelName, filter, option) {
+    const { app } = this;
+    const result = await app.model[modelName].findOne(filter, option);
+    return !result ? {} : result;
+  }
 }
 
 module.exports = BaseService;

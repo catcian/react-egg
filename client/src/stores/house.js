@@ -1,5 +1,16 @@
 import Http from '../utils/http';
 import { CommonEnum } from '@/enums';
+
+const handleOrders = async (url, dispatch, payload) => {
+  const result = await Http({
+    url,
+    body: payload
+  })
+  dispatch({
+    type: 'setOrders',
+    payload: result,
+  })
+}
 export default {
   state: {
     detail: {},
@@ -7,6 +18,7 @@ export default {
     showLoading: true,
     page: CommonEnum.PAGE,
     reloadCommentsNum: 0,
+    order: null,
   },
   reducers: {
     getDetail(state, payload) {
@@ -15,18 +27,21 @@ export default {
         detail: payload,
       };
     },
+
     getComments(state, payload) {
       return {
         ...state,
         comments: payload,
       };
     },
+
     setShowLoading(state, payload) {
       return {
         ...state,
         showLoading: payload,
       };
     },
+
     reloadComments(state, payload) {
       return {
         ...state,
@@ -37,6 +52,7 @@ export default {
         reloadCommentsNum: state.reloadCommentsNum + 1,
       };
     },
+
     resetData(state, payload) {
       return {
         ...state,
@@ -48,6 +64,13 @@ export default {
         ...payload,
       };
     },
+
+    setOrders(state, payload) {
+      return {
+        ...state,
+        order: payload,
+      }
+    }
   },
   effects: {
     async getDetailAsync(dispatch, rootState, payload) {
@@ -60,6 +83,7 @@ export default {
         payload: detail,
       });
     },
+
     async getCommentsAsync(dispatch, rootState, payload) {
       const { comments, page } = rootState.house;
       const lists = await Http({
@@ -79,6 +103,7 @@ export default {
         payload: lists.length ? true : false,
       });
     },
+
     async addCommentsAsync(dispatch, rootState, payload) {
       const result = await Http({
         url: '/comment/add',
@@ -91,5 +116,17 @@ export default {
         });
       }
     },
+
+    async hasOrdersAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/hasOrder', dispatch, payload)
+    },
+
+    async addOrdersAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/addOrder', dispatch, payload)
+    },
+
+    async delOrderAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/delOrder', dispatch, payload)
+    }
   },
 };

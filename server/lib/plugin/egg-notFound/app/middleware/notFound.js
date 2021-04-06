@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = options => {
+module.exports = () => {
   return async (ctx, next) => {
     const lists = ctx.app.router.stack.filter(item => item.regexp.test(ctx.request.url));
     if (lists.length) {
@@ -8,7 +8,7 @@ module.exports = options => {
     } else {
       ctx.body = {
         status: 404,
-        errMsg: '接口' + ctx.request.url + '不存在',
+        errMsg: ctx.request.url + ' not found',
       };
     }
   };

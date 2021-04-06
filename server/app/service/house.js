@@ -59,14 +59,14 @@ class HouseService extends BaseService {
 
   async detail(id) {
     return this.run(async (ctx, app) => {
-      const result = await app.model.House.findOne({
+      const result = await this.findOne('House', {
         where: {
           id,
         },
         include: [
           { model: app.model.Imgs, limit: 3, attributes: [ 'url' ] },
         ],
-      });
+      })
 
       await app.model.House.update({
         showCount: result.dataValues.showCount + 1,

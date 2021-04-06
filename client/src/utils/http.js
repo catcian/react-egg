@@ -38,11 +38,12 @@ export default function Http({ url, method = 'POST', headers, body, setResult, s
           localStorage.clear()
           Toast.fail(resp.errMsg)
           reject(resp.errMsg)
+          const pathname = location.pathname
           setTimeout(() => {
             let query = {
-              from: location.pathname
+              from: pathname
             }
-            if (location.pathname === '/house') {
+            if (pathname === '/house') {
               query = {
                 ...query,
                 id: urlGet('id')

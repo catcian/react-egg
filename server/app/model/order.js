@@ -8,8 +8,14 @@ module.exports = app => {
     userId: INTEGER,
     houseId: INTEGER,
     isPayed: INTEGER,
-    createTime: { type: DATE, get() { return new Date(this.getDataValue('createTime').getTime()); } },
-    updateTime: { type: DATE, get() { return new Date(this.getDataValue('updateTime').getTime()); } },
+    createTime: {
+      type: DATE,
+      get() { return new Date(this.getDataValue('createTime')).getTime(); },
+    },
+    updateTime: {
+      type: DATE,
+      get() { return new Date(this.getDataValue('updateTime')).getTime(); },
+    },
   });
   return Order;
 };

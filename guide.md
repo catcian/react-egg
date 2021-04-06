@@ -6299,3 +6299,177 @@ module.exports = app => {
 };
 
 ```
+
+10-8 编写预定和取消预定民宿接口，与前端联调
+``` stores/house.js
+
+    const handleOrders = async (url, dispatch, payload) => {
+      const result = await Http({
+        url,
+        body: payload
+      })
+      dispatch({
+        type: 'setOrders',
+        payload: result,
+      })
+    }
+
+    state: {
+      order: null
+    }
+
+    setOrders(state, payload) {
+      return {
+        ...state,
+        order: payload,
+      }
+    }
+
+    async hasOrdersAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/hasOrder', dispatch, payload)
+    },
+
+    async addOrdersAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/addOrder', dispatch, payload)
+    },
+
+    async delOrderAsync(dispatch, rootState, payload) {
+      await handleOrders('/orders/delOrder', dispatch, payload)
+    }
+```
+
+``` pages/houses/index
+  const {
+    house: {
+      order,
+      hasOrdersAsync,
+      addOrdersAsync,
+      delOrderAsync,
+    },
+  } = useStoreHook();
+
+  const handleBtnClick = id => {
+    if (!id) {
+      addOrdersAsync({
+        houseId: query?.id
+      })
+    } else {
+      delOrderAsync({
+        houseId: query?.id
+      })
+    }
+  }
+
+  useEffect(() => {
+    hasOrdersAsync({
+      houseId: query?.id
+    })
+  }, [])
+```
+
+``` house/components/Info/index.js
+
+  const renderBtn = () => {
+    // props.order 没有id 没有预定订单
+    if(!props.order?.id) {
+      return <Button className="info-btn" type="warning" onClick={() => props.btnClick()}>
+      预定
+    </Button>
+    }
+    // props.order.isPayed === 0 未支付
+    if (props.order?.isPayed === 0) {
+      return <Button className="info-btn" type="ghost" onClick={() => props.btnClick(props.order?.id)}>
+      取消预定
+    </Button>
+    }
+    // props.order.isPayed === 1 已支付
+    if(props.order?.isPayed === 1) {
+      return <Button className="info-btn" type="ghost">
+      已经支付
+    </Button>
+    }
+  }
+```
+
+server
+``` controller/orders.js
+  async hasOrder() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.orders.hasOrder(user.id, ctx.params('houseId'));
+    if (result) {
+      this.success(result);
+    } else {
+      this.error();
+    }
+  }
+
+  async addOrder() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.orders.addOrder({
+      userId: user.id,
+      houseId: ctx.params('houseId'),
+      isPayed: 0,
+      createTime: ctx.helper.time(),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error();
+    }
+  }
+
+  async delOrder() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.orders.delOrder({
+      userId: user.id,
+      houseId: ctx.params('houseId'),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error();
+    }
+  }
+```
+app/router.js
+const userExist = app.middleware.userExist()
+
+``` service/orders.js
+  async hasOrder(userId, houseId) {
+    return this.run(async () => {
+      const result = await this.findOne('Order', {
+        where: {
+          userId,
+          houseId,
+        },
+      });
+      return result;
+    });
+  }
+
+  async addOrder(params) {
+    return this.run(async (ctx, app) => {
+      console.log('/OrdersService/addOrder');
+      const result = await app.model.Order.create(params);
+      console.log('result', result);
+      return result;
+    });
+  }
+
+  async delOrder(params) {
+    return this.run(async (ctx, app) => {
+      console.log('/OrdersService/delOrder');
+      const result = await app.model.Order.destroy({
+        where: {
+          userId: params.userId,
+          houseId: params.houseId,
+        },
+      });
+      console.log(result);
+      return result;
+    });
+  }
+```

@@ -8,7 +8,6 @@ class CommentController extends BaseController {
     const { ctx } = this;
     const user = await ctx.service.user.getUser(ctx.username);
     const result = await ctx.service.comment.lists(ctx.params(), user.id);
-    console.log('-- /controller/comment/lists result --', result);
     if (result) {
       await this.success(result);
     } else {
@@ -25,7 +24,6 @@ class CommentController extends BaseController {
       msg: ctx.params('comment'),
       createTime: ctx.helper.time(),
     });
-    console.log('-- /controller/comment/add result --', result);
     if (result) {
       await this.success(result);
     } else {
