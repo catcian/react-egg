@@ -6524,3 +6524,125 @@ server
   }
 ```
 
+client
+``` order/components/Item
+    <img src={props?.house_as?.imgs[0]?.url} alt="order" />
+    <div className="center">
+      <div className="title">{props?.house_as?.info}</div>
+      <div className="price">{props?.house_as?.price}</div>
+      <div className="time">{Timer(props?.createTime, '')}</div>
+    </div>
+    <div className="pay">{handlePay()}</div>
+  </div>
+```
+
+``` order/components/Lists
+ const [state, setState] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setState(true)
+    }, 1500)
+  }, []);
+  return (
+    <div>
+      {isEmpty(props?.orders) ? (
+        <> { state ? <ShowLoading showLoading={props.showLoading}></ShowLoading> : <OrderSkeletons></OrderSkeletons>} </>
+      ) : (
+        <div className="tab-lists">
+          {props.orders.map((item) => (
+            <OrderItem type={props.type} key={item.id} {...item}></OrderItem>
+          ))}
+          <ShowLoading showLoading={props.showLoading}></ShowLoading>
+        </div>
+      )}
+      {/* <OrderSkeletons></OrderSkeletons> */}
+    </div>
+  );
+```
+
+
+10-10 Egg.js 模拟支付过程，与前端联调
+
+``` order/components/lists
+  const handleBtnPay = async id => {
+    const result = await Http({
+      url: '/orders/pay',
+      body: {
+        id
+      }
+    })
+    console.log(result)
+    if (result) {
+      Toast.success('支付成功')
+      window.location.reload()
+    } else {
+      Toast.fail('支付失败')
+    }
+  }
+```
+
+``` controller/orders.js
+ async invokePay(params) {
+    return {
+      orderNumber: params.id + new Date().getTime(),
+    };
+  }
+
+  async pay() {
+    const { ctx } = this;
+    // const user = await ctx.service.user.getUser(ctx.username);
+    const { id } = ctx.params();
+    // 查看订单是否存在
+    const order = await ctx.service.orders.getOrder(ctx.params('id'));
+    if (order) {
+
+      try {
+        // 第三方请求
+        const beforePay = await this.invokePay({ id });
+        const result = await ctx.service.orders.pay({
+          id,
+          order_number: beforePay.orderNumber,
+          updateTime: ctx.helper.time(),
+        });
+
+        if (result) {
+          await this.success('订单支付成功');
+        } else {
+          await this.error('订单支付失败');
+        }
+      } catch (error) {
+        await this.error('订单支付失败');
+      }
+
+    } else {
+      await this.error('订单不存在');
+    }
+  }
+```
+
+``` service/orders.js
+  async getOrder(id) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.Order.findByPk(id);
+      console.log('/OrdersService/getOrder');
+      console.log(result);
+      return result;
+    });
+  }
+
+  async pay(params) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.Order.update({
+        order_number: params.order_number,
+        isPayed: 1,
+        updateTime: params.updateTime,
+      }, {
+        where: {
+          id: params.id,
+        },
+      });
+      return result;
+    });
+  }
+```

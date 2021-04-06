@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'antd-mobile';
+import { Button, Toast } from 'antd-mobile';
 import { Timer } from '@/utils'
+import Http from '../../../../utils/http';
 
 export default function (props) {
   const [state, setState] = useState();
 
   useEffect(() => {}, []);
 
+  const handleBtnPay = async id => {
+    const result = await Http({
+      url: '/orders/pay',
+      body: {
+        id
+      }
+    })
+    console.log(result)
+    if (result) {
+      Toast.success('支付成功')
+      window.location.reload()
+    } else {
+      Toast.fail('支付失败')
+    }
+  }
+
   const handlePay = () => {
     switch (props.type) {
       case '0':
         return (
-          <Button type="warning" size="small">
+          <Button type="warning" size="small" onClick={() => handleBtnPay(props.id)}>
             去支付
           </Button>
         );

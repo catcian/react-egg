@@ -64,6 +64,30 @@ class OrdersService extends BaseService {
       return result;
     });
   }
+
+  async getOrder(id) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.Order.findByPk(id);
+      console.log('/OrdersService/getOrder');
+      console.log(result);
+      return result;
+    });
+  }
+
+  async pay(params) {
+    return this.run(async (ctx, app) => {
+      const result = await app.model.Order.update({
+        order_number: params.order_number,
+        isPayed: 1,
+        updateTime: params.updateTime,
+      }, {
+        where: {
+          id: params.id,
+        },
+      });
+      return result;
+    });
+  }
 }
 
 module.exports = OrdersService;
