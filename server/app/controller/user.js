@@ -84,6 +84,23 @@ class UserController extends BaseController {
       await this.error();
     }
   }
+
+  async edit() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.user.edit({
+      id: user.id,
+      avatar: ctx.params('img'),
+      sign: ctx.params('sign'),
+      phone: ctx.params('tel'),
+      updateTime: ctx.helper.time(),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error('修改失败');
+    }
+  }
 }
 
 module.exports = UserController;
