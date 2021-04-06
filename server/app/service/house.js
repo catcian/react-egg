@@ -66,7 +66,7 @@ class HouseService extends BaseService {
         include: [
           { model: app.model.Imgs, limit: 3, attributes: [ 'url' ] },
         ],
-      })
+      });
 
       await app.model.House.update({
         showCount: result.dataValues.showCount + 1,

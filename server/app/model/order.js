@@ -17,5 +17,10 @@ module.exports = app => {
       get() { return new Date(this.getDataValue('updateTime')).getTime(); },
     },
   });
+
+  // 多个订单对应一个房屋
+  Order.associate = function() {
+    app.model.Order.belongsTo(app.model.House, { foreignKey: 'houseId', as: 'house_as' });
+  };
   return Order;
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'antd-mobile';
+import { Timer } from '@/utils'
 
 export default function (props) {
   const [state, setState] = useState();
@@ -24,11 +25,11 @@ export default function (props) {
 
   return (
     <div className="order-item">
-      <img src={props?.img} alt="order" />
+      <img src={props?.house_as?.imgs[0]?.url} alt="order" />
       <div className="center">
-        <div className="title">{props?.title}</div>
-        <div className="price">{props?.price}</div>
-        <div className="time">{props?.createTime}</div>
+        <div className="title">{props?.house_as?.info}</div>
+        <div className="price">{props?.house_as?.price}</div>
+        <div className="time">{Timer(props?.createTime, '')}</div>
       </div>
       <div className="pay">{handlePay()}</div>
     </div>

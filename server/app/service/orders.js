@@ -1,5 +1,5 @@
 'use strict';
-const Service = require('egg').Service;
+// const Service = require('egg').Service;
 const BaseService = require('./base');
 
 class OrdersService extends BaseService {
@@ -18,23 +18,49 @@ class OrdersService extends BaseService {
 
   async addOrder(params) {
     return this.run(async (ctx, app) => {
-      console.log('/OrdersService/addOrder');
+      // console.log('/OrdersService/addOrder');
       const result = await app.model.Order.create(params);
-      console.log('result', result);
       return result;
     });
   }
 
   async delOrder(params) {
     return this.run(async (ctx, app) => {
-      console.log('/OrdersService/delOrder');
+      // console.log('/OrdersService/delOrder');
       const result = await app.model.Order.destroy({
         where: {
           userId: params.userId,
           houseId: params.houseId,
         },
       });
-      console.log(result);
+      return result;
+    });
+  }
+
+  async lists(params) {
+    return this.run(async (ctx, app) => {
+      console.log('/OrdersService/lists');
+      const result = await app.model.Order.findAll({
+        where: {
+          userId: params.userId,
+          isPayed: params.isPayed,
+        },
+        limit: params.pageSize,
+        offset: (params.pageNum - 1) * params.pageSize,
+        include: [
+          {
+            model: app.model.House,
+            as: 'house_as',
+            include: [
+              {
+                model: app.model.Imgs,
+                attributes: [ 'url' ],
+                limit: 1,
+              },
+            ],
+          },
+        ],
+      });
       return result;
     });
   }

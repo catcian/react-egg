@@ -1,5 +1,5 @@
 'use strict';
-const Controller = require('egg').Controller;
+// const Controller = require('egg').Controller;
 const BaseController = require('./base');
 
 class OrdersController extends BaseController {
@@ -36,6 +36,21 @@ class OrdersController extends BaseController {
     const result = await ctx.service.orders.delOrder({
       userId: user.id,
       houseId: ctx.params('houseId'),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error();
+    }
+  }
+
+  async lists() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.orders.lists({
+      ...ctx.params(),
+      userId: user.id,
+      isPayed: ctx.params('type'),
     });
     if (result) {
       this.success(result);

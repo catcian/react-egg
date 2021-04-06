@@ -6473,3 +6473,54 @@ const userExist = app.middleware.userExist()
     });
   }
 ```
+
+10-9 编写订单列表接口，与前端联调
+
+server
+``` controller/orders.js
+  async lists() {
+    const { ctx } = this;
+    const user = await ctx.service.user.getUser(ctx.username);
+    const result = await ctx.service.orders.lists({
+      ...ctx.params(),
+      userId: user.id,
+      isPayed: ctx.params('type'),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error();
+    }
+  }
+```
+
+``` service/orders.js
+  async lists(params) {
+    return this.run(async (ctx, app) => {
+      console.log('/OrdersService/lists');
+      const result = await app.model.Order.findAll({
+        where: {
+          userId: params.userId,
+          isPayed: params.isPayed,
+        },
+        limit: params.pageSize,
+        offset: (params.pageNum - 1) * params.pageSize,
+        include: [
+          {
+            model: app.model.House,
+            as: 'house_as',
+            include: [
+              {
+                model: app.model.Imgs,
+                attributes: [ 'url' ],
+                limit: 1,
+              },
+            ],
+          },
+        ],
+      });
+      return result;
+    });
+  }
+```
+

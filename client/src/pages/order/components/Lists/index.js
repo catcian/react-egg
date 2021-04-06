@@ -6,13 +6,17 @@ import { ShowLoading } from '@/components'
 import { OrderSkeletons } from '@/skeletons'
 
 export default function (props) {
-  const [state, setState] = useState();
+  const [state, setState] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setState(true)
+    }, 1500)
+  }, []);
   return (
     <div>
       {isEmpty(props?.orders) ? (
-        <OrderSkeletons></OrderSkeletons>
+        <> { state ? <ShowLoading showLoading={props.showLoading}></ShowLoading> : <OrderSkeletons></OrderSkeletons>} </>
       ) : (
         <div className="tab-lists">
           {props.orders.map((item) => (
