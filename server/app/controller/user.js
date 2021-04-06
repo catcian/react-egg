@@ -95,7 +95,7 @@ class UserController extends BaseController {
     const result = await ctx.service.user.edit({
       id: ctx.userId,
       avatar: ctx.params('img'),
-      sign: ctx.params('sign'),
+      sign: ctx.helper.escape(ctx.params('sign')),
       phone: ctx.params('tel'),
       updateTime: ctx.helper.time(),
     });

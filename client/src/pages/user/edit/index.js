@@ -22,17 +22,17 @@ function Edit(props) {
   };
 
   const handleSubmit = () => {
-    if (isEmpty(files)) {
-      Toast.fail('请上传图片!');
-      return;
-    }
+    // if (isEmpty(files)) {
+    //   Toast.fail('请上传图片!');
+    //   return;
+    // }
     validateFields((error, value) => {
       if (error) {
         Toast.fail('请讲信息补充完整！');
         return;
       } else {
         editUserAsync({
-          img: files[0].url,
+          img: files[0]?.url,
           tel: value.tel,
           sign: value.sign
         })

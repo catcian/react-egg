@@ -18,8 +18,9 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'httpLog', 'notFound', 'auth' ];
+  config.middleware = [ 'allowHosts', 'httpLog', 'notFound', 'auth' ];
 
+  config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000' ];
   // httpLog options
   config.httpLog = {
     type: 'all',

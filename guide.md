@@ -6668,3 +6668,107 @@ const user = await ctx.service.user.getUser(ctx.username);
     return tokenCache ? tokenCache.id : undefined;
   },
 ```
+
+
+11-1 XSS 常见攻击方式与解决思路
+web 安全
+Web应用中存在很多安全风险,这些风险会被黑客利用,轻则算改网页内容,重则窃取网站内部数据,更为严重的则是在网页中植入恶意码,使得用户受到侵害。
+
+安全风险
+1. xss 跨站脚本攻击：在web 页面注入脚本，使用javascript窃取用户信息
+1. sql注入攻击：将用户传入的数据作为参数，使用字符串拼接的方式插入到sql查询中
+1. csrf 跨站请求伪造：伪造用户请求向网站发起恶意请求。
+1. 海量接口请求，通过短时间内向服务器发送海量的请求，耗尽服务器资源，使服务器崩溃
+
+xss 攻击手段
+1. dom-based型攻击： 利用dom本身的缺陷，进行攻击 img 图片加载失败 onerror 触发事件
+1. 存储型：表单提交的数据存在恶意代码，被保存到目标网站的服务器中
+1. 反射型：恶意代码并没有保存在目标网站，通过引诱用户点击一个链接到目标网站的恶意链接实施攻击
+
+xss 防御手段
+1. 过滤：对用户的输入进行过滤，移除用户输入的style节点、script节点、iframe等节点
+1. 编码 html entity 编码
+1. cookie 将重要的cookie设置成http only 这样就不能通过 js 获取到该 cookie
+
+xss.html
+``` controller/user.js
+  async edit() {
+    const { ctx } = this;
+    const result = await ctx.service.user.edit({
+      id: ctx.userId,
+      avatar: ctx.params('img'),
+    + sign: ctx.helper.escape(ctx.params('sign')),
+      phone: ctx.params('tel'),
+      updateTime: ctx.helper.time(),
+    });
+    if (result) {
+      this.success(result);
+    } else {
+      this.error('修改失败');
+    }
+  }
+```
+sql注入防御手段
+1. 验证输入类型；比如根据id查询数据，那么变量必须是整型
+1. 转义特殊字符：比如引号、分号、和横线、在执行curd前都需要进行转义
+
+11-2 CSRF 常见攻击方式与解决思路(开发egg-allowHosts插件)
+
+浏览器    WebA(安全)    WebB(不安全)
+1. 用户 浏览 并登陆网站A
+2. 通过验证，生成 cookie，cookie保存在浏览器当中
+3. 用户 访问网站B
+4. 网站B 跳转访问到网站A
+5. 网站B 跳转携带 cookie 访问网站A
+6. 因此网站A 不知道请求是浏览器访问，还是网站B访问的
+
+
+csrf 防御手段
+1. 使用token：服务器会发送给客户端一个token，客户端请求接口带上token，服务器验证token是否有效，有效允许访问，否则拒绝访问。
+1. Referer 验证：Referer 指的是页面请求来源，意思是，只接受本站的请求，服务器才做响应；如果不是，就拦截。
+
+app.js
+const mids = app.config.coreMiddleware;
+app.config.coreMiddleware = [...mids, ...[
+  'allowHosts',
+  'notFound',
+  'auth'
+]];
+
+``` lib/plugin/egg-allowHosts/
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+
+    const { referer } = ctx.request.header;
+
+    if (referer) {
+      const url = new URL(referer);
+      if (options.includes(url.host)) {
+        await next();
+      } else {
+        ctx.body = {
+          status: 404,
+          errMsg: `${url.host} permission denied`,
+        };
+      }
+    } else {
+      console.log('12');
+      // 浏览器地址栏输入 或 postman
+      await next();
+    }
+  };
+};
+```
+
+``` plugin.js
+  allowHosts: {
+    enable: true,
+    path: path.join(__dirname, '../lib/plugin/egg-allowHosts'),
+  },
+```
+``` config.default.js
+config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000' ];
+```
+

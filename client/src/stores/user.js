@@ -17,6 +17,7 @@ export default {
         ...payload,
       };
     },
+
     editUser(state, payload) {
       return {
         ...state,
@@ -24,6 +25,7 @@ export default {
     },
   },
   effects: {
+
     async getUserAsync(dispatch, rootState, payload) {
       const user = await Http({
         url: '/user/detail',
@@ -36,7 +38,9 @@ export default {
         });
       } 
     },
+
     async editUserAsync(dispatch, rootState, payload) {
+      console.log(payload)
       const result = await Http({
         url: '/user/edit',
         body: payload,
@@ -48,6 +52,7 @@ export default {
         }, 1500)
       }
     },
+
     async loginAsync(dispatch, rootState, payload) {
       const result = await Http({
         url: '/user/login',
@@ -72,6 +77,7 @@ export default {
         }, 1500)
       }
     },
+
     async registerAsync(dispatch, rootState, payload) {
       const result = await Http({
         url: '/user/register',
@@ -87,6 +93,7 @@ export default {
         }, 1500)
       }
     },
+
     async logoutAsync(dispatch, rootState, payload) {
       const result = await Http({
         url: '/user/logout',
