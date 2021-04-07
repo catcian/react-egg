@@ -6818,3 +6818,39 @@ module.exports = options => {
 };
 
 ```
+
+
+11-4 接口缓存问题处理(开发egg-interfaceCache插件)
+1. 接口返回的值存放在redis
+1. 接口地址作为 redis 中的 key
+2. 查询redis 有缓存，返回接口
+3. 如果没有redis，将接口返回的结果保存到redis中
+
+redis 保存的string 需要转译JSO JSON.parse
+```
+'use strict';
+
+module.exports = options => {
+  return async (ctx, next) => {
+    const { url } = ctx.request;
+    if (options.cacheApis.includes(url)) {
+      const cache = await ctx.app.redis.get(url);
+      if (cache) {
+        ctx.body = JSON.parse(cache);
+      } else {
+        await next();
+        await ctx.app.redis.set(url, JSON.stringify(ctx.response.body), 'EX', options.expire);
+      }
+    } else {
+      await next();
+    }
+  };
+};
+```
+
+``` config.default.js
+  config.interfaceCache = {
+    expire: 60 * 10, // 10 min
+    cacheApis: [ '/api/commons/citys', '/api/house/hot' ],
+  };
+```

@@ -45,8 +45,6 @@ class UserController extends BaseController {
     const { ctx, app } = this;
     const { username, password } = ctx.request.body;
     const user = await ctx.service.user.getUser(username, password);
-    console.log('/UserController/login');
-    console.log(user);
     if (user) {
       const token = await this.jwtSign(user.id, user.username);
       console.log('login username', username);

@@ -18,7 +18,12 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'interfaceLimit', 'allowHosts', 'httpLog', 'notFound', 'auth' ];
+  config.middleware = [ 'interfaceLimit', 'allowHosts', 'httpLog', 'notFound', 'auth', 'interfaceCache' ];
+
+  config.interfaceCache = {
+    expire: 60 * 10, // 10 min
+    cacheApis: [ '/api/commons/citys', '/api/house/hot' ],
+  };
 
   config.interfaceLimit = {
     maxCount: 5,
