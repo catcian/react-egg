@@ -16,7 +16,6 @@ module.exports = options => {
         };
       }
     } else {
-      console.log('12');
       // 浏览器地址栏输入 或 postman
       await next();
     }

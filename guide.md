@@ -6772,3 +6772,49 @@ module.exports = options => {
 config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000' ];
 ```
 
+11-3 如何对接口限流，避免无限制请求(开发egg-interfaceLimit插件)
+接口 防御手段
+1. 服务限流：服务器在一定时间内只接收一定量的请求，超出限制则拒绝执行
+1. 接口缓存：将常用的接口进行缓存，减少对数据库查询次数
+
+``` config.default.js
+  config.interfaceLimit = {
+    maxCount: 5,
+    limitTime: 3 * 1000,
+  };
+```
+
+``` lib/plgin/egg-interfaceLimit
+// 思路 超过3秒最多允许3个接口请求/
+1. 设置计数器，每次请求计数加1，记录起始时间
+1. 超过3秒 计数器 大于3，则提示请求频繁，计数器清零，起始时间修改为当前时间
+1. 超过3秒 计数器 小于3，计数器清零，起始时间修改为当前时间
+1. 不超过3秒  计数器加1 并 继续执行
+module.exports = options => {
+  let count = 0;
+  let firstTime = new Date().getTime();
+  // console.log(options);
+  return async (ctx, next) => {
+
+    if (new Date().getTime() - firstTime >= options.limitTime) {
+      if (count > options.maxCount) {
+        count = 0;
+        firstTime = new Date().getTime();
+        ctx.body = {
+          status: 404,
+          errMsg: '请求频繁，稍后再试。',
+        };
+      } else {
+        count = 0;
+        firstTime = new Date().getTime();
+        await next();
+      }
+    } else {
+      count++;
+      await next();
+
+    }
+  };
+};
+
+```

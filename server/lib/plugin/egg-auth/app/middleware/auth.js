@@ -8,7 +8,7 @@ module.exports = options => {
     // const user = ctx.session[ctx.username];
     // session 中是否存在
     // console.log('ctx.session[ctx.username]', user);
-    console.log('/app/middleware/redis.get(tx.username)', user);
+    console.log('/app/middleware/redis.get(ctx.username)', user);
     if (!user && !options.exclude.includes(url.split('?')[0])) {
       ctx.body = {
         status: 10001,

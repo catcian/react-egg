@@ -18,7 +18,12 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1616568946375_6539';
 
   // add your middleware config here
-  config.middleware = [ 'allowHosts', 'httpLog', 'notFound', 'auth' ];
+  config.middleware = [ 'interfaceLimit', 'allowHosts', 'httpLog', 'notFound', 'auth' ];
+
+  config.interfaceLimit = {
+    maxCount: 5,
+    limitTime: 3 * 1000,
+  };
 
   config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000' ];
   // httpLog options

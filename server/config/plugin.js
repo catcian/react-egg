@@ -43,4 +43,8 @@ module.exports = {
     enable: true,
     path: path.join(__dirname, '../lib/plugin/egg-allowHosts'),
   },
+  interfaceLimit: {
+    enable: true,
+    path: path.join(__dirname, '../lib/plugin/egg-interfaceLimit'),
+  },
 };
