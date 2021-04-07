@@ -31,4 +31,5 @@ run/
 *.sw*
 *.un~
 typings/
+/docker
 .nyc_output/

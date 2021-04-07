@@ -6854,3 +6854,140 @@ module.exports = options => {
     cacheApis: [ '/api/commons/citys', '/api/house/hot' ],
   };
 ```
+
+12-1 Docker简介
+项目部署
+为什么需要 docker
+目前开发会遇到的问题，开发环境不一致，开发系统不一致，本地开发环境和线上环境不同
+
+软件安装麻烦：安装不同软件的复杂程度不同，不仅耗时久还容易出错
+
+运维成本过高；软件维护和升级都比较费时费力，如果新增机器，所有软件都需要重新安装
+
+12-2 Docker基础入门
+docker 操作
+1. 镜像操作：拉取、查看、删除等
+1. 容器操作：运行，查看，进入、删除
+
+拉取镜像 默认从docker仓库获取，默认仓库地址 https://hub.docker.com/
+推荐 https://dashboard.daocloud.io/packages/explore
+node  12.18
+mysql 8.0.20
+
+-- 拉取镜像
+$ docker pull daocloud.io/library/node:12.18
+
+-- 查看镜像
+$ docker images
+REPOSITORY                     TAG       IMAGE ID       CREATED        SIZE
+jy06136887/docker101tutorial   latest    a35d9d1f5140   2 hours ago    27.9MB
+docker101tutorial              latest    a35d9d1f5140   2 hours ago    27.9MB
+alpine/git                     latest    a939554ad0d0   6 weeks ago    25.1MB
+daocloud.io/library/node       12.18     28faf336034d   6 months ago   918MB
+
+-- 重命名镜像
+$ docker tag 28faf336034d node:12.18
+$ docker images
+REPOSITORY                     TAG       IMAGE ID       CREATED        SIZE
+jy06136887/docker101tutorial   latest    a35d9d1f5140   3 hours ago    27.9MB
+docker101tutorial              latest    a35d9d1f5140   3 hours ago    27.9MB
+alpine/git                     latest    a939554ad0d0   6 weeks ago    25.1MB
+daocloud.io/library/node       12.18     28faf336034d   6 months ago   918MB
+node                           12.18     28faf336034d   6 months ago   918MB
+
+-- 本地镜像导出
+$ mkdir docker
+$ cd docker
+$ docker save -o node.image 28faf336034d
+$ ls
+node.image
+
+-- 删除镜像
+$ docker rmi 28faf336034d
+Error response from daemon: conflict: unable to delete 28faf336034d (must be forced) - image is referenced in multiple repositories
+$ docker rmi 28faf336034d -f
+$ docker images
+REPOSITORY                     TAG       IMAGE ID       CREATED       SIZE
+docker101tutorial              latest    a35d9d1f5140   3 hours ago   27.9MB
+jy06136887/docker101tutorial   latest    a35d9d1f5140   3 hours ago   27.9MB
+alpine/git                     latest    a939554ad0d0   6 weeks ago   25.1MB
+
+-- 本地导入
+$ docker load -i node.image
+b323b70996e4: Loading layer [==================================================>]  105.6MB/105.6MB
+e8847c2734e1: Loading layer [==================================================>]  23.95MB/23.95MB
+a4c504f73441: Loading layer [==================================================>]  8.004MB/8.004MB
+ef5de533cb53: Loading layer [==================================================>]  146.5MB/146.5MB
+cbe6bbd0c86f: Loading layer [==================================================>]  575.3MB/575.3MB
+174e334f3f46: Loading layer [==================================================>]  349.2kB/349.2kB
+378725267e28: Loading layer [==================================================>]  78.99MB/78.99MB
+a447e65f1e5f: Loading layer [==================================================>]  7.759MB/7.759MB
+fee9b925cc06: Loading layer [==================================================>]  3.584kB/3.584kB
+Loaded image ID: sha256:28faf336034dcc856cb4e5b222d6d0aee32990bc82a1b59d2963074981c5fad1
+$ docker images
+REPOSITORY                     TAG       IMAGE ID       CREATED        SIZE
+jy06136887/docker101tutorial   latest    a35d9d1f5140   3 hours ago    27.9MB
+docker101tutorial              latest    a35d9d1f5140   3 hours ago    27.9MB
+alpine/git                     latest    a939554ad0d0   6 weeks ago    25.1MB
+<none>                         <none>    28faf336034d   6 months ago   918MB
+$ docker tag 28faf336034d node:12.18
+$ docker images
+REPOSITORY                     TAG       IMAGE ID       CREATED        SIZE
+jy06136887/docker101tutorial   latest    a35d9d1f5140   3 hours ago    27.9MB
+docker101tutorial              latest    a35d9d1f5140   3 hours ago    27.9MB
+alpine/git                     latest    a939554ad0d0   6 weeks ago    25.1MB
+node                           12.18     28faf336034d   6 months ago   918MB
+
+-- 启动镜像
+-d/后台运行 -p/端口 宿主端口/容器端口 --name/容器名称 -e MYSQL_ROOT_PASSWORD=abc123456/密码
+$ docker run -d -p 3307:3306 --name mysql -e MYSQL_ROOT_PASSWORD=abc123456 be0dbf01a0f3
+4947fdaecee6eba9885bab4a408832b208124fae2d148b098c3ea3189209d97a
+
+-- 查看当前运行镜像
+$ docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                               NAMES
+4947fdaecee6   be0dbf01a0f3   "docker-entrypoint.s…"   6 seconds ago   Up 5 seconds   33060/tcp, 0.0.0.0:3307->3306/tcp   mysql
+
+-- 所有的镜像
+$ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED              STATUS                   PORTS                               NAMES
+4947fdaecee6   be0dbf01a0f3        "docker-entrypoint.s…"   About a minute ago   Up About a minute        33060/tcp, 0.0.0.0:3307->3306/tcp   mysql
+7d1299611d07   docker101tutorial   "/docker-entrypoint.…"   3 hours ago          Exited (0) 3 hours ago                                       docker-tutorial
+
+-- 所有的镜像容器id
+$ docker ps -aq
+4947fdaecee6
+7d1299611d07
+
+-- 停止容器
+$ docker stop 4947fdaecee6
+4947fdaecee6
+$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+$ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED         STATUS                      PORTS     NAMES
+4947fdaecee6   be0dbf01a0f3        "docker-entrypoint.s…"   4 minutes ago   Exited (0) 13 seconds ago             mysql
+7d1299611d07   docker101tutorial   "/docker-entrypoint.…"   3 hours ago     Exited (0) 3 hours ago                docker-tutorial
+
+-- 启动容器
+$ docker start 4947fdaecee6
+4947fdaecee6
+$ docker ps -a
+CONTAINER ID   IMAGE               COMMAND                  CREATED         STATUS                   PORTS                               NAMES
+4947fdaecee6   be0dbf01a0f3        "docker-entrypoint.s…"   6 minutes ago   Up 6 seconds             33060/tcp, 0.0.0.0:3307->3306/tcp   mysql
+7d1299611d07   docker101tutorial   "/docker-entrypoint.…"   3 hours ago     Exited (0) 3 hours ago                                       docker-tutorial
+
+-- 删除容器
+$ docker rm 4947fdaecee6
+
+-- 重新启动容器
+$ docker restart 4947fdaecee6
+
+-- 进入容器内部
+$ docker exec -it 4947fdaecee6 sh
+# mysql -uroot -p
+Enter password:
+
+-- 查看容器日志
+$ docker logs -f 4947fdaecee6/容器id
+
