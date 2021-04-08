@@ -2,7 +2,6 @@
 // const Controller = require('egg').Controller;
 const BaseController = require('./base');
 const md5 = require('md5');
-
 class UserController extends BaseController {
   async jwtSign(id, username) {
     const { app } = this;
@@ -16,7 +15,7 @@ class UserController extends BaseController {
     const { ctx, app } = this;
     const params = ctx.request.body;
     const user = await ctx.service.user.getUser(params.username);
-    if (user) {
+    if (Object.keys(user).length !== 0) {
       await this.error('用户已存在');
       return;
     }

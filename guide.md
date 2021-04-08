@@ -6991,3 +6991,193 @@ Enter password:
 -- 查看容器日志
 $ docker logs -f 4947fdaecee6/容器id
 
+12-3 阿里云后台介绍
+centos 7.7 64位
+ssh root@8.129.91.9
+
+12-4 项目部署
+
+-- 基本库
+yum -y install yum-utils device-mapper-persistent-data lvm2
+
+-- docker 镜像源
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+[root@iZwz9g1c3fleikf5q63pztZ ~]# yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+已加载插件：fastestmirror
+adding repo from: http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+grabbing file http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo to /etc/yum.repos.d/docker-ce.repo
+repo saved to /etc/yum.repos.d/docker-ce.repo
+
+-- 安装docker
+yum -y install docker-ce docker-ce-cli containerd.io
+
+-- 启动 docker 服务
+systemctl start docker
+
+-- 开机自启动 docker 服务
+systemctl enable docker
+Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service to /usr/lib/systemd/system/docker.service.
+
+-- docker 是否成功
+docker -v
+
+-- 修改镜像源
+vi /etc/docker/daemon.json
+{
+  "registry-mirrors": [
+    "https://zkln8zq2.mirror.aliyuncs.com"
+  ]
+}
+
+"https://register.docker-cn.com/"
+
+-- 重启服务
+systemctl daemon-reload
+-- 重启docker
+systemctl restart docker
+
+
+-- 安装mysql
+[root@catcian ~]# docker pull daocloud.io/library/mysql:8.0.20
+
+-- 运行 mysql
+[root@catcian ~]# docker run -d -p 6739:6739 --name mysql -e MYSQL_ROOT_PASSWORD=xxx be0dbf01a0f3
+ce98415a154eb94cb05a7edd0fdcac669dde5d33d2f658346548d18dcca4a15b
+[root@catcian ~]# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS                                         NAMES
+ce98415a154e   be0dbf01a0f3   "docker-entrypoint.s…"   6 seconds ago   Up 5 seconds   3306/tcp, 33060/tcp, 0.0.0.0:6739->6739/tcp   mysql
+
+
+
+-- 安装redis:6.0.3-alpine3.11
+$ docker pull daocloud.io/library/redis:6.0.3-alpine3.11
+6.0.3-alpine3.11: Pulling from library/redis
+cbdbe7a5bc2a: Pull complete
+dc0373118a0d: Pull complete
+cfd369fe6256: Pull complete
+3ab90cca2b5b: Pull complete
+b54e03d4f573: Pull complete
+98f28c5b40da: Pull complete
+Digest: sha256:e89340feba19edcfd09638f1ea1f6e09c9459477d8e956ea93be9c6040f85464
+Status: Downloaded newer image for daocloud.io/library/redis:6.0.3-alpine3.11
+daocloud.io/library/redis:6.0.3-alpine3.11
+
+-- 运行redis
+$ docker run -d -p 6379:6379 --name redis 29c713657d31 --requirepass xxx
+
+-- 进入redis 容器
+redis-cli -a abc123456
+$ docker exec -it 4af601ddc121(容器id) sh
+/data # redis-cli
+(error) NOAUTH Authentication required.
+127.0.0.1:6379> auth xxx
+OK
+127.0.0.1:6379> set username 1
+OK
+127.0.0.1:6379> get username
+"1"
+
+
+
+nginx
+
+docker pull nginx:1.13.0-alpine
+
+/nginx/conf
+``` /nginx/conf/nginx.conf
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+/nginx/conf.d
+``` /nginx/conf.d/default.conf
+server {
+  #监听端口
+  listen 80;
+  #监听地址
+  server_name 8.129.91.9;
+
+  # 静态资源
+  location / {
+    # 根目录
+    root /usr/share/nginx/html;
+    # 设置默认页 查找文件
+    index index.html
+  }
+
+  #接口转发
+  location ~ /api/ {
+    proxy_pass http://8.129.91.9:7001;
+  }
+}
+```
+/nginx/log
+/nginx/html
+/nginx/html/index.html
+
+
+
+client 
+``` umirc.js
+history: {
+  type: 'hash'// 生产
+}
+```
+
+
+``` utlis/http.js
+location.hash = '#/login?from=' + location.pathname
+```
+
+``` stores/user.js
+logoutAsync{
+  location.hash `#/.
+}
+```
+
+yarn build 打包
+
+文件上传
+目录
+scp - rp nginx root@8.129.91.9:/root
+
+
+-- 运行nginx
+$ docker images
+REPOSITORY                  TAG                IMAGE ID       CREATED         SIZE
+daocloud.io/library/mysql   8.0.20             be0dbf01a0f3   10 months ago   541MB
+daocloud.io/library/redis   6.0.3-alpine3.11   29c713657d31   10 months ago   31.6MB
+daocloud.io/library/nginx   1.13.0-alpine      f00ab1b3ac6d   3 years ago     15.5MB
+$ docker run --name nginx -d -p 80:80 -v /root/nginx/log:/var/log/nginx -v /root/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /root/nginx/conf.d:/etc/nginx/conf.d -v /root/nginx/html:/usr/share/nginx/html f00ab1b3ac6d
+155b0903e5a7a6faa489e7291d52e5602de6cc7015d5387537ffd5ca24b4dfb4
+
+安全组配置，配置规则

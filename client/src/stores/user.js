@@ -85,11 +85,11 @@ export default {
       })
       if (result) {
         localStorage.setItem('token', result.token)
-        localStorage.setItem('usernname', result.usernname)
-        const fromPath = urlGet('from')
+        localStorage.setItem('usernname', result.username)
+        const hash = location.hash.split('?')[0].substring(1)
         Toast.success('注册成功')
         setTimeout(() => {
-          history.push(fromPath);
+          history.push('/');
         }, 1500)
       }
     },
@@ -102,12 +102,10 @@ export default {
       if (result) {
         localStorage.clear()
         Toast.success('退出成功')
+        const hash = location.hash.split('?')[0].substring(1)
         setTimeout(() => {
           history.push({
-            pathname: '/login',
-            query: {
-              from: location.pathname
-            }
+            pathname: '/',
           })
         }, 1500)
       }

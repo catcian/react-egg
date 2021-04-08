@@ -39,11 +39,12 @@ export default function Http({ url, method = 'POST', headers, body, setResult, s
           Toast.fail(resp.errMsg)
           reject(resp.errMsg)
           const pathname = location.pathname
+          const hash = location.hash.split('?')[0].substring(1)
           setTimeout(() => {
             let query = {
-              from: pathname
+              from: hash ? hash : pathname
             }
-            if (pathname === '/house') {
+            if (pathname === '/house' || hash === '/house') {
               query = {
                 ...query,
                 id: urlGet('id')
