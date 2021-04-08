@@ -31,8 +31,6 @@ class UserService extends BaseService {
           id: params.id,
         },
       });
-      console.log('/UserServive/edit');
-      console.log(result);
       return result;
     });
   }

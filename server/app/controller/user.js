@@ -44,11 +44,11 @@ class UserController extends BaseController {
     const { ctx, app } = this;
     const { username, password } = ctx.request.body;
     const user = await ctx.service.user.getUser(username, password);
-    if (user) {
+    if (Object.keys(user).length !== 0) {
       const token = await this.jwtSign(user.id, user.username);
-      console.log('login username', username);
+      console.log('login username', user.username);
       // ctx.session[username] = 1;
-      console.log('login app.redis.get(username)', await app.redis.get(username));
+      console.log('login app.redis.get(username)', await app.redis.get(user.username));
       await this.success({
         ...ctx.helper.unPick(user.dataValues, [ 'password' ]),
         createTime: ctx.helper.timestamp(user.createTime),

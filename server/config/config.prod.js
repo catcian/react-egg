@@ -30,15 +30,24 @@ module.exports = appInfo => {
     limitTime: 3 * 1000,
   };
 
-  config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000' ];
+  config.allowHosts = [ 'localhost:8000', '127.0.0.1:8000', '8.129.91.9' ];
   // httpLog options
   config.httpLog = {
     type: 'all',
   };
 
   config.logger = {
-    dir: path.join(appInfo.baseDir, 'logs/local'),
+    level: 'INFO',
+    consoleLevel: 'INFO',
+    dir: path.join(appInfo.baseDir, 'logs/prod'),
+    encoding: 'utf-8',
+    // appLogName: `${appInfo.name}-web.log`,
+    // coreLogName: 'egg-web.log',
+    // agentLogName: 'egg-agent.log',
+    // errorLogName: 'common-error.log',
+    outputJSON: false,
   };
+
   // 框架的安全插件是默认开启的，关闭安全防范
   config.security = {
     csrf: {
@@ -89,25 +98,24 @@ module.exports = appInfo => {
     // database configuration
     client: {
     // host
-      host: '127.0.0.1',
+      host: '8.129.91.9',
       // port
       port: '3306',
       // username
       user: 'root',
       // password
-      password: '',
+      password: 'abc123456',
       // database
       database: 'egg_house',
     },
   };
-
   config.sequelize = {
     dialect: 'mysql',
     database: 'egg_house',
-    host: '127.0.0.1',
+    host: '8.129.91.9',
     port: '3306',
-    username: 'root',
-    password: '',
+    user: 'root',
+    password: 'abc123456',
     define: {
       timestamps: false,
       freezeTableName: true,
@@ -121,7 +129,7 @@ module.exports = appInfo => {
   config.redis = {
     client: {
       port: 6379,
-      host: '127.0.0.1',
+      host: '8.129.91.9',
       password: 'abc123456',
       db: 0,
     },

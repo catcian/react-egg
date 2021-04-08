@@ -1,5 +1,5 @@
 {
-  "name": "egg-lesson",
+  "name": "server",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -33,6 +33,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-",
+    "prod": "EGG_SERVER_ENV=prod egg-scripts start --title=egg-server-",
     "stop": "egg-scripts stop --title=egg-server-",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",

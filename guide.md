@@ -7181,3 +7181,68 @@ $ docker run --name nginx -d -p 80:80 -v /root/nginx/log:/var/log/nginx -v /root
 155b0903e5a7a6faa489e7291d52e5602de6cc7015d5387537ffd5ca24b4dfb4
 
 安全组配置，配置规则
+
+-- server 
+Dockerfile
+# 使用node镜像
+FROM daocloud.io/library/node:12.18
+# 在容器中新建目录文件夹 egg
+RUN mkdir -p /egg-server
+# 将 /egg-server 设置为默认工作目录
+WORDIR /egg-server
+# 将 package.json 复制默认工作目录
+COPY package.json /egg-server/package.json
+# 安装依赖
+RUN yarn config set register https://registry.npm.taobao.org
+RUN yarn --production
+# 将 copy 代码拷贝致容器
+COPY ./ /egg-server
+# 7001 端口暴露出
+EXPOSE 7001
+# 等待容器启动后执行脚本
+CMD yarn start
+
+config.prod.js
+allowHosts = ['8.129.91.9']
+mysql.host
+sequelize.host
+redis.host
+
+package.json 
+prod EGG_SERVER_ENV=prod egg-scripts start (--daemon)
+
+unzip -u -d 目录 解压文件
+unzip -u -d server egg.zip
+
+-- 创建数据库
+
+-- docker 容器 mysql 权限
+mysql -uroot -p
+
+-- 远程链接授权
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+-- 刷新权限
+FLUSH PRIVILEGES;
+
+-- 更改加密规则
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER;
+
+-- 更新root用户密码
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'abc123456';
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'abc123456';
+
+-- 刷新权限
+FLUSH PRIVILEGES;
+
+mysql 8.0 使用node.js 会报错
+
+-- 运行 egg-server 镜像
+docker build -t egg-server:1.0 ./egg-server
+
+docker images;
+
+docker run -d -p 7001:7001 --name egg-server 51506a99f72a
+
+docker logs -f 
