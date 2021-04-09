@@ -6,11 +6,11 @@ module.exports = {
   base64Encode(str = '') {
     return new Buffer(str).toString('base64');
   },
-  time() {
-    return dayjs().format('YYYY-MM-DD HH:mm:ss');
+  time(format) {
+    return format ? dayjs().format(format) : dayjs().format('YYYY-MM-DD HH:mm:ss');
   },
   timestamp(date) {
-    return new Date(date).getTime();
+    return date ? new Date(date).getTime() : new Date().getTime();
   },
   unPick(source, arr) {
     if (Array.isArray(arr)) {

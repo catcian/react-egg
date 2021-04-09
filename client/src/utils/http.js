@@ -17,14 +17,25 @@ export default function Http({ url, method = 'POST', headers, body, setResult, s
   if (method.toUpperCase() === 'GET') {
     params = undefined;
   } else {
+
     params = {
       headers: {
         ...defaultHeader,
-        headers,
+        ...headers,
       },
       method,
       body: JSON.stringify(body),
     };
+    // upload
+    if (url === '/commons/upload') {
+      params = {
+        headers: {
+          token
+        },
+        method,
+        body
+      }
+    }
   }
 
   return new Promise((resolve, reject) => {

@@ -9,6 +9,7 @@ export default {
     avatar: undefined,
     tel: undefined,
     sign: undefined,
+    uploadPath: '',
   },
   reducers: {
     getUser(state, payload) {
@@ -23,6 +24,14 @@ export default {
         ...state,
       };
     },
+
+    getUploadPath(state, payload) {
+      return {
+        ...state,
+        uploadPath: payload
+      }
+    }
+    
   },
   effects: {
 
@@ -109,6 +118,19 @@ export default {
           })
         }, 1500)
       }
+    },
+
+    async uploadAsync(dispatch, rootState, payload) {
+      const result = await Http({
+        url: '/commons/upload',
+        body: payload
+      })
+
+      dispatch({
+        type: 'getUploadPath',
+        payload: result
+      })
     }
+
   },
 };

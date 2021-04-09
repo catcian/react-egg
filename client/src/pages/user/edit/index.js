@@ -3,20 +3,25 @@ import { List, Button, ImagePicker, Toast, InputItem } from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { isEmpty } from 'project-libs';
 import { useStoreHook } from 'think-react-store';
+import { ToFile } from '@/utils'
 
 function Edit(props) {
   const {
-    user: { editUserAsync },
+    user: { editUserAsync, uploadAsync, uploadPath },
   } = useStoreHook();
   const { getFieldProps, validateFields } = props.form;
   const [files, setFiles] = useState([]);
-
-  useEffect(() => {}, []);
 
   const handleChange = (files) => {
     if (files[0]?.file?.size / 1024 / 1024 < 0.1) {
       Toast.fail('图片大小不能小于0.1M');
       // return;
+    }
+    const imgFile = ToFile(files[0]?.url, 'avatar')
+    if(imgFile) {
+      const fd = new FormData()
+      fd.append('avatar', imgFile)
+      uploadAsync(fd)
     }
     setFiles(files);
   };
@@ -31,8 +36,9 @@ function Edit(props) {
         Toast.fail('请讲信息补充完整！');
         return;
       } else {
+        
         editUserAsync({
-          img: files[0]?.url,
+          img: uploadPath?.path,
           tel: value.tel,
           sign: value.sign
         })
@@ -72,6 +78,7 @@ function Edit(props) {
       <Button type="warning" style={{ marginTop: '20px' }} onClick={handleSubmit}>
         修改
       </Button>
+
     </div>
   );
 }
